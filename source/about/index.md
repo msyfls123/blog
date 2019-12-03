@@ -14,6 +14,11 @@ date: 2019-03-09 23:06:05
 - GraphQL, RxJS, React, Webpack, CycleJS
 - 了解 Rust, 对 Android, QT 等有粗浅认识
 
+## 社区
+
+- [JSConf China 2019](https://2019.jsconfchina.com/) Speaker: 响应式编程使你看得更远
+- [InfoQ 采访](https://www.infoq.cn/article/kzyb9IEj6iyHegBNrLgd)：掌控前端数据流，响应式编程让你看得更远
+
 ## 经历
 - 2016.10 – 至今 豆瓣阅读前端工程师 [See](https://read.douban.com)
   - 在团队内推动了 GraphQL 的使用，初步引入 RxJS 处理并发异步操作
