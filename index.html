@@ -127,6 +127,204 @@
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
     <div class="card">
     
+    <div class="card-image">
+        <a href="/blog/2019/12/29/类型定义即是量纲/" class="image is-7by1">
+            <img class="thumbnail" src="/blog/images/fundamental-unit-1.jpg" alt="类型定义即是量纲">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-12-29T14:12:13.000Z">2019-12-29</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    5 分钟 读完 (大约 762 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/blog/2019/12/29/类型定义即是量纲/">类型定义即是量纲</a>
+            
+        </h1>
+        <div class="content">
+            <p>2019 年阅读的前端项目终于吃上了 TypeScript，群众纷纷反映真香！</p>
+<p>我在思考，类型定义对于程序语言来说究竟算是什么呢？我们大家都知道编译型语言类型检查不通过是会编译失败的，返回一个错误信息，那么我们为什么要保证变量类型呢？<br>我不想先谈那些内存结构啊，指针之类的，我想说的是类型定义就好比物理学里的“量纲”。</p>
+<p>我们会说 1 立方米的木头，1 吨的木头，都是可以的。但我们不会说 1 安培的木头，或者 1 摄氏度的木头。因为这些量纲没法衡量木头的多少，或者说即使确实有 1 安培电流通过的木头，表面温度为 1 摄氏度的木头，我们也没法了解它到底意味着什么（能换多少钱，需要多少辆车才能拉动？）。</p>
+<p>计算机程序是简单的，每个变量，每个函数，他们都只会做两件事，那就是被写入内存和从内存读取，量纲是他们在内存里分配的形式，<code>u32</code> 和 <code>i64</code> 就是不同的变量，长得不一样，功能也不一样。</p>
+<p>JavaScript 是弱类型的语言，它容忍隐式类型转换。但 TypeScript 不允许这样做。我们不能把 <code>string</code> 类型的变量传给一个接受 <code>number</code> 类型参数的函数，就好像我们没法把木头接到灯泡上指望它发光一样（好吧，如果这是一段带点的木头就当我在放屁），尤其是你接到的还是一段看起来很像电池的木头，比如名为 <code>battery</code>，但类型是 <code>wood</code>。</p>
+<p>另外，保证量纲被定义的好处是我们拥有了更好的接口提示，即使之前就有 document comment，但我们依然只能通过 description 来辨识变量类型和猜测该用的参数，有 TypeScript 以后 ……</p>
+<p><img src="/blog/images/fundamental-unit-3.gif" alt="https://juejin.im/post/5d8efeace51d45782b0c1bd6"></p>
+<p>最后，我想说的是，即使 TypeScript 给开发过程带来了巨大的便利，但我们仍应该清楚地认识到它只是一门 JavaScript 的预处理语言，运行时仍是那个不带类型检查的玩具语言（？），当 API 接口返回的数据不同于类型定义的 Interface 怎么办？</p>
+<h2 id="Runtime-Type-Check"><a href="#Runtime-Type-Check" class="headerlink" title="Runtime Type Check"></a>Runtime Type Check</h2><p>一种方案是 WebAssembly，在 Rust 代码里用 Serde 之类的序列化工具来整理 JSON 数据，如果遇到不存在的属性会直接报错</p>
+<p><img src="/blog/images/fundamental-unit-2.png" alt></p>
+<p>另一种就是 JS 方式：<a href="https://github.com/zertosh/invariant" target="_blank" rel="noopener">invariant</a></p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> invariant = <span class="hljs-built_in">require</span>(<span class="hljs-string">'invariant'</span>);</span><br><span class="line"></span><br><span class="line">invariant(someTruthyVal, <span class="hljs-string">'This will not throw'</span>);</span><br><span class="line"><span class="hljs-comment">// No errors</span></span><br><span class="line"></span><br><span class="line">invariant(someFalseyVal, <span class="hljs-string">'This will throw an error with this message'</span>);</span><br><span class="line"><span class="hljs-comment">// Error: Invariant Violation: This will throw an error with this message</span></span><br></pre></td></tr></table></figure>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-image">
+        <a href="/blog/2019/12/03/前端文件打包优化/" class="image is-7by1">
+            <img class="thumbnail" src="/blog/images/js-bundle-4.png" alt="前端文件打包优化">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-12-03T13:10:40.000Z">2019-12-03</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    7 分钟 读完 (大约 1100 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/blog/2019/12/03/前端文件打包优化/">前端文件打包优化</a>
+            
+        </h1>
+        <div class="content">
+            <p>前端开发除了 HTML 模板外最重要的就是 JS/CSS 文件了，现今开发者都是本地书写 ES6/Stylus/Sass 然后经打包发布至 CDN 等环境，于此带来的问题是一些不需要的代码被打包了进来，甚至更严重的是一份代码被打包几遍。当然，Webpack 这样的工具出现就是为了解决这些问题，不过考虑到打包过程是一次性的编译，运行时代码的区别仍然需要开发者手动对待。</p>
+<h2 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h2><h3 id="1-重复打包了类库文件"><a href="#1-重复打包了类库文件" class="headerlink" title="1. 重复打包了类库文件"></a>1. 重复打包了类库文件</h3><p><img src="/blog/images/js-bundle-1.png" alt="backbone、underscore 被同时打包进了 vendor 和 setup 入口文件"></p>
+<p>上图中可以看到 vendor 和 setup 里都有 backbone、underscore 和 zepto 等库文件，这是为什么呢？</p>
+<p>原因是当我们引入 <code>splitChunksPlugin</code> 时仅将 <code>/node_modules/</code> 下的文件纳入 vendor 范围，但在 entry 处又定义了包含通过 bower 安装的 backbone、underscore 等类库的 vendor，见下面两图。 </p>
+<p><img src="/blog/images/js-bundle-2.png" alt="mobile config 中定义了 vendor"></p>
+<p><img src="/blog/images/js-bundle-3.png" alt="base config 中定义了 cacheGroup.vendor.test 为 /node_modules/"></p>
+<p>如图所示将 <code>/public/js/lib</code> 写入 <code>optimization.splitChunks.cacheGroups.vendor.test</code> 就可以了，结果如下图。</p>
+<p><img src="/blog/images/js-bundle-4.png" alt="backbone、underscore 等库乖乖地呆在了 vendor 里面"></p>
+<h3 id="2-类库文件无法自动剔除无用代码"><a href="#2-类库文件无法自动剔除无用代码" class="headerlink" title="2. 类库文件无法自动剔除无用代码"></a>2. 类库文件无法自动剔除无用代码</h3><p>像 <code>date-fns</code> 和 <code>RxJS</code> 这样 battle tested 的库，从早期原型链（prototype）实现到现在拥抱函数式的历史进程中无可避免地引入了很多历史负担，比如下图中 <code>date-fns/esm</code> 就非常巨大，里面很多都是我们暂时不需要的功能。</p>
+<p><img src="/blog/images/js-bundle-5.png" alt="date-fns/esm"></p>
+<p>好在它们文档都比较全：</p>
+<ul>
+<li>RxJS <a href="https://github.com/ReactiveX/rxjs/blob/865b7d36c1fc59d065072e7026e959c3a0e01ce7/doc/pipeable-operators.md#build-and-treeshaking" target="_blank" rel="noopener">Pipeable Operators</a></li>
+<li>date-fns <a href="https://date-fns.org/v2.0.0-alpha.7/docs/ECMAScript-Modules" target="_blank" rel="noopener">ECMAScript-Modules</a></li>
+</ul>
+<p>如下图一顿修改。<br><img src="/blog/images/js-bundle-7.png" alt="import function from &#39;date-fns/function&#39; directly"></p>
+<p>见证奇迹的时刻！<br><img src="/blog/images/js-bundle-6.png" alt="date-fns/esm mini"></p>
+<h3 id="3-运行时才能确认使用的重依赖模块"><a href="#3-运行时才能确认使用的重依赖模块" class="headerlink" title="3. 运行时才能确认使用的重依赖模块"></a>3. 运行时才能确认使用的重依赖模块</h3><p><img src="/blog/images/js-bundle-8.png" alt="membership app 内出现了 jQuery 等依赖"></p>
+<p>一个 React App 内竟然出现了 jQuery 依赖 …… 一定是哪里出了问题，经过不懈的努力，终于找到了是在 web 和 mobile 公用的组件里用了微信支付的 module，而这个 module 开头就直接引入了 backbone/underscore/zepto 三大金刚 ……</p>
+<p><img src="/blog/images/js-bundle-11.png" alt="weixin_wap_payment 依赖了 backbone 等库"></p>
+<p>Webpack 编译时并不能知道运行时究竟在不在手机环境，怎么办呢？我们可以通过 webpack <a href="https://webpack.js.org/api/module-methods/#require-amd-version" target="_blank" rel="noopener">require AMD 模式</a> 来拆分代码。</p>
+<p><img src="/blog/images/js-bundle-10.png" alt="AMD require weixin_wap_payment"></p>
+<p>其实这个打出来的 34 号包永远也不会被 import ……<br><img src="/blog/images/js-bundle-9.png" alt="jQuery/backbone/underscore 等都被打包出去了"></p>
+<h2 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h2><h3 id="1-重复-CSS-Variables-定义"><a href="#1-重复-CSS-Variables-定义" class="headerlink" title="1. 重复 CSS Variables 定义"></a>1. 重复 CSS Variables 定义</h3><p>开发小王接到了一个任务，改进项目 css 代码以支持当下新出的黑夜模式（Dare Mode），小王犯了愁，一个个颜色变量替换也太苦逼了，小王挠挠头想出了一个在 source 文件定义 CSS Variables 的方法。</p>
+<p><img src="/blog/images/css-bundle-1.png" alt="duplicate CSS Variables"></p>
+<p>看起来非常完美，但不足之处是这堆 CSS Variables 每次 import 都会被定义一遍，结果就是有多少 stylus 文件就被重复定义了多少遍 …… 不要问我为什么要用 import 而不是 require ……</p>
+<p>我们知道 <code>Stylus</code> 是一种 css 的预编译器，它的变量和 CSS Variables 是不一样的，CSS Variables 是会编译到生成的 CSS 文件里，而 Stylus 变量则会在编译中承担一次桥梁的作用之后悄悄消失。可以通过比对 Stylus 变量是否已经赋值 <code>var(--css-variable)</code> 来判断是否需要定义 CSS Variables。</p>
+<p><img src="/blog/images/css-bundle-3.png" alt="is css variables defined?"></p>
+<p>成果就是从有多少 stylus 文件就有多少次 CSS Variables 定义缩减到入口文件那么多个数的定义，足足降低了一个数量级，打开 <code>Chrome DevTools &gt; Elements &gt; Styles</code> 终于不卡了！</p>
+<p><img src="/blog/images/css-bundle-2.png" alt="注意观察右侧滚动条的宽度！"></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-image">
+        <a href="/blog/2019/03/19/排序/" class="image is-7by1">
+            <img class="thumbnail" src="/blog/images/sort.gif" alt="排序">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-03-19T14:36:50.000Z">2019-03-19</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    2 分钟 读完 (大约 330 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/blog/2019/03/19/排序/">排序</a>
+            
+        </h1>
+        <div class="content">
+            <p>算法中的排序算是老生常谈的问题了，不过我的问题是生活中真的有那么简单只需要按照一个值从小到大排列的需求吗？</p>
+<p>如下图<br><img src="/blog/images/contacts-pc.png" alt="web"><br>在 App 端变成了这样<br><img src="/blog/images/contacts-app.jpg" alt="App"></p>
+<p>显然这些已注销用户是在不同时间关注的，web 上将他们混排了，App 上则是单列在最后，前一种强调了关注顺序，后一种强调了社交性（注销账号当然再也没有了社交价值）。并且 App 理论上不太会有用户真的去翻到最后一条，Elastic Search 默认最大条数是 10000，恐怕意义也是如此。</p>
+<p>当然排序在程序上而言也就一行代码的区别，不过在产品上区别可是很大，是在从一个笔记本在向电话簿转变。</p>
+<p>这一切是否预示着我们每个人之间的关系都是从路人成为朋友，然而最终将深埋通讯录底不见天日，直到天人永隔。</p>
+<p>谁都只能陪谁走一段路，但这条路毕竟是要靠自己走完。</p>
+<p>行色秋将晚，交情老更亲。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -209,7 +407,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        1
+                        4
                     </p>
                 </div>
             </div>
@@ -219,7 +417,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        0
+                        2
                     </p>
                 </div>
             </div>
@@ -309,7 +507,23 @@
                 分类
             </h3>
             <ul class="menu-list">
-            
+            <li>
+        <a class="level is-marginless" href="/blog/categories/web/">
+            <span class="level-start">
+                <span class="level-item">web</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/blog/categories/想法/">
+            <span class="level-start">
+                <span class="level-item">想法</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li>
             </ul>
         </div>
     </div>
@@ -326,6 +540,63 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/blog/2019/12/29/类型定义即是量纲/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/fundamental-unit-1.jpg" alt="类型定义即是量纲">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-29T14:12:13.000Z">2019-12-29</time></div>
+                    <a href="/blog/2019/12/29/类型定义即是量纲/" class="has-link-black-ter is-size-6">类型定义即是量纲</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2019/12/03/前端文件打包优化/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/js-bundle-4.png" alt="前端文件打包优化">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T13:10:40.000Z">2019-12-03</time></div>
+                    <a href="/blog/2019/12/03/前端文件打包优化/" class="has-link-black-ter is-size-6">前端文件打包优化</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2019/03/19/排序/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/sort.gif" alt="排序">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-19T14:36:50.000Z">2019-03-19</time></div>
+                    <a href="/blog/2019/03/19/排序/" class="has-link-black-ter is-size-6">排序</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -359,12 +630,23 @@
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/blog/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/blog/archives/2019/03/">
                 <span class="level-start">
                     <span class="level-item">三月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -407,6 +689,63 @@
         
         <article class="media">
             
+            <a href="/blog/2019/12/29/类型定义即是量纲/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/fundamental-unit-1.jpg" alt="类型定义即是量纲">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-29T14:12:13.000Z">2019-12-29</time></div>
+                    <a href="/blog/2019/12/29/类型定义即是量纲/" class="has-link-black-ter is-size-6">类型定义即是量纲</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2019/12/03/前端文件打包优化/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/js-bundle-4.png" alt="前端文件打包优化">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T13:10:40.000Z">2019-12-03</time></div>
+                    <a href="/blog/2019/12/03/前端文件打包优化/" class="has-link-black-ter is-size-6">前端文件打包优化</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2019/03/19/排序/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/sort.gif" alt="排序">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-19T14:36:50.000Z">2019-03-19</time></div>
+                    <a href="/blog/2019/03/19/排序/" class="has-link-black-ter is-size-6">排序</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/blog/2019/03/09/媒介即是信息/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/blog/images/thumbnail.svg" alt="媒介即是信息">
@@ -437,12 +776,23 @@
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/blog/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/blog/archives/2019/03/">
                 <span class="level-start">
                     <span class="level-item">三月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>

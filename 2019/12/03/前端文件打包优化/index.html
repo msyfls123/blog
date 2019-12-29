@@ -2,24 +2,37 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-<title>about - 马猴烧酒</title>
+<title>前端文件打包优化 - 马猴烧酒</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="前端工程师，现就职于豆瓣阅读。 无锡人，喜甜食，不拒酸苦辣。 好读金庸武侠、郑渊洁童话，一个坚定的共产主义群众。 技术栈 TypeScript, Python, HTML5 GraphQL, RxJS, React, Webpack, CycleJS 了解 Rust, 对 Android, QT 等有粗浅认识  社区 JSConf China 2019 Speaker: 响应式编程使你看得更远 I">
-<meta property="og:type" content="website">
-<meta property="og:title" content="about">
-<meta property="og:url" content="https://msyfls123.github.io/blog/about/index.html">
+    <meta name="description" content="前端开发除了 HTML 模板外最重要的就是 JS/CSS 文件了，现今开发者都是本地书写 ES6/Stylus/Sass 然后经打包发布至 CDN 等环境，于此带来的问题是一些不需要的代码被打包了进来，甚至更严重的是一份代码被打包几遍。当然，Webpack 这样的工具出现就是为了解决这些问题，不过考虑到打包过程是一次性的编译，运行时代码的区别仍然需要开发者手动对待。 JavaScript1. 重复">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端文件打包优化">
+<meta property="og:url" content="https://msyfls123.github.io/blog/2019/12/03/前端文件打包优化/index.html">
 <meta property="og:site_name" content="马猴烧酒">
-<meta property="og:description" content="前端工程师，现就职于豆瓣阅读。 无锡人，喜甜食，不拒酸苦辣。 好读金庸武侠、郑渊洁童话，一个坚定的共产主义群众。 技术栈 TypeScript, Python, HTML5 GraphQL, RxJS, React, Webpack, CycleJS 了解 Rust, 对 Android, QT 等有粗浅认识  社区 JSConf China 2019 Speaker: 响应式编程使你看得更远 I">
+<meta property="og:description" content="前端开发除了 HTML 模板外最重要的就是 JS/CSS 文件了，现今开发者都是本地书写 ES6/Stylus/Sass 然后经打包发布至 CDN 等环境，于此带来的问题是一些不需要的代码被打包了进来，甚至更严重的是一份代码被打包几遍。当然，Webpack 这样的工具出现就是为了解决这些问题，不过考虑到打包过程是一次性的编译，运行时代码的区别仍然需要开发者手动对待。 JavaScript1. 重复">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://msyfls123.github.io/blog/images/asfaloth.jpeg">
-<meta property="og:updated_time" content="2019-12-29T13:50:30.376Z">
+<meta property="og:image" content="https://msyfls123.github.io/blog/images/js-bundle-1.png">
+<meta property="og:image" content="https://msyfls123.github.io/blog/images/js-bundle-2.png">
+<meta property="og:image" content="https://msyfls123.github.io/blog/images/js-bundle-3.png">
+<meta property="og:image" content="https://msyfls123.github.io/blog/images/js-bundle-4.png">
+<meta property="og:image" content="https://msyfls123.github.io/blog/images/js-bundle-5.png">
+<meta property="og:image" content="https://msyfls123.github.io/blog/images/js-bundle-7.png">
+<meta property="og:image" content="https://msyfls123.github.io/blog/images/js-bundle-6.png">
+<meta property="og:image" content="https://msyfls123.github.io/blog/images/js-bundle-8.png">
+<meta property="og:image" content="https://msyfls123.github.io/blog/images/js-bundle-11.png">
+<meta property="og:image" content="https://msyfls123.github.io/blog/images/js-bundle-10.png">
+<meta property="og:image" content="https://msyfls123.github.io/blog/images/js-bundle-9.png">
+<meta property="og:image" content="https://msyfls123.github.io/blog/images/css-bundle-1.png">
+<meta property="og:image" content="https://msyfls123.github.io/blog/images/css-bundle-3.png">
+<meta property="og:image" content="https://msyfls123.github.io/blog/images/css-bundle-2.png">
+<meta property="og:updated_time" content="2019-12-29T13:50:30.375Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="about">
-<meta name="twitter:description" content="前端工程师，现就职于豆瓣阅读。 无锡人，喜甜食，不拒酸苦辣。 好读金庸武侠、郑渊洁童话，一个坚定的共产主义群众。 技术栈 TypeScript, Python, HTML5 GraphQL, RxJS, React, Webpack, CycleJS 了解 Rust, 对 Android, QT 等有粗浅认识  社区 JSConf China 2019 Speaker: 响应式编程使你看得更远 I">
-<meta name="twitter:image" content="https://msyfls123.github.io/blog/images/asfaloth.jpeg">
+<meta name="twitter:title" content="前端文件打包优化">
+<meta name="twitter:description" content="前端开发除了 HTML 模板外最重要的就是 JS/CSS 文件了，现今开发者都是本地书写 ES6/Stylus/Sass 然后经打包发布至 CDN 等环境，于此带来的问题是一些不需要的代码被打包了进来，甚至更严重的是一份代码被打包几遍。当然，Webpack 这样的工具出现就是为了解决这些问题，不过考虑到打包过程是一次性的编译，运行时代码的区别仍然需要开发者手动对待。 JavaScript1. 重复">
+<meta name="twitter:image" content="https://msyfls123.github.io/blog/images/js-bundle-1.png">
 
 
 
@@ -91,7 +104,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/blog/">
             
-                <img src="/blog/images/logo.jpg" alt="about" height="28">
+                <img src="/blog/images/logo.jpg" alt="前端文件打包优化" height="28">
             
             </a>
         </div>
@@ -107,7 +120,7 @@
                 
                 <a class="navbar-item" href="/blog/tags">Tags</a>
                 
-                <a class="navbar-item is-active" href="/blog/about">About</a>
+                <a class="navbar-item" href="/blog/about">About</a>
                 
             </div>
             
@@ -129,44 +142,69 @@
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
     
+    <div class="card-image">
+        <span class="image is-7by1">
+            <img class="thumbnail" src="/blog/images/js-bundle-4.png" alt="前端文件打包优化">
+        </span>
+    </div>
+    
     <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-12-03T13:10:40.000Z">2019-12-03</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    7 分钟 读完 (大约 1100 个字)
+                </span>
+                
+                
+            </div>
+        </div>
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                about
+                前端文件打包优化
             
         </h1>
         <div class="content">
-            <p>前端工程师，现就职于豆瓣阅读。</p>
-<p>无锡人，喜甜食，不拒酸苦辣。</p>
-<p>好读金庸武侠、郑渊洁童话，一个坚定的共产主义群众。</p>
-<h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><ul>
-<li>TypeScript, Python, HTML5</li>
-<li>GraphQL, RxJS, React, Webpack, CycleJS</li>
-<li>了解 Rust, 对 Android, QT 等有粗浅认识</li>
+            <p>前端开发除了 HTML 模板外最重要的就是 JS/CSS 文件了，现今开发者都是本地书写 ES6/Stylus/Sass 然后经打包发布至 CDN 等环境，于此带来的问题是一些不需要的代码被打包了进来，甚至更严重的是一份代码被打包几遍。当然，Webpack 这样的工具出现就是为了解决这些问题，不过考虑到打包过程是一次性的编译，运行时代码的区别仍然需要开发者手动对待。</p>
+<h2 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h2><h3 id="1-重复打包了类库文件"><a href="#1-重复打包了类库文件" class="headerlink" title="1. 重复打包了类库文件"></a>1. 重复打包了类库文件</h3><p><img src="/blog/images/js-bundle-1.png" alt="backbone、underscore 被同时打包进了 vendor 和 setup 入口文件"></p>
+<p>上图中可以看到 vendor 和 setup 里都有 backbone、underscore 和 zepto 等库文件，这是为什么呢？</p>
+<p>原因是当我们引入 <code>splitChunksPlugin</code> 时仅将 <code>/node_modules/</code> 下的文件纳入 vendor 范围，但在 entry 处又定义了包含通过 bower 安装的 backbone、underscore 等类库的 vendor，见下面两图。 </p>
+<p><img src="/blog/images/js-bundle-2.png" alt="mobile config 中定义了 vendor"></p>
+<p><img src="/blog/images/js-bundle-3.png" alt="base config 中定义了 cacheGroup.vendor.test 为 /node_modules/"></p>
+<p>如图所示将 <code>/public/js/lib</code> 写入 <code>optimization.splitChunks.cacheGroups.vendor.test</code> 就可以了，结果如下图。</p>
+<p><img src="/blog/images/js-bundle-4.png" alt="backbone、underscore 等库乖乖地呆在了 vendor 里面"></p>
+<h3 id="2-类库文件无法自动剔除无用代码"><a href="#2-类库文件无法自动剔除无用代码" class="headerlink" title="2. 类库文件无法自动剔除无用代码"></a>2. 类库文件无法自动剔除无用代码</h3><p>像 <code>date-fns</code> 和 <code>RxJS</code> 这样 battle tested 的库，从早期原型链（prototype）实现到现在拥抱函数式的历史进程中无可避免地引入了很多历史负担，比如下图中 <code>date-fns/esm</code> 就非常巨大，里面很多都是我们暂时不需要的功能。</p>
+<p><img src="/blog/images/js-bundle-5.png" alt="date-fns/esm"></p>
+<p>好在它们文档都比较全：</p>
+<ul>
+<li>RxJS <a href="https://github.com/ReactiveX/rxjs/blob/865b7d36c1fc59d065072e7026e959c3a0e01ce7/doc/pipeable-operators.md#build-and-treeshaking" target="_blank" rel="noopener">Pipeable Operators</a></li>
+<li>date-fns <a href="https://date-fns.org/v2.0.0-alpha.7/docs/ECMAScript-Modules" target="_blank" rel="noopener">ECMAScript-Modules</a></li>
 </ul>
-<h2 id="社区"><a href="#社区" class="headerlink" title="社区"></a>社区</h2><ul>
-<li><a href="https://2019.jsconfchina.com/" target="_blank" rel="noopener">JSConf China 2019</a> Speaker: 响应式编程使你看得更远</li>
-<li><a href="https://www.infoq.cn/article/kzyb9IEj6iyHegBNrLgd" target="_blank" rel="noopener">InfoQ 采访</a>：掌控前端数据流，响应式编程让你看得更远</li>
-</ul>
-<h2 id="经历"><a href="#经历" class="headerlink" title="经历"></a>经历</h2><ul>
-<li>2016.10 – 至今 豆瓣阅读前端工程师 <a href="https://read.douban.com" target="_blank" rel="noopener">See</a><ul>
-<li>在团队内推动了 GraphQL 的使用，初步引入 RxJS 处理并发异步操作</li>
-<li>小程序开发，实现微信内图文混排阅读 <img src="/blog/images/asfaloth.jpeg" width="200"></li>
-<li>日常功能的开发与维护，逐步将 web 书店和管理系统从后端模板迁移至 tsx</li>
-</ul>
-</li>
-<li>2016.3 - 2016.7 蜗牛数字前端开发实习 <a href="https://msyfls123.github.io/myWiki/index.html?name=woniu">See</a><ul>
-<li>VR、直播聚合 web 站点的研发</li>
-<li>官网页面维护与活动 H5 页面的开发</li>
-</ul>
-</li>
-</ul>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
-<li>设计 <a href="https://www.douban.com/photos/album/155070126/" target="_blank" rel="noopener">See</a></li>
-<li>交互 <a href="http://msyfls123.github.io/test/midea/">See</a></li>
-<li>Django 建站一例 <a href="https://derui-tech.com/" target="_blank" rel="noopener">See</a></li>
-</ul>
+<p>如下图一顿修改。<br><img src="/blog/images/js-bundle-7.png" alt="import function from &#39;date-fns/function&#39; directly"></p>
+<p>见证奇迹的时刻！<br><img src="/blog/images/js-bundle-6.png" alt="date-fns/esm mini"></p>
+<h3 id="3-运行时才能确认使用的重依赖模块"><a href="#3-运行时才能确认使用的重依赖模块" class="headerlink" title="3. 运行时才能确认使用的重依赖模块"></a>3. 运行时才能确认使用的重依赖模块</h3><p><img src="/blog/images/js-bundle-8.png" alt="membership app 内出现了 jQuery 等依赖"></p>
+<p>一个 React App 内竟然出现了 jQuery 依赖 …… 一定是哪里出了问题，经过不懈的努力，终于找到了是在 web 和 mobile 公用的组件里用了微信支付的 module，而这个 module 开头就直接引入了 backbone/underscore/zepto 三大金刚 ……</p>
+<p><img src="/blog/images/js-bundle-11.png" alt="weixin_wap_payment 依赖了 backbone 等库"></p>
+<p>Webpack 编译时并不能知道运行时究竟在不在手机环境，怎么办呢？我们可以通过 webpack <a href="https://webpack.js.org/api/module-methods/#require-amd-version" target="_blank" rel="noopener">require AMD 模式</a> 来拆分代码。</p>
+<p><img src="/blog/images/js-bundle-10.png" alt="AMD require weixin_wap_payment"></p>
+<p>其实这个打出来的 34 号包永远也不会被 import ……<br><img src="/blog/images/js-bundle-9.png" alt="jQuery/backbone/underscore 等都被打包出去了"></p>
+<h2 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h2><h3 id="1-重复-CSS-Variables-定义"><a href="#1-重复-CSS-Variables-定义" class="headerlink" title="1. 重复 CSS Variables 定义"></a>1. 重复 CSS Variables 定义</h3><p>开发小王接到了一个任务，改进项目 css 代码以支持当下新出的黑夜模式（Dare Mode），小王犯了愁，一个个颜色变量替换也太苦逼了，小王挠挠头想出了一个在 source 文件定义 CSS Variables 的方法。</p>
+<p><img src="/blog/images/css-bundle-1.png" alt="duplicate CSS Variables"></p>
+<p>看起来非常完美，但不足之处是这堆 CSS Variables 每次 import 都会被定义一遍，结果就是有多少 stylus 文件就被重复定义了多少遍 …… 不要问我为什么要用 import 而不是 require ……</p>
+<p>我们知道 <code>Stylus</code> 是一种 css 的预编译器，它的变量和 CSS Variables 是不一样的，CSS Variables 是会编译到生成的 CSS 文件里，而 Stylus 变量则会在编译中承担一次桥梁的作用之后悄悄消失。可以通过比对 Stylus 变量是否已经赋值 <code>var(--css-variable)</code> 来判断是否需要定义 CSS Variables。</p>
+<p><img src="/blog/images/css-bundle-3.png" alt="is css variables defined?"></p>
+<p>成果就是从有多少 stylus 文件就有多少次 CSS Variables 定义缩减到入口文件那么多个数的定义，足足降低了一个数量级，打开 <code>Chrome DevTools &gt; Elements &gt; Styles</code> 终于不卡了！</p>
+<p><img src="/blog/images/css-bundle-2.png" alt="注意观察右侧滚动条的宽度！"></p>
 
         </div>
         
@@ -208,6 +246,27 @@
 
 
 
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/blog/2019/12/29/类型定义即是量纲/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">类型定义即是量纲</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/blog/2019/03/19/排序/">
+                <span class="level-item">排序</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
 
 
 <div class="card">
@@ -216,8 +275,8 @@
         
 <script>
     var disqus_config = function () {
-        this.page.url = 'https://msyfls123.github.io/blog/about/index.html';
-        this.page.identifier = 'about/index.html';
+        this.page.url = 'https://msyfls123.github.io/blog/2019/12/03/前端文件打包优化/';
+        this.page.identifier = 'web-bundle';
     };
     (function() {
         var d = document, s = d.createElement('script');  
@@ -696,7 +755,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/blog/">
                 
-                    <img src="/blog/images/logo.jpg" alt="about" height="28">
+                    <img src="/blog/images/logo.jpg" alt="前端文件打包优化" height="28">
                 
                 </a>
                 <p class="is-size-7">
