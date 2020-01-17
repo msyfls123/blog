@@ -2,7 +2,7 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-<title>马猴烧酒</title>
+<title>归档: 2020 - 马猴烧酒</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
@@ -10,7 +10,7 @@
     <meta name="description" content="姓马属猴爱烧饭喝酒">
 <meta property="og:type" content="website">
 <meta property="og:title" content="马猴烧酒">
-<meta property="og:url" content="https://msyfls123.github.io/blog/index.html">
+<meta property="og:url" content="https://msyfls123.github.io/blog/archives/2020/index.html">
 <meta property="og:site_name" content="马猴烧酒">
 <meta property="og:description" content="姓马属猴爱烧饭喝酒">
 <meta property="og:locale" content="zh-CN">
@@ -96,7 +96,7 @@
             
             <div class="navbar-start">
                 
-                <a class="navbar-item is-active" href="/blog/">Home</a>
+                <a class="navbar-item" href="/blog/">Home</a>
                 
                 <a class="navbar-item" href="/blog/archives">Archives</a>
                 
@@ -125,308 +125,42 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
-    <div class="card">
-    
-    <div class="card-image">
-        <a href="/blog/2020/01/17/再谈业务逻辑/" class="image is-7by1">
-            <img class="thumbnail" src="/blog/images/business-logic-1.png" alt="再谈业务逻辑">
-        </a>
-    </div>
-    
-    <div class="card-content article ">
+
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="tag is-link">
+        2020
+        </h3>
+        <div class="timeline">
         
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-01-17T03:28:25.000Z">2020-01-17</time>
+            <article class="media">
                 
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
+                <a href="/blog/2020/01/17/再谈业务逻辑/" class="media-left">
+                    <p class="image is-64x64">
+                        <img class="thumbnail" src="/blog/images/business-logic-1.png" alt="再谈业务逻辑">
+                    </p>
+                </a>
+                
+                <div class="media-content">
+                    <div class="content">
+                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2020-01-17T03:28:25.000Z">2020-01-17</time>
+                        <a href="/blog/2020/01/17/再谈业务逻辑/" class="has-link-black-ter is-size-6">再谈业务逻辑</a>
+                        <div class="level article-meta is-mobile">
+                            <div class="level-left">
+                                
+                                <div class="level-item is-size-7 is-uppercase">
+                                <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    9 分钟 读完 (大约 1392 个字)
-                </span>
-                
-                
-            </div>
+            </article>
+        
         </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/blog/2020/01/17/再谈业务逻辑/">再谈业务逻辑</a>
-            
-        </h1>
-        <div class="content">
-            <p>我面试过一些岗位，也面试过很多人，基础的岗位问的最多的大概就是对框架的理解，对语言基础的掌握等等，但如果是高级岗位往往问到对市场大环境的感悟和对业务逻辑的理解，体现了工具的应用必然是为完成目的服务的标准。</p>
-<p>实际开发中，由于前后端现在工种的分离，业务逻辑的归属是很大的问题。</p>
-<p>后端面向数据库和第三方服务集成，数据库总是以最小业务模型为基准，考虑扩展性进行建模，而第三方服务与领域模型融合则需要对业务逻辑进行抽象化，比如支付接口需要考虑本身提供的商品种类和第三方支付的种类进行分别编码并抽取公共逻辑，常见的形式有 <code>Adapter（适配器模式）</code>等。</p>
-<p>前端当下也很复杂，虽然有了一些基础组件，但随着业务的深入，组件上难免多出很多随着各种特殊使用场景分别配置的参数，甚至一个组件接受几十个参数来配置，可能也有同学一看这不行啊，感觉封装了几个配置好的组件供业务使用，但上面的过程多了以后，组件变得又深又长，深体现在封装层级上，长体现在单个组件的长度上，比如封装一个电子书的展示列表。</p>
-<p><code>图片</code> -&gt; <code>封面</code> -&gt; <code>带标签的封面</code> -&gt; <code>电子书</code> -&gt; <code>书籍列表</code> -&gt; <code>可无限加载的书籍列表</code></p>
-<p>这时如果要把「图片的尺寸」或者「可点击与否」传递给最内部的组件，就需要一层层从上面传下来，React 有 context 方法来在组件间传递参数，但这毕竟是不可见的，需要自己去 <code>useContext</code> 来得到。ES6 中提供了 <code>Reflect</code> 对象，比如 <code>Reflect.getMetadata(&#39;design:paramtypes&#39;, target)</code> 可以得到在参数里定义的参数类型，Angular 的控制反转和依赖注入就是依靠<a href="https://jkchao.github.io/typescript-book-chinese/tips/metadata.html#%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC%E5%92%8C%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5" target="_blank" rel="noopener">这</a>实现的。这为我们提供了一些可以想象的思路，当然本质上它只能解决编码上的便利性，组件的层级和复杂度并没有因此降下来。</p>
-<p>当前前后端通讯主要靠两种方式</p>
-<ol>
-<li>首屏页面内 script 注入初始数据</li>
-<li>AJAX 接口</li>
-</ol>
-<p>阅读站新的接口优先考虑 <code>GraphQL</code>，<code>GraphQL</code> 是一种面向领域模型的非常好的查询语言，我们不再需要多次往返前后端通讯获得更多数据，或者是重复定义各种 <code>build_xxx_entity</code>，只需要一次定义，任何用到单个字段的地方都只用写字段名就可以使用，可以说极大地降低了边际成本，而且越用收益越高。当然有同学会问那如果大批量查询的问题呢？Facebook 给出了 DataLoader 的方案，但我们的 <code>peewee</code> 版本以及早期的 hack 写法限制了我们真正将 <code>ORM &lt;==&gt; GraphQL</code> 的过程，现在其实是手动 <code>ORM &lt;==&gt; 字段，带缓存的字段 &lt;==&gt; GraphQL</code>。</p>
-<p>当后端和接口都做到了尽量少耦合业务逻辑时，业务逻辑就大量堆积在表单 POST 接口和前端展示逻辑上，又因为表单校验因 js 和 python 没法互通，需要前后端分别实现，而展示逻辑则是大多硬编码在组件内。这点其实很吓人。表单方面有 JSON Schema 的方案，但因为 Python 这种胶水语言快读开发的节奏每每难以落地，只是可惜展示上没法脱离业务组件进行编码，之前有过在 App 上设计根据 type 来组合 widget 的展示形式，但一旦需求变动代码就变得非常臃肿。</p>
-<p>一种现有的整理业务逻辑的形式是把 <code>Business Logic</code> 存到数据库中 …… 简单来说，如果数据库可以方便地表达因果关系，或许这是一种可行的方案。还有就是很通用的配置文件方式，也是我们搭建开发环境的方式，通过脚本配置在环境初始化时载入一系列的变量最终构建出符合业务需要的开发环境。</p>
-<p>理想的情形可能是，前端只提供组件库和组件间的组合逻辑，后端只提供数据的存储和加工工具，业务逻辑由第三方提供配置，设置极限值和用户可选值，用户可以在享有最多自主权的情形下使用 web 产品，当然这也只是一种美好的愿望……毕竟当下都是想把产品做到尽善尽美，只给用户一种最好的选择，可这是不是用户想要的呢？做得越多也许越错呢？没有人真的会去想，大家都是假装想想罢了。</p>
-
-        </div>
-        
-        
-        
     </div>
 </div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-image">
-        <a href="/blog/2019/12/29/类型定义即是量纲/" class="image is-7by1">
-            <img class="thumbnail" src="/blog/images/fundamental-unit-1.jpg" alt="类型定义即是量纲">
-        </a>
-    </div>
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-12-29T14:12:13.000Z">2019-12-29</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    5 分钟 读完 (大约 762 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/blog/2019/12/29/类型定义即是量纲/">类型定义即是量纲</a>
-            
-        </h1>
-        <div class="content">
-            <p>2019 年阅读的前端项目终于吃上了 TypeScript，群众纷纷反映真香！</p>
-<p>我在思考，类型定义对于程序语言来说究竟算是什么呢？我们大家都知道编译型语言类型检查不通过是会编译失败的，返回一个错误信息，那么我们为什么要保证变量类型呢？<br>我不想先谈那些内存结构啊，指针之类的，我想说的是类型定义就好比物理学里的“量纲”。</p>
-<p>我们会说 1 立方米的木头，1 吨的木头，都是可以的。但我们不会说 1 安培的木头，或者 1 摄氏度的木头。因为这些量纲没法衡量木头的多少，或者说即使确实有 1 安培电流通过的木头，表面温度为 1 摄氏度的木头，我们也没法了解它到底意味着什么（能换多少钱，需要多少辆车才能拉动？）。</p>
-<p>计算机程序是简单的，每个变量，每个函数，他们都只会做两件事，那就是被写入内存和从内存读取，量纲是他们在内存里分配的形式，<code>u32</code> 和 <code>i64</code> 就是不同的变量，长得不一样，功能也不一样。</p>
-<p>JavaScript 是弱类型的语言，它容忍隐式类型转换。但 TypeScript 不允许这样做。我们不能把 <code>string</code> 类型的变量传给一个接受 <code>number</code> 类型参数的函数，就好像我们没法把木头接到灯泡上指望它发光一样（好吧，如果这是一段带点的木头就当我在放屁），尤其是你接到的还是一段看起来很像电池的木头，比如名为 <code>battery</code>，但类型是 <code>wood</code>。</p>
-<p>另外，保证量纲被定义的好处是我们拥有了更好的接口提示，即使之前就有 document comment，但我们依然只能通过 description 来辨识变量类型和猜测该用的参数，有 TypeScript 以后 ……</p>
-<p><img src="/blog/images/fundamental-unit-3.gif" alt="https://juejin.im/post/5d8efeace51d45782b0c1bd6"></p>
-<p>最后，我想说的是，即使 TypeScript 给开发过程带来了巨大的便利，但我们仍应该清楚地认识到它只是一门 JavaScript 的预处理语言，运行时仍是那个不带类型检查的玩具语言（？），当 API 接口返回的数据不同于类型定义的 Interface 怎么办？</p>
-<h2 id="Runtime-Type-Check"><a href="#Runtime-Type-Check" class="headerlink" title="Runtime Type Check"></a>Runtime Type Check</h2><p>一种方案是 WebAssembly，在 Rust 代码里用 Serde 之类的序列化工具来整理 JSON 数据，如果遇到不存在的属性会直接报错</p>
-<p><img src="/blog/images/fundamental-unit-2.png" alt></p>
-<p>另一种就是 JS 方式：<a href="https://github.com/zertosh/invariant" target="_blank" rel="noopener">invariant</a></p>
-<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> invariant = <span class="hljs-built_in">require</span>(<span class="hljs-string">'invariant'</span>);</span><br><span class="line"></span><br><span class="line">invariant(someTruthyVal, <span class="hljs-string">'This will not throw'</span>);</span><br><span class="line"><span class="hljs-comment">// No errors</span></span><br><span class="line"></span><br><span class="line">invariant(someFalseyVal, <span class="hljs-string">'This will throw an error with this message'</span>);</span><br><span class="line"><span class="hljs-comment">// Error: Invariant Violation: This will throw an error with this message</span></span><br></pre></td></tr></table></figure>
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-image">
-        <a href="/blog/2019/12/03/前端文件打包优化/" class="image is-7by1">
-            <img class="thumbnail" src="/blog/images/js-bundle-4.png" alt="前端文件打包优化">
-        </a>
-    </div>
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-12-03T13:10:40.000Z">2019-12-03</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    7 分钟 读完 (大约 1100 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/blog/2019/12/03/前端文件打包优化/">前端文件打包优化</a>
-            
-        </h1>
-        <div class="content">
-            <p>前端开发除了 HTML 模板外最重要的就是 JS/CSS 文件了，现今开发者都是本地书写 ES6/Stylus/Sass 然后经打包发布至 CDN 等环境，于此带来的问题是一些不需要的代码被打包了进来，甚至更严重的是一份代码被打包几遍。当然，Webpack 这样的工具出现就是为了解决这些问题，不过考虑到打包过程是一次性的编译，运行时代码的区别仍然需要开发者手动对待。</p>
-<h2 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h2><h3 id="1-重复打包了类库文件"><a href="#1-重复打包了类库文件" class="headerlink" title="1. 重复打包了类库文件"></a>1. 重复打包了类库文件</h3><p><img src="/blog/images/js-bundle-1.png" alt="backbone、underscore 被同时打包进了 vendor 和 setup 入口文件"></p>
-<p>上图中可以看到 vendor 和 setup 里都有 backbone、underscore 和 zepto 等库文件，这是为什么呢？</p>
-<p>原因是当我们引入 <code>splitChunksPlugin</code> 时仅将 <code>/node_modules/</code> 下的文件纳入 vendor 范围，但在 entry 处又定义了包含通过 bower 安装的 backbone、underscore 等类库的 vendor，见下面两图。 </p>
-<p><img src="/blog/images/js-bundle-2.png" alt="mobile config 中定义了 vendor"></p>
-<p><img src="/blog/images/js-bundle-3.png" alt="base config 中定义了 cacheGroup.vendor.test 为 /node_modules/"></p>
-<p>如图所示将 <code>/public/js/lib</code> 写入 <code>optimization.splitChunks.cacheGroups.vendor.test</code> 就可以了，结果如下图。</p>
-<p><img src="/blog/images/js-bundle-4.png" alt="backbone、underscore 等库乖乖地呆在了 vendor 里面"></p>
-<h3 id="2-类库文件无法自动剔除无用代码"><a href="#2-类库文件无法自动剔除无用代码" class="headerlink" title="2. 类库文件无法自动剔除无用代码"></a>2. 类库文件无法自动剔除无用代码</h3><p>像 <code>date-fns</code> 和 <code>RxJS</code> 这样 battle tested 的库，从早期原型链（prototype）实现到现在拥抱函数式的历史进程中无可避免地引入了很多历史负担，比如下图中 <code>date-fns/esm</code> 就非常巨大，里面很多都是我们暂时不需要的功能。</p>
-<p><img src="/blog/images/js-bundle-5.png" alt="date-fns/esm"></p>
-<p>好在它们文档都比较全：</p>
-<ul>
-<li>RxJS <a href="https://github.com/ReactiveX/rxjs/blob/865b7d36c1fc59d065072e7026e959c3a0e01ce7/doc/pipeable-operators.md#build-and-treeshaking" target="_blank" rel="noopener">Pipeable Operators</a></li>
-<li>date-fns <a href="https://date-fns.org/v2.0.0-alpha.7/docs/ECMAScript-Modules" target="_blank" rel="noopener">ECMAScript-Modules</a></li>
-</ul>
-<p>如下图一顿修改。<br><img src="/blog/images/js-bundle-7.png" alt="import function from &#39;date-fns/function&#39; directly"></p>
-<p>见证奇迹的时刻！<br><img src="/blog/images/js-bundle-6.png" alt="date-fns/esm mini"></p>
-<h3 id="3-运行时才能确认使用的重依赖模块"><a href="#3-运行时才能确认使用的重依赖模块" class="headerlink" title="3. 运行时才能确认使用的重依赖模块"></a>3. 运行时才能确认使用的重依赖模块</h3><p><img src="/blog/images/js-bundle-8.png" alt="membership app 内出现了 jQuery 等依赖"></p>
-<p>一个 React App 内竟然出现了 jQuery 依赖 …… 一定是哪里出了问题，经过不懈的努力，终于找到了是在 web 和 mobile 公用的组件里用了微信支付的 module，而这个 module 开头就直接引入了 backbone/underscore/zepto 三大金刚 ……</p>
-<p><img src="/blog/images/js-bundle-11.png" alt="weixin_wap_payment 依赖了 backbone 等库"></p>
-<p>Webpack 编译时并不能知道运行时究竟在不在手机环境，怎么办呢？我们可以通过 webpack <a href="https://webpack.js.org/api/module-methods/#require-amd-version" target="_blank" rel="noopener">require AMD 模式</a> 来拆分代码。</p>
-<p><img src="/blog/images/js-bundle-10.png" alt="AMD require weixin_wap_payment"></p>
-<p>其实这个打出来的 34 号包永远也不会被 import ……<br><img src="/blog/images/js-bundle-9.png" alt="jQuery/backbone/underscore 等都被打包出去了"></p>
-<h2 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h2><h3 id="1-重复-CSS-Variables-定义"><a href="#1-重复-CSS-Variables-定义" class="headerlink" title="1. 重复 CSS Variables 定义"></a>1. 重复 CSS Variables 定义</h3><p>开发小王接到了一个任务，改进项目 css 代码以支持当下新出的黑夜模式（Dare Mode），小王犯了愁，一个个颜色变量替换也太苦逼了，小王挠挠头想出了一个在 source 文件定义 CSS Variables 的方法。</p>
-<p><img src="/blog/images/css-bundle-1.png" alt="duplicate CSS Variables"></p>
-<p>看起来非常完美，但不足之处是这堆 CSS Variables 每次 import 都会被定义一遍，结果就是有多少 stylus 文件就被重复定义了多少遍 …… 不要问我为什么要用 import 而不是 require ……</p>
-<p>我们知道 <code>Stylus</code> 是一种 css 的预编译器，它的变量和 CSS Variables 是不一样的，CSS Variables 是会编译到生成的 CSS 文件里，而 Stylus 变量则会在编译中承担一次桥梁的作用之后悄悄消失。可以通过比对 Stylus 变量是否已经赋值 <code>var(--css-variable)</code> 来判断是否需要定义 CSS Variables。</p>
-<p><img src="/blog/images/css-bundle-3.png" alt="is css variables defined?"></p>
-<p>成果就是从有多少 stylus 文件就有多少次 CSS Variables 定义缩减到入口文件那么多个数的定义，足足降低了一个数量级，打开 <code>Chrome DevTools &gt; Elements &gt; Styles</code> 终于不卡了！</p>
-<p><img src="/blog/images/css-bundle-2.png" alt="注意观察右侧滚动条的宽度！"></p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-image">
-        <a href="/blog/2019/03/19/排序/" class="image is-7by1">
-            <img class="thumbnail" src="/blog/images/sort.gif" alt="排序">
-        </a>
-    </div>
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-03-19T14:36:50.000Z">2019-03-19</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    2 分钟 读完 (大约 330 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/blog/2019/03/19/排序/">排序</a>
-            
-        </h1>
-        <div class="content">
-            <p>算法中的排序算是老生常谈的问题了，不过我的问题是生活中真的有那么简单只需要按照一个值从小到大排列的需求吗？</p>
-<p>如下图<br><img src="/blog/images/contacts-pc.png" alt="web"><br>在 App 端变成了这样<br><img src="/blog/images/contacts-app.jpg" alt="App"></p>
-<p>显然这些已注销用户是在不同时间关注的，web 上将他们混排了，App 上则是单列在最后，前一种强调了关注顺序，后一种强调了社交性（注销账号当然再也没有了社交价值）。并且 App 理论上不太会有用户真的去翻到最后一条，Elastic Search 默认最大条数是 10000，恐怕意义也是如此。</p>
-<p>当然排序在程序上而言也就一行代码的区别，不过在产品上区别可是很大，是在从一个笔记本在向电话簿转变。</p>
-<p>这一切是否预示着我们每个人之间的关系都是从路人成为朋友，然而最终将深埋通讯录底不见天日，直到天人永隔。</p>
-<p>谁都只能陪谁走一段路，但这条路毕竟是要靠自己走完。</p>
-<p>行色秋将晚，交情老更亲。</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-03-09T14:30:32.000Z">2019-03-09</time>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    几秒 读完 (大约 64 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/blog/2019/03/09/媒介即是信息/">媒介即是信息</a>
-            
-        </h1>
-        <div class="content">
-            <p>Twitter 决定了信息的载体只有 140 个字与 9 张图片，大部分人的思维方式也就停留在此，但抖音等短视频跳了出来，表示 15 秒钟的短视频能传递更准确的信息。</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
 
 
 </div>
