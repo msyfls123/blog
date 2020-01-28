@@ -206,6 +206,9 @@ img.thumbnail {
   font-size: 1.15rem;
   position: relative;
 }
+.article .content .gallery-item img {
+  border: 1px solid #ddd;
+}
 .rtl {
   direction: rtl;
 }
