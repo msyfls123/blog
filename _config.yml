@@ -4,9 +4,9 @@
 
 # Site
 title: 马猴烧酒
-subtitle:
-description: 姓马属猴爱烧饭喝酒
-keywords:
+subtitle: 现在站在你面前的我 并不是幻影呀
+description: 现在站在你面前的我 并不是幻影呀
+keywords: 前端 感悟 技术
 author: msyfls123
 language: zh-CN
 timezone:
@@ -50,7 +50,7 @@ highlight:
 # order_by: Posts order. (Order by date descending by default)
 index_generator:
   path: ''
-  per_page: 10
+  per_page: 3
   order_by: -date
   
 # Category & Tag
