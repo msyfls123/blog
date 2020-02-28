@@ -209,6 +209,10 @@ img.thumbnail {
 .article .content .gallery-item img {
   border: 1px solid #ddd;
 }
+.article .content table {
+  display: block;
+  overflow-x: auto;
+}
 .rtl {
   direction: rtl;
 }
