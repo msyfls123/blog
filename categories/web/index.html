@@ -140,6 +140,76 @@
     <div class="card">
     
     <div class="card-image">
+        <a href="/blog/2020/03/13/通用设计/" class="image is-7by1">
+            <img class="thumbnail" src="/blog/images/general-design-2.png" alt="通用设计">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-03-13T13:39:18.000Z">2020-03-13</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    7 分钟 读完 (大约 1033 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/blog/2020/03/13/通用设计/">通用设计</a>
+            
+        </h1>
+        <div class="content">
+            <p>我们知道页面是 web 设计中单次呈现给用户的一个功能整体，但功能的粒度随着 <code>AJAX</code> 的出现不仅仅限于表单即 <code>form</code> 与服务器的单次交互，变成了 <code>XMLHTTPRequest</code> 或 <code>fetch</code> 甚至 <code>WebSocket</code> 的多次往返，这样而言单一页面也可以承载更多的用户交互行为。与之同时带来的问题是如何有效划分功能区域以便实现最大程度的组件化，增强复用性和可维护性？</p>
+<h3 id="签约与填写身份信息分离"><a href="#签约与填写身份信息分离" class="headerlink" title="签约与填写身份信息分离"></a>签约与填写身份信息分离</h3><p>以某次产品设计为例，产品需要将 <code>签署合同</code> 和 <code>填写身份信息</code> 作为一个步骤页面放到拉力赛作品的创建流程里，原先的页面长成下图这样。</p>
+<p><img src="/blog/images/general-design-3.png" alt="原签署合同页面"></p>
+<p>产品的想法是直接复用这个页面，作为前端当即表达了反对：这个页面包含了签协议和填信息两种操作，但却共用一个接口，不利于今后业务逻辑更为复杂时拆分（当下就已经属于过度耦合了），建议将 <code>填写身份信息</code> 放到单独的页面去。但产品随即表达了反对，认为用户的操作流程不应该多一个页面跳转。这怎么办呢？</p>
+<p><strong>用弹窗啊！</strong></p>
+<p>弹窗作为一种全局模态框可以在不修改整体页面流式布局的基础上让用户看到额外信息，甚至进行交互操作。弹窗内的组件可以被复用，因为是动态挂载到页面上的，一般对页面已有数据的依赖较小。</p>
+<p><img src="/blog/images/general-design-1.png" alt="现签署合同页面"><br><img src="/blog/images/general-design-2.png" alt="在身份信息不全情形下会弹出弹窗以供填写"></p>
+<p>在实际代码构建时为了便于使用，将整个弹窗加上作者身份数据的获取、存储与更新逻辑整体封装到了一个 <code>hook</code> 中：<br><figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> &#123; agentInfo, loaded, showAgentInfoFormDialog &#125; = useAgentInfo(agentId)</span><br></pre></td></tr></table></figure></p>
+<p>这样将数据和方法返回给调用方，将代码的侵入性做到最低。如果以后有只需要身份信息而不需要修改弹窗的使用情形，也可以尽情复用。</p>
+<h3 id="更通用的标签筛选"><a href="#更通用的标签筛选" class="headerlink" title="更通用的标签筛选"></a>更通用的标签筛选</h3><p>一日接到了一个增加筛选器筛选条件的需求（筛选器是一个巨大的，有着上百个 CheckBox，相比各种电商筛选条件毫不逊色的怪物👹）。</p>
+<p><img src="/blog/images/general-design-6.png" alt="需求"></p>
+<p>作为一个凡是遇到需求不杠一杠就不开心的开发，我理直气壮地提出了自己的看法：这种一次性使用的需求，会在文件里留下谜一样的代码，而且根本不可能实现复用，如果要重构或者迁移都会是巨大的沉没成本。</p>
+<p>随后根据下图的需求来源项</p>
+<p><img src="/blog/images/general-design-4.png" alt="征文大赛筛选项，五个硬编码的分类条件，实则为普通分类"></p>
+<p>提取出了可以重复利用的「标签输入框」</p>
+<p><img src="/blog/images/general-design-5.png" alt="标签输入框"></p>
+<p>有人会问，这样经常需要输入特定标签会不会不方便呢？早就想过啦，可以使用「加入书签」功能</p>
+<p><img src="/blog/images/general-design-7.png" alt="加入书签"></p>
+<p>会映射成形如 <code>/admin/editorial_service?tags=亲密关系+轻装上场</code> 的 url 存储在 localStorage 中，方便下次使用。大功告成！</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通用设计可以提供组件的复用能力，尽可能做到少暴露接口给外界，毕竟多一行代码就多一分风险和维护的成本，同时通用性足够好的情形下也能促进产品往更高效的方向发展，而不是拘泥于小而美的自我天地。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-image">
         <a href="/blog/2020/02/28/混合开发最小接口/" class="image is-7by1">
             <img class="thumbnail" src="/blog/images/hybrid-development-minimum-interface-1.png" alt="混合开发最小接口">
         </a>
@@ -655,7 +725,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        7
+                        8
                     </p>
                 </div>
             </div>
@@ -761,7 +831,7 @@
                 <span class="level-item">web</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">3</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/blog/categories/想法/">
@@ -788,6 +858,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/blog/2020/03/13/通用设计/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/general-design-2.png" alt="通用设计">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-13T13:39:18.000Z">2020-03-13</time></div>
+                    <a href="/blog/2020/03/13/通用设计/" class="has-link-black-ter is-size-6">通用设计</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -865,25 +954,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/blog/2019/12/03/前端文件打包优化/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/js-bundle-4.png" alt="前端文件打包优化">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T13:10:40.000Z">2019-12-03</time></div>
-                    <a href="/blog/2019/12/03/前端文件打包优化/" class="has-link-black-ter is-size-6">前端文件打包优化</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -895,6 +965,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/blog/archives/2020/02/">
@@ -978,6 +1059,25 @@
         
         <article class="media">
             
+            <a href="/blog/2020/03/13/通用设计/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/general-design-2.png" alt="通用设计">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-13T13:39:18.000Z">2020-03-13</time></div>
+                    <a href="/blog/2020/03/13/通用设计/" class="has-link-black-ter is-size-6">通用设计</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/blog/2020/02/28/混合开发最小接口/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/blog/images/hybrid-development-minimum-interface-1.png" alt="混合开发最小接口">
@@ -1052,25 +1152,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/blog/2019/12/03/前端文件打包优化/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/js-bundle-4.png" alt="前端文件打包优化">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-03T13:10:40.000Z">2019-12-03</time></div>
-                    <a href="/blog/2019/12/03/前端文件打包优化/" class="has-link-black-ter is-size-6">前端文件打包优化</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1082,6 +1163,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/blog/archives/2020/02/">
