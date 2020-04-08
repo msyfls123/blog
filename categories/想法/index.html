@@ -140,6 +140,75 @@
     <div class="card">
     
     <div class="card-image">
+        <a href="/blog/2020/04/08/过度包装/" class="image is-7by1">
+            <img class="thumbnail" src="/blog/images/over-packaging-1.jpg" alt="过度包装">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-04-08T14:16:59.000Z">2020-04-08</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    7 分钟 读完 (大约 1053 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/blog/2020/04/08/过度包装/">过度包装</a>
+            
+        </h1>
+        <div class="content">
+            <p>疫情期间每天都是自己做饭吃，隔两三天就要买一次菜，每次买菜光是拆包装盒就要耗费非常多的心力，更别提清洗食材和锅碗，切菜淘米调配料，蒸炒炖炸等工序了，难怪说疫情期间分手的情侣、离婚的夫妻比比皆是，敢情大家平时都是装作很会生活的样子，一旦没了外卖快递都退回到了饮毛汝血的状态。</p>
+<p>正如做饭 1 小时，吃饭 10 分钟，洗碗半小时所说的那样，吃这样一个动作在当前都会有无穷的副作用，可以说现代都市生活真的是建立在非常完善的 O2O 服务行业之下的，要吃饭线上下个单线下送来，要保洁自如下个单线下保洁员上门，要 ml 都有 165/90 32C 的家政服务人员上门服务。人的生活变成了只需处理工作，其他时间都可以用钱买到，这样 WFH 所带来的工作时长延长对社畜的身心打击几乎到了极致。扯远了。</p>
+<p>网上买菜或者超市买菜，相比于菜市场买菜最大的区别是包装。垃圾桶里丢掉的绝大部分是塑料包装而不是切掉的边角料菜或者剩饭剩菜。就像软件开发里，动辄几十上百层的封装之下，真正工作的是那么一两行代码。</p>
+<ol>
+<li>public</li>
+<li>js</li>
+<li>submit</li>
+<li>works</li>
+<li>manage</li>
+<li>components</li>
+<li>header-actions</li>
+<li>PriceActions</li>
+<li><code>PriceActions.tsx</code> -&gt; <code>StartPromotionButton.tsx</code> -&gt; <code>StartPromotionForm.tsx</code></li>
+</ol>
+<p>一个页面上小小的组件，被封装在 9 层目录之下，同目录平级之间还有嵌套关系。当然组件化分治思想也是 React 一直火到现在的根本原因，但有时也会想想这种扁平化的目录结构是否真的合适项目的发展，或者说在业务需求猛增前提下如何科学组织目录结构以便修改维护也是门学问了，当然最好的方式是：不组织。根据实际发展来让文件自行组织，见 <a href="https://github.com/benawad/destiny" target="_blank" rel="noopener">destiny</a>。</p>
+<p>拉扯这么多包装的弊端，但包装实际上是一项很重要的工序，因为不包装带来的风险，往往是看不见的：<br>小吕去年写了个活动页的接口，因为是第一次办这种活动，小吕本着以产品需求为约束的理念写好了无届数限制的 API 接口，然后前端同学以此接口封装了一个组件给页面加了上去。转眼间一年过去了，活动办了第二届，产品要求有新功能，小吕又哼哧哼哧写了一个第二届活动的 API，但这时候出分歧了：前端觉得接口应该稳定，如果每做一届都要回溯一遍做过的接口映射，太累且容易出错；而后端觉得分离 API 有助于更清晰地业务逻辑。大家说的都没错，怎么办呢？包装一下接口吧！</p>
+<p><img src="/blog/images/over-packaging-2.jpg" alt="原俩接口实现，红线为本次修改"><br><img src="/blog/images/over-packaging-3.jpg" alt="Adapter 模式"></p>
+<p>可以看出是适当的包装有助于分清业务界限，明确各端职责是非常值得提倡的。</p>
+<p>但为什么实践中经常分不清这些呢？因为 Python 本质是一个胶水语言，更多起黏合剂作用，而 JavaScript 更想火柴棍，可以飞速搭原型，但两者都不是拥有持续集成性和可维护性的代表。个人以为类型系统以及所有权（或者说内存锁）是一个合格的工业级语言必备的，一个保障 AOT 安全，一个保障 JIT 安全，任何业务逻辑都是对这两个基本原则的封装。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-image">
         <a href="/blog/2020/01/28/时滞效应/" class="image is-7by1">
             <img class="thumbnail" src="/blog/images/delay-effect-1.png" alt="时滞效应">
         </a>
@@ -426,7 +495,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        8
+                        9
                     </p>
                 </div>
             </div>
@@ -540,7 +609,7 @@
                 <span class="level-item">想法</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">4</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li>
             </ul>
@@ -559,6 +628,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/blog/2020/04/08/过度包装/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/over-packaging-1.jpg" alt="过度包装">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-08T14:16:59.000Z">2020-04-08</time></div>
+                    <a href="/blog/2020/04/08/过度包装/" class="has-link-black-ter is-size-6">过度包装</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -636,25 +724,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/blog/2019/12/29/类型定义即是量纲/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/fundamental-unit-1.jpg" alt="类型定义即是量纲">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-29T14:12:13.000Z">2019-12-29</time></div>
-                    <a href="/blog/2019/12/29/类型定义即是量纲/" class="has-link-black-ter is-size-6">类型定义即是量纲</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -666,6 +735,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/blog/archives/2020/03/">
@@ -760,6 +840,25 @@
         
         <article class="media">
             
+            <a href="/blog/2020/04/08/过度包装/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/over-packaging-1.jpg" alt="过度包装">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-08T14:16:59.000Z">2020-04-08</time></div>
+                    <a href="/blog/2020/04/08/过度包装/" class="has-link-black-ter is-size-6">过度包装</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/blog/2020/03/13/通用设计/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/blog/images/general-design-2.png" alt="通用设计">
@@ -834,25 +933,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/blog/2019/12/29/类型定义即是量纲/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/fundamental-unit-1.jpg" alt="类型定义即是量纲">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-29T14:12:13.000Z">2019-12-29</time></div>
-                    <a href="/blog/2019/12/29/类型定义即是量纲/" class="has-link-black-ter is-size-6">类型定义即是量纲</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -864,6 +944,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/blog/archives/2020/03/">
