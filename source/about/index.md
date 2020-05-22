@@ -9,6 +9,8 @@ date: 2019-03-09 23:06:05
 
 好读金庸武侠、郑渊洁童话，一个坚定的共产主义群众。
 
+曾驯服公司于豆瓣拥有 3w 粉丝的网红猫[大蛋](https://douban.com/people/arkdome)一只。
+
 ## 技术栈
 - TypeScript, Python, HTML5
 - GraphQL, RxJS, React, Webpack, CycleJS
@@ -32,3 +34,4 @@ date: 2019-03-09 23:06:05
 - 设计 [See](https://www.douban.com/photos/album/155070126/)
 - 交互 [See](http://msyfls123.github.io/test/midea/)
 - Django 建站一例 [See](https://derui-tech.com/)
+- 烧饭 [See](https://www.douban.com/photos/album/1873642638/)
