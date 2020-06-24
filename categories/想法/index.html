@@ -140,6 +140,66 @@
     <div class="card">
     
     <div class="card-image">
+        <a href="/blog/2020/05/11/程序员应该写出怎样的代码/" class="image is-7by1">
+            <img class="thumbnail" src="/blog/images/code-favor-1.jpeg" alt="程序员应该写出怎样的代码">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-05-11T14:22:24.000Z">2020-05-11</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    7 分钟 读完 (大约 1117 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/blog/2020/05/11/程序员应该写出怎样的代码/">程序员应该写出怎样的代码</a>
+            
+        </h1>
+        <div class="content">
+            <p>虽说老板和产品经理都不会太关心代码质量，所求无非是美观可用效率高等等，但<del>作为一个略有追求的程序员</del>在严酷的需求排期和反复推翻修改的生存环境之下，面对前人挖下的坑和自己几个月前寥寥草草写出的 adhoc 代码，总会望洋兴叹一番，痛定思痛想要写出一些拯救苍生（几个月后的自己）的传世代码。</p>
+<p>然鹅面对一堆静态动态模板混杂、数个参数可变返回数据可变的异步嵌套接口加上鬼都不认识的 model/view 继承堆积起来意大利面条一般的代码，更别说还有不知哪里引用的全局样式给兴高采烈调完所有组件的你温柔一刀。怎么办？</p>
+<p>首先从简单的样式部分着手，CSS Module 或 styled component 完美解决了局部样式的问题，SSR 解决了前后端模板的一致性。这些都是社区提供的通用方案，剩下的基本就是如何组织 model 以及接口了，即前后端数据同步问题。</p>
+<p>我们知道 Python 和 JavaScript 都是动态语言，而动态语言最臭名昭著的就是“动态一时爽，重构火葬场”，基本一个数据倒上那么三四次手之后就变得亲妈不认了。类型是一定要加的，我们用 TypeScript！</p>
+<p><img src="/blog/images/fundamental-unit-3.gif" alt="https://juejin.im/post/5d8efeace51d45782b0c1bd6"></p>
+<p>具体的好处<a href="/blog/2019/12/29/类型定义即是量纲/">前面已经提到过了</a>，这里想说明的是类型定义不仅保证了代码逻辑的正确性，也给予阅读时良好的体验，有了类型以后相当一部分关于变量的说明都可以挪到 type 和 interface 上，代码更容易实现“自解释”。其实 ES Module 很大程度上已经完善了代码的引用逻辑，但相比之下类型定义具有更强的约束（字段级别）和更灵活的配置（interface 鸭子类型），所以都 0202 年了，还不上 TypeScript 真的都没法说自己是工程化的前端项目。</p>
+<p>但 TypeScript 只是解决了前端的代码一致性，JavaScript 总还是要在 web 这个容器内运行的，目前边缘计算还不够成熟，以服务器为数据源和计算存储中心的 C/S 架构仍是未来一段时间的主流，所以接口相对于前端的重要性是不言而喻的（插一句，往后想想，与设备的连接接口以后会不会成为前端的新方向呢？这就成了边缘计算）。而对于 HTTP 请求而言，RESTful 是曾经统治一时的事实标准，非常 CRUD，但也非常不灵活。</p>
+<p>我们需要的是一种组织更加灵活、分层结构、高度复用、最好实现“自文档”的接口，这就是 GraphQL。虽然它也存在嵌套查询时会拖慢数据库，参数传递不清晰等毛病，但瑕不掩瑜，它确实是目前前端对于结构化数据查询最好的方式，更为出众的是它支持自定义返回字段，不多不少刚刚好是前端想要的那些，这简直太香了。</p>
+<p><img src="/blog/images/code-favor-2.png" alt="示例查询，用户 -&gt; 作品 -&gt; 评论/收藏用户/章节列表 -&gt; 自定义格式上架时间"></p>
+<p>如果不考虑性能和异步并发，这些已经足以一个前端掌控 95% 的开发任务了，但往往那 5% 的事儿占据了 95% 的开发时间，后面会写写对于 Web Assembly 和 Reactive Programming 的理解，长远来看，当前围绕 html 进行的框架或者语言升级将告一段落，往后会转入多语言及范式涌入 web 开发领域碰撞并融合，浏览器正式成为继 iOS 和 Android 之后的第三大移动操作平台，更为可贵的是 web 的普适性使它几乎没有什么前置使用成本。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-image">
         <a href="/blog/2020/04/08/过度包装/" class="image is-7by1">
             <img class="thumbnail" src="/blog/images/over-packaging-1.jpg" alt="过度包装">
         </a>
@@ -495,7 +555,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        9
+                        13
                     </p>
                 </div>
             </div>
@@ -515,7 +575,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        0
+                        7
                     </p>
                 </div>
             </div>
@@ -601,7 +661,7 @@
                 <span class="level-item">web</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">3</span>
+                <span class="level-item tag">6</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/blog/categories/想法/">
@@ -609,7 +669,7 @@
                 <span class="level-item">想法</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">5</span>
+                <span class="level-item tag">6</span>
             </span>
         </a></li>
             </ul>
@@ -618,6 +678,15 @@
 </div>
     
         
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/blog/tags/gulp/" style="font-size: 20px;">gulp</a> <a href="/blog/tags/nodejs/" style="font-size: 20px;">nodejs</a> <a href="/blog/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/blog/tags/前端/" style="font-size: 10px;">前端</a> <a href="/blog/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/blog/tags/编程/" style="font-size: 10px;">编程</a> <a href="/blog/tags/面试/" style="font-size: 10px;">面试</a>
+    </div>
+</div>
+
     
     
         <div class="column-right-shadow is-hidden-widescreen ">
@@ -628,6 +697,82 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/blog/2020/06/24/interview-summary/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/interview-summary-1.jpg" alt="面试小结">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-24T14:41:24.000Z">2020-06-24</time></div>
+                    <a href="/blog/2020/06/24/interview-summary/" class="has-link-black-ter is-size-6">面试小结</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2020/06/05/parallel-computing-review/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/parallel-computing-review-1.png" alt="复盘一次 gulp &amp; webpack 构建优化">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-05T07:57:22.000Z">2020-06-05</time></div>
+                    <a href="/blog/2020/06/05/parallel-computing-review/" class="has-link-black-ter is-size-6">复盘一次 gulp &amp; webpack 构建优化</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2020/05/28/并行化密集型计算/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/parallel-computing-4.jpg" alt="并行化密集型计算">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-28T14:27:59.000Z">2020-05-28</time></div>
+                    <a href="/blog/2020/05/28/并行化密集型计算/" class="has-link-black-ter is-size-6">并行化密集型计算</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2020/05/11/程序员应该写出怎样的代码/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/code-favor-1.jpeg" alt="程序员应该写出怎样的代码">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-11T14:22:24.000Z">2020-05-11</time></div>
+                    <a href="/blog/2020/05/11/程序员应该写出怎样的代码/" class="has-link-black-ter is-size-6">程序员应该写出怎样的代码</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -648,82 +793,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/blog/2020/03/13/通用设计/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/general-design-2.png" alt="通用设计">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-13T13:39:18.000Z">2020-03-13</time></div>
-                    <a href="/blog/2020/03/13/通用设计/" class="has-link-black-ter is-size-6">通用设计</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/blog/2020/02/28/混合开发最小接口/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/hybrid-development-minimum-interface-1.png" alt="混合开发最小接口">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-28T13:26:06.000Z">2020-02-28</time></div>
-                    <a href="/blog/2020/02/28/混合开发最小接口/" class="has-link-black-ter is-size-6">混合开发最小接口</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/blog/2020/01/28/时滞效应/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/delay-effect-1.png" alt="时滞效应">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-28T09:30:35.000Z">2020-01-28</time></div>
-                    <a href="/blog/2020/01/28/时滞效应/" class="has-link-black-ter is-size-6">时滞效应</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/blog/2020/01/17/再谈业务逻辑/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/business-logic-1.png" alt="再谈业务逻辑">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-17T03:28:25.000Z">2020-01-17</time></div>
-                    <a href="/blog/2020/01/17/再谈业务逻辑/" class="has-link-black-ter is-size-6">再谈业务逻辑</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -735,6 +804,28 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/blog/archives/2020/04/">
@@ -814,6 +905,55 @@
                 标签
             </h3>
             <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/gulp/">
+                        <span class="tag">gulp</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/nodejs/">
+                        <span class="tag">nodejs</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/webpack/">
+                        <span class="tag">webpack</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/前端/">
+                        <span class="tag">前端</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/多线程/">
+                        <span class="tag">多线程</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/编程/">
+                        <span class="tag">编程</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/面试/">
+                        <span class="tag">面试</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
                 
             </div>
         </div>
@@ -840,6 +980,82 @@
         
         <article class="media">
             
+            <a href="/blog/2020/06/24/interview-summary/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/interview-summary-1.jpg" alt="面试小结">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-24T14:41:24.000Z">2020-06-24</time></div>
+                    <a href="/blog/2020/06/24/interview-summary/" class="has-link-black-ter is-size-6">面试小结</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2020/06/05/parallel-computing-review/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/parallel-computing-review-1.png" alt="复盘一次 gulp &amp; webpack 构建优化">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-05T07:57:22.000Z">2020-06-05</time></div>
+                    <a href="/blog/2020/06/05/parallel-computing-review/" class="has-link-black-ter is-size-6">复盘一次 gulp &amp; webpack 构建优化</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2020/05/28/并行化密集型计算/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/parallel-computing-4.jpg" alt="并行化密集型计算">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-28T14:27:59.000Z">2020-05-28</time></div>
+                    <a href="/blog/2020/05/28/并行化密集型计算/" class="has-link-black-ter is-size-6">并行化密集型计算</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2020/05/11/程序员应该写出怎样的代码/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/code-favor-1.jpeg" alt="程序员应该写出怎样的代码">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-11T14:22:24.000Z">2020-05-11</time></div>
+                    <a href="/blog/2020/05/11/程序员应该写出怎样的代码/" class="has-link-black-ter is-size-6">程序员应该写出怎样的代码</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/blog/2020/04/08/过度包装/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/blog/images/over-packaging-1.jpg" alt="过度包装">
@@ -850,82 +1066,6 @@
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-08T14:16:59.000Z">2020-04-08</time></div>
                     <a href="/blog/2020/04/08/过度包装/" class="has-link-black-ter is-size-6">过度包装</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/blog/2020/03/13/通用设计/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/general-design-2.png" alt="通用设计">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-13T13:39:18.000Z">2020-03-13</time></div>
-                    <a href="/blog/2020/03/13/通用设计/" class="has-link-black-ter is-size-6">通用设计</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/blog/2020/02/28/混合开发最小接口/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/hybrid-development-minimum-interface-1.png" alt="混合开发最小接口">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-28T13:26:06.000Z">2020-02-28</time></div>
-                    <a href="/blog/2020/02/28/混合开发最小接口/" class="has-link-black-ter is-size-6">混合开发最小接口</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/blog/2020/01/28/时滞效应/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/delay-effect-1.png" alt="时滞效应">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-28T09:30:35.000Z">2020-01-28</time></div>
-                    <a href="/blog/2020/01/28/时滞效应/" class="has-link-black-ter is-size-6">时滞效应</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/blog/2020/01/17/再谈业务逻辑/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/business-logic-1.png" alt="再谈业务逻辑">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-17T03:28:25.000Z">2020-01-17</time></div>
-                    <a href="/blog/2020/01/17/再谈业务逻辑/" class="has-link-black-ter is-size-6">再谈业务逻辑</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
                     </p>
@@ -944,6 +1084,28 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/blog/archives/2020/04/">
@@ -1023,6 +1185,55 @@
                 标签
             </h3>
             <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/gulp/">
+                        <span class="tag">gulp</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/nodejs/">
+                        <span class="tag">nodejs</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/webpack/">
+                        <span class="tag">webpack</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/前端/">
+                        <span class="tag">前端</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/多线程/">
+                        <span class="tag">多线程</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/编程/">
+                        <span class="tag">编程</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/面试/">
+                        <span class="tag">面试</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
                 
             </div>
         </div>
