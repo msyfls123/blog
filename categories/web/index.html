@@ -140,6 +140,87 @@
     <div class="card">
     
     <div class="card-image">
+        <a href="/blog/2020/06/27/format-and-validate/" class="image is-7by1">
+            <img class="thumbnail" src="/blog/images/format-and-validate-1.png" alt="格式化与验证">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-06-27T14:12:41.000Z">2020-06-27</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    8 分钟 读完 (大约 1255 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/blog/2020/06/27/format-and-validate/">格式化与验证</a>
+            
+        </h1>
+        <div class="content">
+            <p>众所周知，前端很大程度上就是做数据的展示和收集工作，这时候用户看到的内容和服务端存储的数据中间就会有多层转换过程。</p>
+<h1 id="钱"><a href="#钱" class="headerlink" title="钱"></a>钱</h1><p>最重要的当然是 money 啦，相差一分钱都能让用户急得哇哇大叫。比如业务里有三种价格：</p>
+<ul>
+<li><code>fixed_price</code> 原价</li>
+<li><code>promotion_price</code> 特价，一般为 <code>fixed_price * promotion.discount</code></li>
+<li><code>vip_price</code> 会员价，一般为 <code>fixed_price * vip.discount</code>，可能为空</li>
+</ul>
+<p>经常出现的情形时既要显示折扣（<code>discount</code>）又要显示价格（promotion_price or vip_price），可不可以直接返回 <code>fixed_price</code> 和 <code>discount</code> 呢？不可以！细心的读者已经觉察到问题了 —— <code>discount</code> <code>为小数，fixed_price</code> 与其相乘很可能不是一个整数（这里要插一句，一般情况下价格都是记录为 int，以 cent 作为单位）。比如臭名昭著的 <code>JavaScript</code> 浮点数相加问题。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; 0.1 + 0.2</span><br><span class="line">&lt; 0.30000000000000004</span><br><span class="line">&gt; 0.1 + 0.2 === 0.3</span><br><span class="line">&lt; false</span><br></pre></td></tr></table></figure>
+<p>原因就是 float 在计算机里存了 32 位，1 位符号位 + 8 位指数位 + 23 位尾数，反正就是不精确就完事了。那我们即使不精确也要保证各处拿到的是一个值，这个值只能以后端为准。</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@property</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">promotion_price</span><span class="hljs-params">(self)</span>:</span></span><br><span class="line">  promotion = self.get_active_promotion()</span><br><span class="line">    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> promotion:</span><br><span class="line">        <span class="hljs-keyword">return</span> self.fixed_price</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">if</span> self.is_chapter:</span><br><span class="line">        <span class="hljs-keyword">return</span> int(self.fixed_price * self.column.promotion_discount)</span><br><span class="line">    <span class="hljs-keyword">return</span> promotion.price</span><br></pre></td></tr></table></figure>
+<p>这个值是惰性的，也就是说只有用到时才会计算值，返回的一定是一个整数。有一些应用场景：</p>
+<ul>
+<li>直接展示价格：<code>(price / 100).toFixed(2)</code> =&gt; <code>0.99</code></li>
+<li>很多章节合并购买，<code>items.reduce((total, item) =&gt; total + item.price, 0)</code> 注意这个值可能会不等于整本的定价，这时就要引导或劝说用户直接买整本更划算呀</li>
+<li>满减活动，类似合并购买情形，只不过是有一些阈值情形<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">getMaxAvailableRebateAmountInGroup = <span class="hljs-function">(<span class="hljs-params">group</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> total = <span class="hljs-keyword">this</span>.getTotalPriceInGroup(group)</span><br><span class="line">  <span class="hljs-keyword">let</span> maxAmount = <span class="hljs-number">0</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (!group.event) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> maxAmount</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  group.event.availablecouponGroups.some(<span class="hljs-function">(<span class="hljs-params">coupon</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (total &gt; coupon[<span class="hljs-number">0</span>]) &#123;</span><br><span class="line">      maxAmount = coupon[<span class="hljs-number">1</span>]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> total &gt; coupon[<span class="hljs-number">0</span>]</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="hljs-keyword">return</span> maxAmount</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * Returns rebate threshold info.</span></span><br><span class="line"><span class="hljs-comment"> * @param &#123;Object[]&#125; couponGroups - Available coupons.</span></span><br><span class="line"><span class="hljs-comment"> * @param &#123;number&#125; couponGroups[][0] - The threshold of coupon.</span></span><br><span class="line"><span class="hljs-comment"> * @param &#123;number&#125; couponGroups[][1] - The amount of coupon, will be reduced from price when total meets threshold.</span></span><br><span class="line"><span class="hljs-comment"> * @param &#123;numer&#125; total - Total of prices.</span></span><br><span class="line"><span class="hljs-comment"> * @returns &#123;[string, bool]&#125; Description String, isMaxThresholdMet</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-comment">// returned value: [descString, isMaxThresholdMet]</span></span><br><span class="line">getRebateThreshold = <span class="hljs-function">(<span class="hljs-params">couponGroups, total</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> mf = moneyformatShort</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (couponGroups.length === <span class="hljs-number">0</span> ) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> [<span class="hljs-string">'本活动满减券已全部用完'</span>, <span class="hljs-literal">true</span>]</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, prev_threshold = <span class="hljs-number">0</span>, prev_amount = <span class="hljs-number">0</span>; i &lt; couponGroups.length; i++) &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> [threshold, amount] = couponGroups[i]</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">if</span> (total &gt;= threshold) &#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (i === <span class="hljs-number">0</span>) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> [<span class="hljs-string">'已购满 '</span> + mf(threshold) + <span class="hljs-string">'，已减 '</span> + mf(amount), <span class="hljs-literal">true</span>]</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> [<span class="hljs-string">'已减 '</span> + mf(amount) +</span><br><span class="line">          <span class="hljs-string">'，再购 '</span> + mf(prev_threshold - total) + <span class="hljs-string">' 可减 '</span> + mf(prev_amount), <span class="hljs-literal">false</span>]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (i === couponGroups.length - <span class="hljs-number">1</span>) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> [<span class="hljs-string">'购满 '</span> + mf(threshold) + <span class="hljs-string">' 可减 '</span> + mf(amount) +</span><br><span class="line">          <span class="hljs-string">'，还差 '</span> + mf(threshold - total), <span class="hljs-literal">false</span>]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    [prev_threshold, prev_amount] = [threshold, amount]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">getTotalPriceInGroup = <span class="hljs-function">(<span class="hljs-params">group</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> group.itemList.reduce(<span class="hljs-function">(<span class="hljs-params">total, item</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (item.onSale &amp;&amp; item.selected) &#123;</span><br><span class="line">      total += item.salePrice</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> total</span><br><span class="line">  &#125;, <span class="hljs-number">0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>钱的计算大概就是这样，涉及到第三方支付就更头疼了。</p>
+<h1 id="时间"><a href="#时间" class="headerlink" title="时间"></a>时间</h1><p>金钱是宝贵的，时间是更宝贵的。而我们需要根据不同场景甚至用户所在时区去显示不同的时间格式，有一种方案是 <code>date-fns</code>，项目里也有根据 timestamp 转换成用户可读格式的各种函数，但有时候只是想简简单单显示一个时间，同时考虑各种情况下的复用性。上 <code>GraphQL</code>！</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> time</span><br><span class="line"><span class="hljs-keyword">from</span> libs.utils.date <span class="hljs-keyword">import</span> mtimeformat</span><br><span class="line"><span class="hljs-keyword">from</span> ..types <span class="hljs-keyword">import</span> TimeFormat</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">format_time</span><span class="hljs-params">(time_, format=TimeFormat.FULL_TIME.value)</span>:</span></span><br><span class="line">    <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">        TimeFormat.FURTHER: mtimeformat(time_),</span><br><span class="line">        TimeFormat.FULL_TIME: time_.strftime(<span class="hljs-string">'%Y-%m-%d %H:%M:%S'</span>),</span><br><span class="line">        TimeFormat.FULL_DAY: time_.strftime(<span class="hljs-string">'%Y-%m-%d'</span>),</span><br><span class="line">        TimeFormat.CHINESE_FULL_DAY: time_.strftime(<span class="hljs-string">'%Y 年 %-m 月 %-d 日'</span>),</span><br><span class="line">        TimeFormat.ISO: time_.isoformat(),</span><br><span class="line">        TimeFormat.TIMESTAMP: int(time.mktime(time_.timetuple()) * <span class="hljs-number">1000</span>),</span><br><span class="line">    &#125;[format]</span><br></pre></td></tr></table></figure>
+<p>其中 <code>TimeFormat</code> 是一个 <code>GraphQL</code> 的 enum 类型，<code>mtimeformat</code> 是一个可以根据相差时间来区别展示的函数，比如可以展示成「刚刚」「5 分钟前」这样的口语化格式。</p>
+<p><img src="/blog/images/format-and-validate-2.png" alt="实际效果"></p>
+<h1 id="表单"><a href="#表单" class="headerlink" title="表单"></a>表单</h1><p>表单的验证可以有很多实现，最简单的莫过于 <code>maxlength</code> 及 <code>require</code> 这种，直接交给浏览器，项目里也用到了一些 <code>jQuery</code> 的表单绑定，在提交之前一次性遍历表单项根据 <code>data-*</code> 来进行 check。</p>
+<p>现实是 react 相关的表单验证有以下两个痛点：</p>
+<h2 id="异步验证"><a href="#异步验证" class="headerlink" title="异步验证"></a>异步验证</h2><p>所幸的是 <code>formik</code> 支持了 <code>Promise</code> 的验证结果</p>
+<figure class="highlight jsx hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;Field name=&#123;name&#125; type=<span class="hljs-string">"number"</span></span><br><span class="line">  validate=&#123;<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> fetchAgent(value).then(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (res.agentExisted) &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (res.existed) &#123;</span><br><span class="line">          <span class="hljs-keyword">return</span> <span class="hljs-string">`该作者经纪合同已经存在，负责人：<span class="hljs-subst">$&#123;res.editorName&#125;</span>`</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-string">`'作者 ID' 为 <span class="hljs-subst">$&#123;value&#125;</span> 的用户不存在或不是作者身份`</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="依赖另一输入"><a href="#依赖另一输入" class="headerlink" title="依赖另一输入"></a>依赖另一输入</h2><figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> Yup <span class="hljs-keyword">from</span> <span class="hljs-string">'yup'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> OTHER_NATIONALITY = <span class="hljs-string">'其他'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> validationSchema=Yup.object().shape(&#123;</span><br><span class="line">  nationality: Yup.string().nullable(<span class="hljs-literal">true</span>).required(<span class="hljs-string">'请选择国家或地区'</span>),</span><br><span class="line">  otherNationality: Yup.string().test(</span><br><span class="line">    <span class="hljs-string">'need-other-nationality'</span>,</span><br><span class="line">    <span class="hljs-string">'请填写其他国家或地区'</span>,</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.parent.nationality !== OTHER_NATIONALITY || !!value</span><br><span class="line">    &#125;</span><br><span class="line">  ),</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><img src="/blog/images/format-and-validate-3.png" alt="实际情形为中间的输入框依赖于前面的下拉筛选框是否选了「其他」"></p>
+<h1 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h1><p>异步鉴权路由</p>
+<figure class="highlight jsx hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> PrivateRoute = <span class="hljs-function">(<span class="hljs-params">&#123; component: Component, ...rest &#125;</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> user = useSelector(<span class="hljs-function"><span class="hljs-params">state</span> =&gt;</span> selectors.user(state))</span><br><span class="line">  <span class="hljs-keyword">const</span> isLoaded = useSelector(<span class="hljs-function"><span class="hljs-params">state</span> =&gt;</span> selectors.isLoaded(state))</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> (</span><br><span class="line">    &lt;Route</span><br><span class="line">      &#123;...rest&#125;</span><br><span class="line">      render=&#123;(props) =&gt;</span><br><span class="line">        !isLoaded ? (</span><br><span class="line">          &lt;&gt;&lt;/&gt;</span><br><span class="line">        ) : user ? (</span><br><span class="line">          &lt;Component &#123;...props&#125; /&gt;</span><br><span class="line">        ) : (</span><br><span class="line">          &lt;Redirect to='/404' /&gt;</span><br><span class="line">        )</span><br><span class="line">      &#125;</span><br><span class="line">    /&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-image">
         <a href="/blog/2020/06/24/interview-summary/" class="image is-7by1">
             <img class="thumbnail" src="/blog/images/interview-summary-1.jpg" alt="面试小结">
         </a>
@@ -961,7 +1042,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        13
+                        14
                     </p>
                 </div>
             </div>
@@ -1067,7 +1148,7 @@
                 <span class="level-item">web</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">6</span>
+                <span class="level-item tag">7</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/blog/categories/想法/">
@@ -1103,6 +1184,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/blog/2020/06/27/format-and-validate/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/format-and-validate-1.png" alt="格式化与验证">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-27T14:12:41.000Z">2020-06-27</time></div>
+                    <a href="/blog/2020/06/27/format-and-validate/" class="has-link-black-ter is-size-6">格式化与验证</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -1180,25 +1280,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/blog/2020/04/08/过度包装/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/over-packaging-1.jpg" alt="过度包装">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-08T14:16:59.000Z">2020-04-08</time></div>
-                    <a href="/blog/2020/04/08/过度包装/" class="has-link-black-ter is-size-6">过度包装</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1217,7 +1298,7 @@
                     <span class="level-item">六月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1386,6 +1467,25 @@
         
         <article class="media">
             
+            <a href="/blog/2020/06/27/format-and-validate/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/format-and-validate-1.png" alt="格式化与验证">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-27T14:12:41.000Z">2020-06-27</time></div>
+                    <a href="/blog/2020/06/27/format-and-validate/" class="has-link-black-ter is-size-6">格式化与验证</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/blog/2020/06/24/interview-summary/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/blog/images/interview-summary-1.jpg" alt="面试小结">
@@ -1460,25 +1560,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/blog/2020/04/08/过度包装/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/over-packaging-1.jpg" alt="过度包装">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-08T14:16:59.000Z">2020-04-08</time></div>
-                    <a href="/blog/2020/04/08/过度包装/" class="has-link-black-ter is-size-6">过度包装</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1497,7 +1578,7 @@
                     <span class="level-item">六月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
