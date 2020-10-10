@@ -26,7 +26,8 @@ date: 2019-03-09 23:06:05
   - Eletron 跨端开发
 - 2016.10 – 2020.7 **豆瓣阅读前端工程师** [See](https://read.douban.com)
   - 在团队内推动了 GraphQL 的使用，初步引入 RxJS 处理并发异步操作
-  - 小程序开发，实现微信内图文混排阅读 <img src="/blog/images/asfaloth.jpeg" width="200"/>
+  - 小程序开发，实现微信内图文混排阅读
+    <img src="/blog/images/asfaloth.jpeg" width="150" style="margin: 20px;"/>
   - 日常功能的开发与维护，逐步将 web 书店和管理系统从后端模板迁移至 tsx
 - 2016.3 - 2016.7 **蜗牛数字前端开发实习** [See](https://msyfls123.github.io/myWiki/index.html?name=woniu)
   - VR、直播聚合 web 站点的研发
