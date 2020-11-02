@@ -13,14 +13,14 @@ disqusId: electron-build
 
 减化软件开发复杂度的核心奥义是分层与抽象，汇编语言抹平了不同 CPU 实现的差异，做到了"中央处理器"的抽象，而操作系统则是抽象了各种计算机硬件，对应用程序暴露了系统层的接口，让应用程序不需要一对一地对接硬件。
 
-回到这篇文章的标题，目前主流的桌面端主要为 Windows、macOS 和 Linux 三种，考虑覆盖人群，实际做到覆盖前两端即可覆盖绝大多数用户。或许有同学就要问了，都 2020 年了还有必要开发桌面端应用吗？？Web 它不香吗？答案是：香，但它还不够香。网页因为各种安全方面的限制，现在还无法很好地和系统进行交互，比如文件读写（实际已经有了 Native File System [[https://web.dev/file-system-access/]{.ul}](https://web.dev/file-system-access/)）和更改各种系统配置的能力，这些往往是处于安全和兼容性的考虑。如果想强行在 Web 里做到这些部分也不是不可以，但相对普通 Web 开发，成本就显得过高了点，这点先按下不表。
+回到这篇文章的标题，目前主流的桌面端主要为 Windows、macOS 和 Linux 三种，考虑覆盖人群，实际做到覆盖前两端即可覆盖绝大多数用户。或许有同学就要问了，都 2020 年了还有必要开发桌面端应用吗？？Web 它不香吗？答案是：香，但它还不够香。网页因为各种安全方面的限制，现在还无法很好地和系统进行交互，比如文件读写（实际已经有了 Native File System [[https://web.dev/file-system-access/](https://web.dev/file-system-access/)）和更改各种系统配置的能力，这些往往是处于安全和兼容性的考虑。如果想强行在 Web 里做到这些部分也不是不可以，但相对普通 Web 开发，成本就显得过高了点，这点先按下不表。
  俗话讲"酒香不怕巷子深"，Web 在富 UI 应用的场景下已经一枝独秀遥遥领先于其他 GUI 方案，像早期 Qt、GTK 等跨端 GUI 开发方案已经几乎绝迹（PyQt 还过得比较滋润，主要是 Python 胶水语言的特性编写简单界面比较灵活），随着移动端浪潮的袭来以及 Node.js 的崛起，更多开发者选择 JavaScript （包括附属于其上的语言和框架）进行跨桌面、移动端和 Web 的混合开发，像 Ionic、Cordova(PhoneGap) 等框架在 2011 年以后如雨后春笋般冒了出来，当然随着 Facebook 和 Google 发布 React Native 和 Flutter，广大 Web 开发者终于可以喘口气，看到了只学一种框架就用上五年的曙光。
 
 移动端的竞争如此激烈，但桌面端则目前只有一个王者，那就是 Electron。我们来看看它究竟是什么?
 
 ![](/blog/images/electron-build/document_image_rId10.png)
 
-这个问题的答案很简单，Electron 就是 Chromium（Chrome 内核）、Node.js 和系统原生 API 的结合。它做的事情很简单，整个应用跑在一个 main process（主进程） 上，需要提供 GUI 界面时则创建一个 renderer process（渲染进程）去开启一个 Chromium 里的 BrowserWindow/BrowserView，实际就像是 Chrome 的一个窗口或者 Tab 页一样，而其中展示的既可以是本地网页也可以是线上网页，主进程和渲染进程间通过 IPC 进行通讯，主进程可以自由地调用 Electron 提供的系统 API，可以控制其所辖渲染进程的生命周期。
+这个问题的答案很简单，Electron 就是 Chromium（Chrome 内核）、Node.js 和系统原生 API 的结合。它做的事情很简单，整个应用跑在一个 main process（主进程） 上，需要提供 GUI 界面时则创建一个 renderer process（渲染进程）去开启一个 Chromium 里的 BrowserWindow/BrowserView，实际就像是 Chrome 的一个窗口或者 Tab 页一样，而其中展示的既可以是本地网页也可以是线上网页，主进程和渲染进程间通过 IPC 进行通讯，主进程可以自由地调用 Electron 提供的系统 API 以及 Node.js 模块，可以控制其所辖渲染进程的生命周期。
 
 ![](/blog/images/electron-build/document_image_rId11.png)
 Electron 做到了系统进程和展示界面的分离，类似于 Chrome或小程序的实现，这样的分层有利于**多窗口应用**的开发，天然地形成了 **MVC架构**。这里仅对其工作原理做大致介绍，并不会详尽阐述如何启动一个 Electron App 乃至创建 BrowserWindow 并与之通讯等，相反，本系列文章将着重于介绍适合 Web 开发者在编码之余需要关注的**代码层次、测试、构建发布**相关内容，以「腾讯文档桌面端」开发过程作为示例，阅读完本系列将使读者初步了解一个 Electron 从开发到上线所需经历的常见流程。
@@ -35,8 +35,7 @@ Electron 做到了系统进程和展示界面的分离，类似于 Chrome或小�
 
 -   我想让用户在"更多场景"下使用我的应用，我该怎么做？
 
--   我是一个 Web 开发者，Electron 看起来是 C/S
-    架构，应该如何设计消息传递机制？
+-   我是一个 Web 开发者，Electron 看起来是 C/S 架构，应该如何设计消息传递机制？
 
 -   用 Electron 开发的 App 可测试性如何，可以在同一套测试配置下运行吗？
 
@@ -56,7 +55,7 @@ Electron 做到了系统进程和展示界面的分离，类似于 Chrome或小�
 使用 Webpack 打包
 -----------------
 
-用 Webpack 打包还是相对简单的，只需要将 config.target 设置成 \'electron-main\' 或者 \'electron-renderer\' 即可
+用 Webpack 打包还是相对简单的，只需要将 config.target 设置成 'electron-main' 或者 'electron-renderer' 即可
  ```js
 // webpack.config.js
 const config = {
@@ -94,7 +93,7 @@ export default [
 ]
 ```
 
-解释一下，format 为 'cjs' 或 'iife' 是表明适用于 Node.js 环境的 commonjs 或者是浏览器环境的立即执行格式，而他们同样都需要将 electron 设置为外部依赖，同时在渲染进程里还需要指定 `electron = require(\'electron\');`。等等，这里竟然在 window 下直接 require？？？是的，通过创建 BrowserWindow 时设置 `nodeIntergration: true` 即可在打开的网页里使用 Node.js 的各种功能，但能力越大所承担的风险也越大，所以是得禁止给在线网页开启这个属性的。
+解释一下，format 为 'cjs' 或 'iife' 是表明适用于 Node.js 环境的 commonjs 或者是浏览器环境的立即执行格式，而他们同样都需要将 electron 设置为外部依赖，同时在渲染进程里还需要指定 `electron = require('electron');`。等等，这里竟然在 window 下直接 require？？？是的，通过创建 BrowserWindow 时设置 `nodeIntergration: true` 即可在打开的网页里使用 Node.js 的各种功能，但能力越大所承担的风险也越大，所以是得禁止给在线网页开启这个属性的。
 
 ![](/blog/images/electron-build/document_image_rId14.png)
 
@@ -116,7 +115,7 @@ export default [
 
 electron-builder 也是一个对开发代码无侵入的打包构建工具，它只需要指定好各种路径以及需要构建的目标配置即可一键完成打包构建、签名、认证等一系列流程。
 
-electron-builder 是具有同时打包出多个平台 App 的能力的，具体在 Mac 上是通过 Wine 这个兼容层来实现的，Wine 是 Wine Is Not an Emulator 的缩写，从名字里强调它不是一个模拟器，它是对 Windows API 的抽象。打包后的应用与 Windows 上构建的应用没有区别，但构建时的 process.platform 会被锁在 \'darwin\' 即 macOS，这是个看起来微不足道，但实则遇到会让人抓耳挠腮的情形，后面会详细展开。
+electron-builder 是具有同时打包出多个平台 App 的能力的，具体在 Mac 上是通过 Wine 这个兼容层来实现的，Wine 是 Wine Is Not an Emulator 的缩写，从名字里强调它不是一个模拟器，它是对 Windows API 的抽象。打包后的应用与 Windows 上构建的应用没有区别，但构建时的 process.platform 会被锁在 'darwin' 即 macOS，这是个看起来微不足道，但实则遇到会让人抓耳挠腮的情形，后面会详细展开。
 
 ![](/blog/images/electron-build/document_image_rId20.png)
 
@@ -168,7 +167,7 @@ const config = {
 QQ AIO 结构化消息打开应用（Windows）
 ------------------------------------
 
-QQ 通过唤起写入注册表里的腾讯文档地址来打开腾讯文档 App 同时带上了 \--url=https://docs.qq.com/xxx 的参数，继而打开对应的文档。
+QQ 通过唤起写入注册表里的腾讯文档地址来打开腾讯文档 App 同时带上了 --url=https://docs.qq.com/xxx 的参数，继而打开对应的文档。
 
 electron-builder 配置 nsis.include 参数带上 nsh 脚本，写入如下设置（注：该配置并不完全）即可帮助 QQ 定位已安装的腾讯文档应用。
 

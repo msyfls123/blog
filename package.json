@@ -9,6 +9,9 @@
     "start": "hexo server",
     "build": "hexo d -g"
   },
+  "engines": {
+    "node": ">=13.2.0 <14.0"
+  },
   "dependencies": {
     "hexo": "^3.9.0",
     "hexo-deployer-git": "^1.0.0",
