@@ -129,6 +129,75 @@
     <div class="card">
     
     <div class="card-image">
+        <a href="/blog/2020/04/08/过度包装/" class="image is-7by1">
+            <img class="thumbnail" src="/blog/images/over-packaging-1.jpg" alt="过度包装">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-04-08T14:16:59.000Z">2020-04-08</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    7 分钟 读完 (大约 1053 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/blog/2020/04/08/过度包装/">过度包装</a>
+            
+        </h1>
+        <div class="content">
+            <p>疫情期间每天都是自己做饭吃，隔两三天就要买一次菜，每次买菜光是拆包装盒就要耗费非常多的心力，更别提清洗食材和锅碗，切菜淘米调配料，蒸炒炖炸等工序了，难怪说疫情期间分手的情侣、离婚的夫妻比比皆是，敢情大家平时都是装作很会生活的样子，一旦没了外卖快递都退回到了饮毛汝血的状态。</p>
+<p>正如做饭 1 小时，吃饭 10 分钟，洗碗半小时所说的那样，吃这样一个动作在当前都会有无穷的副作用，可以说现代都市生活真的是建立在非常完善的 O2O 服务行业之下的，要吃饭线上下个单线下送来，要保洁自如下个单线下保洁员上门，要 ml 都有 165/90 32C 的家政服务人员上门服务。人的生活变成了只需处理工作，其他时间都可以用钱买到，这样 WFH 所带来的工作时长延长对社畜的身心打击几乎到了极致。扯远了。</p>
+<p>网上买菜或者超市买菜，相比于菜市场买菜最大的区别是包装。垃圾桶里丢掉的绝大部分是塑料包装而不是切掉的边角料菜或者剩饭剩菜。就像软件开发里，动辄几十上百层的封装之下，真正工作的是那么一两行代码。</p>
+<ol>
+<li>public</li>
+<li>js</li>
+<li>submit</li>
+<li>works</li>
+<li>manage</li>
+<li>components</li>
+<li>header-actions</li>
+<li>PriceActions</li>
+<li><code>PriceActions.tsx</code> -&gt; <code>StartPromotionButton.tsx</code> -&gt; <code>StartPromotionForm.tsx</code></li>
+</ol>
+<p>一个页面上小小的组件，被封装在 9 层目录之下，同目录平级之间还有嵌套关系。当然组件化分治思想也是 React 一直火到现在的根本原因，但有时也会想想这种扁平化的目录结构是否真的合适项目的发展，或者说在业务需求猛增前提下如何科学组织目录结构以便修改维护也是门学问了，当然最好的方式是：不组织。根据实际发展来让文件自行组织，见 <a href="https://github.com/benawad/destiny" target="_blank" rel="noopener">destiny</a>。</p>
+<p>拉扯这么多包装的弊端，但包装实际上是一项很重要的工序，因为不包装带来的风险，往往是看不见的：<br>小吕去年写了个活动页的接口，因为是第一次办这种活动，小吕本着以产品需求为约束的理念写好了无届数限制的 API 接口，然后前端同学以此接口封装了一个组件给页面加了上去。转眼间一年过去了，活动办了第二届，产品要求有新功能，小吕又哼哧哼哧写了一个第二届活动的 API，但这时候出分歧了：前端觉得接口应该稳定，如果每做一届都要回溯一遍做过的接口映射，太累且容易出错；而后端觉得分离 API 有助于更清晰地业务逻辑。大家说的都没错，怎么办呢？包装一下接口吧！</p>
+<p><img src="/blog/images/over-packaging-2.jpg" alt="原俩接口实现，红线为本次修改"><br><img src="/blog/images/over-packaging-3.jpg" alt="Adapter 模式"></p>
+<p>可以看出是适当的包装有助于分清业务界限，明确各端职责是非常值得提倡的。</p>
+<p>但为什么实践中经常分不清这些呢？因为 Python 本质是一个胶水语言，更多起黏合剂作用，而 JavaScript 更想火柴棍，可以飞速搭原型，但两者都不是拥有持续集成性和可维护性的代表。个人以为类型系统以及所有权（或者说内存锁）是一个合格的工业级语言必备的，一个保障 AOT 安全，一个保障 JIT 安全，任何业务逻辑都是对这两个基本原则的封装。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-image">
         <a href="/blog/2020/03/13/通用设计/" class="image is-7by1">
             <img class="thumbnail" src="/blog/images/general-design-2.png" alt="通用设计">
         </a>
@@ -591,69 +660,6 @@
 
 
 
-    <div class="card">
-    
-    <div class="card-image">
-        <a href="/blog/2020/01/28/时滞效应/" class="image is-7by1">
-            <img class="thumbnail" src="/blog/images/delay-effect-1.png" alt="时滞效应">
-        </a>
-    </div>
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-01-28T09:30:35.000Z">2020-01-28</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    7 分钟 读完 (大约 1064 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/blog/2020/01/28/时滞效应/">时滞效应</a>
-            
-        </h1>
-        <div class="content">
-            <p>在股市的朋友一般都知道「K 线图」这个东西，简单说来就是包含四个数据，即开盘价、最高价、最低价、收盘价，所有的 K 线都是围绕这四个数据展开，反映大势的状况和价格信息。我的姨夫号称一代股神，开一次张可以吃三年，特别崇拜这个图。我个人是有些不以为然的，因为 <code>T + 1</code> 制度的存在杜绝了超短线投机。任何时刻的交易都是基于前一时刻的交易，如果这种方式是靠谱的，那也只是扒下了边际效益的薄薄一层皮而已。如果要做超短线就是期货了，曾有个笑话说炒期货的要尿个尿都要把手上的先抛掉才敢去尿。这就是时滞效应。</p>
-<p>当前华夏大地处在一片新型肺炎疫情的阴霾笼罩之下，时隔 1 – 14 天不等的发病周期，让防疫工作困难重重。一旦某个小区发现感染病例，整个小区都会被隔离。我们可以看下下面这张疫情趋势图，图中可见疑似病例一开始是低于确诊病例的，但年初二之后突然呈井喷般上升趋势，但幸好当下已经逐渐趋于平稳。</p>
-<p><img src="/blog/images/delay-effect-2.jpg" alt="全国疫情趋势图"></p>
-<p>没有疑似病例意味着什么，意味着毫无病例筛查。疑似病例井喷说明什么，说明堆积了足够多的样本上报。量变引发质变，足够多的病例将导致疾病向着失控的方向蔓延，而这一切在确诊病例上是延时的，不确切的。所以需要更多的筛查渠道和病毒检测盒，而现在更可怕的是病毒会“伪装”自己，在感染的前 10 天并无法检查出阳性，这样就给医学意义上的密切接触者数量更提升了一个数量级。</p>
-<p><img src="/blog/images/delay-effect-4.jpg" alt="医生的真知灼见无法实施"></p>
-<p>而反观政府现在在做什么？隔离，对，隔离是必要的。区域自治，区域封锁，假期延长，将蔓延的机会降到最低。另外一点，隔离使得城市面临生活必需品保障短缺的问题，各级政府苦心经营的第三产业在疫情面前已经濒临瘫痪，第二产业随着机器人的大量应用其实已经实现了自治，但第一产业 —— 农业，依然是需要保障的重中之重，农产品需要从城市就近通过内部交通网络输送到各家各户，而这些都是都市人口已经很久很久没有考虑过的了。</p>
-<p><img src="/blog/images/delay-effect-3.jpg" alt="居委会给隔离群众送菜"></p>
-<p>所以说，这次疫情之类最应当做的两个工作是：</p>
-<ol>
-<li>深化医疗行业的规范改革，切实保障一线医务工作者的安全以及避免就诊患者交叉感染。</li>
-<li>大力发展现代农牧业，例如屋顶大棚果蔬养殖和人工智能养猪等等，保障危急时刻群众吃饭问题。</li>
-</ol>
-<p>都市人已经习惯了吃饭了叫个外卖，生病了挂个号慢慢排队的日子，这次疫情让人体会到时间的宝贵，不珍惜时间就会浪费更多的时间（假期）来弥补时间的亏空。在商业软件开发中也是一样，不尊重用户的日常需求，用户切实反馈的问题得不到解决，用户的怨言就会堆积起来，最终导致用户流失。而对于自身而言，每天投资自己一点点，自己变好一点点，就是增强一点点今后的抗风险能力。</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 
     
 <div class="card card-transparent">
@@ -724,7 +730,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        17
+                        18
                     </p>
                 </div>
             </div>
@@ -744,7 +750,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        12
+                        14
                     </p>
                 </div>
             </div>
@@ -830,7 +836,7 @@
                 <span class="level-item">web</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">10</span>
+                <span class="level-item tag">11</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/blog/categories/web/app/">
@@ -860,7 +866,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/blog/tags/Electron/" style="font-size: 10px;">Electron</a> <a href="/blog/tags/electron/" style="font-size: 10px;">electron</a> <a href="/blog/tags/electron-builder/" style="font-size: 10px;">electron-builder</a> <a href="/blog/tags/gulp/" style="font-size: 20px;">gulp</a> <a href="/blog/tags/node/" style="font-size: 10px;">node</a> <a href="/blog/tags/nodejs/" style="font-size: 20px;">nodejs</a> <a href="/blog/tags/rollup/" style="font-size: 10px;">rollup</a> <a href="/blog/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/blog/tags/前端/" style="font-size: 10px;">前端</a> <a href="/blog/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/blog/tags/编程/" style="font-size: 10px;">编程</a> <a href="/blog/tags/面试/" style="font-size: 10px;">面试</a>
+        <a href="/blog/tags/Electron/" style="font-size: 20px;">Electron</a> <a href="/blog/tags/React/" style="font-size: 10px;">React</a> <a href="/blog/tags/UI/" style="font-size: 10px;">UI</a> <a href="/blog/tags/electron/" style="font-size: 10px;">electron</a> <a href="/blog/tags/electron-builder/" style="font-size: 10px;">electron-builder</a> <a href="/blog/tags/gulp/" style="font-size: 20px;">gulp</a> <a href="/blog/tags/node/" style="font-size: 10px;">node</a> <a href="/blog/tags/nodejs/" style="font-size: 20px;">nodejs</a> <a href="/blog/tags/rollup/" style="font-size: 10px;">rollup</a> <a href="/blog/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/blog/tags/前端/" style="font-size: 10px;">前端</a> <a href="/blog/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/blog/tags/编程/" style="font-size: 10px;">编程</a> <a href="/blog/tags/面试/" style="font-size: 10px;">面试</a>
     </div>
 </div>
 
@@ -874,6 +880,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/blog/2020/12/01/rendering-cause-me-to-exist/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/rendering-cause-me-to-exist/document_image_rId9.png" alt="我渲染故我在，Electron 窗口开发指北">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-01T14:54:54.000Z">2020-12-01</time></div>
+                    <a href="/blog/2020/12/01/rendering-cause-me-to-exist/" class="has-link-black-ter is-size-6">我渲染故我在，Electron 窗口开发指北</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -951,25 +976,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/blog/2020/06/24/interview-summary/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/interview-summary-1.jpg" alt="面试小结">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-24T14:41:24.000Z">2020-06-24</time></div>
-                    <a href="/blog/2020/06/24/interview-summary/" class="has-link-black-ter is-size-6">面试小结</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -981,6 +987,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/blog/archives/2020/11/">
@@ -1119,6 +1136,20 @@
                 <div class="control">
                     <a class="tags has-addons" href="/blog/tags/Electron/">
                         <span class="tag">Electron</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/React/">
+                        <span class="tag">React</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/UI/">
+                        <span class="tag">UI</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -1225,6 +1256,25 @@
         
         <article class="media">
             
+            <a href="/blog/2020/12/01/rendering-cause-me-to-exist/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/rendering-cause-me-to-exist/document_image_rId9.png" alt="我渲染故我在，Electron 窗口开发指北">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-01T14:54:54.000Z">2020-12-01</time></div>
+                    <a href="/blog/2020/12/01/rendering-cause-me-to-exist/" class="has-link-black-ter is-size-6">我渲染故我在，Electron 窗口开发指北</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/blog/2020/11/02/丝般顺滑的Electron跨端开发体验/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/blog/images/electron-build.png" alt="丝般顺滑的 Electron 跨端开发体验">
@@ -1299,25 +1349,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/blog/2020/06/24/interview-summary/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/interview-summary-1.jpg" alt="面试小结">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-24T14:41:24.000Z">2020-06-24</time></div>
-                    <a href="/blog/2020/06/24/interview-summary/" class="has-link-black-ter is-size-6">面试小结</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1329,6 +1360,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/blog/archives/2020/11/">
@@ -1467,6 +1509,20 @@
                 <div class="control">
                     <a class="tags has-addons" href="/blog/tags/Electron/">
                         <span class="tag">Electron</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/React/">
+                        <span class="tag">React</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/UI/">
+                        <span class="tag">UI</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>

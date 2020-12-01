@@ -8,7 +8,7 @@
 
 
     <meta name="description" content="接续前一篇《并行化密集型计算》，发现实际上线时 parallel terser 并没有提升速度。反而比单线程还要慢，这就有点不科学了。首先想本地跑起来没有出错，大概不是程序逻辑问题，再想想看，估计是配置问题，与 SA 进行了一波有力的交流。  原来 os.cpus() 拿到的是真实的计算机 CPU 核数，而 k8s 会限制容器的 CPU 使用量，所以我们应该手动将 NODE_ENV=product">
-<meta name="keywords" content="nodejs,gulp,webpack,多线程">
+<meta name="keywords" content="nodejs,gulp,多线程,webpack">
 <meta property="og:type" content="article">
 <meta property="og:title" content="复盘一次 gulp &amp; webpack 构建优化">
 <meta property="og:url" content="https://msyfls123.github.io/blog/2020/06/05/parallel-computing-review/index.html">
@@ -335,7 +335,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        17
+                        18
                     </p>
                 </div>
             </div>
@@ -355,7 +355,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        12
+                        14
                     </p>
                 </div>
             </div>
@@ -441,7 +441,7 @@
                 <span class="level-item">web</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">10</span>
+                <span class="level-item tag">11</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/blog/categories/web/app/">
@@ -471,7 +471,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/blog/tags/Electron/" style="font-size: 10px;">Electron</a> <a href="/blog/tags/electron/" style="font-size: 10px;">electron</a> <a href="/blog/tags/electron-builder/" style="font-size: 10px;">electron-builder</a> <a href="/blog/tags/gulp/" style="font-size: 20px;">gulp</a> <a href="/blog/tags/node/" style="font-size: 10px;">node</a> <a href="/blog/tags/nodejs/" style="font-size: 20px;">nodejs</a> <a href="/blog/tags/rollup/" style="font-size: 10px;">rollup</a> <a href="/blog/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/blog/tags/前端/" style="font-size: 10px;">前端</a> <a href="/blog/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/blog/tags/编程/" style="font-size: 10px;">编程</a> <a href="/blog/tags/面试/" style="font-size: 10px;">面试</a>
+        <a href="/blog/tags/Electron/" style="font-size: 20px;">Electron</a> <a href="/blog/tags/React/" style="font-size: 10px;">React</a> <a href="/blog/tags/UI/" style="font-size: 10px;">UI</a> <a href="/blog/tags/electron/" style="font-size: 10px;">electron</a> <a href="/blog/tags/electron-builder/" style="font-size: 10px;">electron-builder</a> <a href="/blog/tags/gulp/" style="font-size: 20px;">gulp</a> <a href="/blog/tags/node/" style="font-size: 10px;">node</a> <a href="/blog/tags/nodejs/" style="font-size: 20px;">nodejs</a> <a href="/blog/tags/rollup/" style="font-size: 10px;">rollup</a> <a href="/blog/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/blog/tags/前端/" style="font-size: 10px;">前端</a> <a href="/blog/tags/多线程/" style="font-size: 20px;">多线程</a> <a href="/blog/tags/编程/" style="font-size: 10px;">编程</a> <a href="/blog/tags/面试/" style="font-size: 10px;">面试</a>
     </div>
 </div>
 
@@ -485,6 +485,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/blog/2020/12/01/rendering-cause-me-to-exist/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/rendering-cause-me-to-exist/document_image_rId9.png" alt="我渲染故我在，Electron 窗口开发指北">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-01T14:54:54.000Z">2020-12-01</time></div>
+                    <a href="/blog/2020/12/01/rendering-cause-me-to-exist/" class="has-link-black-ter is-size-6">我渲染故我在，Electron 窗口开发指北</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -562,25 +581,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/blog/2020/06/24/interview-summary/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/interview-summary-1.jpg" alt="面试小结">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-24T14:41:24.000Z">2020-06-24</time></div>
-                    <a href="/blog/2020/06/24/interview-summary/" class="has-link-black-ter is-size-6">面试小结</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -592,6 +592,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/blog/archives/2020/11/">
@@ -730,6 +741,20 @@
                 <div class="control">
                     <a class="tags has-addons" href="/blog/tags/Electron/">
                         <span class="tag">Electron</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/React/">
+                        <span class="tag">React</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/UI/">
+                        <span class="tag">UI</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -836,6 +861,25 @@
         
         <article class="media">
             
+            <a href="/blog/2020/12/01/rendering-cause-me-to-exist/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/rendering-cause-me-to-exist/document_image_rId9.png" alt="我渲染故我在，Electron 窗口开发指北">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-01T14:54:54.000Z">2020-12-01</time></div>
+                    <a href="/blog/2020/12/01/rendering-cause-me-to-exist/" class="has-link-black-ter is-size-6">我渲染故我在，Electron 窗口开发指北</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/blog/2020/11/02/丝般顺滑的Electron跨端开发体验/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/blog/images/electron-build.png" alt="丝般顺滑的 Electron 跨端开发体验">
@@ -910,25 +954,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/blog/2020/06/24/interview-summary/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/interview-summary-1.jpg" alt="面试小结">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-24T14:41:24.000Z">2020-06-24</time></div>
-                    <a href="/blog/2020/06/24/interview-summary/" class="has-link-black-ter is-size-6">面试小结</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -940,6 +965,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/blog/archives/2020/11/">
@@ -1078,6 +1114,20 @@
                 <div class="control">
                     <a class="tags has-addons" href="/blog/tags/Electron/">
                         <span class="tag">Electron</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/React/">
+                        <span class="tag">React</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/UI/">
+                        <span class="tag">UI</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
