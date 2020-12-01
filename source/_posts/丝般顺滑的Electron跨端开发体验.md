@@ -63,7 +63,7 @@ const config = {
 }
 ```
 
-其原理是对不仅包括 Node.js 原生模块，同时也包括 Electron 相关模块都不打包了，交给 Electron 自己在运行时解决依赖，见链接：[[https://github.com/webpack/webpack/blob/3610012f42e4ba9cf80a0e8a58a165b5121d8582/lib/electron/ElectronTargetPlugin.js\#L24-L64]{.ul}](https://github.com/webpack/webpack/blob/3610012f42e4ba9cf80a0e8a58a165b5121d8582/lib/electron/ElectronTargetPlugin.js#L24-L64)
+其原理是对不仅包括 Node.js 原生模块，同时也包括 Electron 相关模块都不打包了，交给 Electron 自己在运行时解决依赖，见链接：[webpack/ElectronTargetPlugin.js#L24-L64](https://github.com/webpack/webpack/blob/3610012f42e4ba9cf80a0e8a58a165b5121d8582/lib/electron/ElectronTargetPlugin.js#L24-L64)
 
 使用 Rollup 打包
 ----------------
