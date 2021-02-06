@@ -129,6 +129,70 @@
     <div class="card">
     
     <div class="card-image">
+        <a href="/blog/2020/05/28/并行化密集型计算/" class="image is-7by1">
+            <img class="thumbnail" src="/blog/images/parallel-computing-4.jpg" alt="并行化密集型计算">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-05-28T14:27:59.000Z">2020-05-28</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    6 分钟 读完 (大约 878 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/blog/2020/05/28/并行化密集型计算/">并行化密集型计算</a>
+            
+        </h1>
+        <div class="content">
+            <p>稍早前对 terser 压缩代码进行优化时将执行过程的代码从 Python 迁移到了 Node.js，准确地说是试图用 gulp stream 来批量压缩，用了一个比较老的包（gulp-terser），已经很久不维护了。与原先相比，底层都是 terser，只是为了在 Node.js 的镜像下使用而统一了文件的提取（glob）和批处理过程（<code>Python Pool &amp; subprocess</code> -&gt; <code>gulp stream</code>）。</p>
+<p>但这样处理了以后发现压缩处理时长变长了很多，差不多慢了 1 分钟，研究了一下 gulp 的处理机制，发现虽然 gulp 号称流式处理，但文件依然是按个通过 pipe 的，前一个处理完下一个才能进入，但<a href="https://github.com/gulpjs/gulp/issues/879#issuecomment-618451309" target="_blank" rel="noopener">通过 parallel-transform 也能实现同时处理多个文件</a>，可是实际操作中以 <code>parallel-transform</code> 替代 <code>through2</code> 并不能提升处理效率。笔者并未实际深究其原因，大致读了下 <code>parallel-transform</code> 的实现，它依然是围绕着 <code>event-loop</code> 做文章，设想成一个水池，干涸了就加水，满了就停止并等待处理完毕抬高基准线。</p>
+<p>笔者甚至使用了 <code>RxJS</code> 来控制并发 …… 但事实证明还是自己太年轻了，这种密集型计算根本无法通过 <code>event-loop</code> 来优化，它和 ajax 或者 IO 操作不一样，处理数据的仍是这个进程，怎么办？那就多进程/多线程！</p>
+<p>问题就变得简单了起来，第一步把文件列表拿到，第二步把它们分发到其他进程/线程处理。</p>
+<p>首先想到的是 <code>gulp.src</code> 接受的是数组，而 <code>glob</code> 接收的是字符串，实现肯定不一样，事实证明果然相差甚远。想想看还是需要先拿到本着能不造轮子就不造轮子的思路，去网上搜搜代码，首先想到的是已废弃的 <code>gulp-util</code>。一看里面有个 <a href="https://github.com/gulpjs/gulp-util/blob/master/lib/buffer.js" target="_blank" rel="noopener">buffer</a> 符合我们的需要，直接抄来，只不过需要注意一下这里有个 <code>cb</code> 需要塞到 <code>fn</code> 的回调里去，这样才能准确得到 task 的总共执行时间。</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> end = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">cb</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.push(buf);</span><br><span class="line">  --- cb();</span><br><span class="line">  --- <span class="hljs-keyword">if</span>(fn) &#123;fn(<span class="hljs-literal">null</span>, buf);</span><br><span class="line">  +++ <span class="hljs-keyword">if</span> (fn) &#123;</span><br><span class="line">  +++   fn(<span class="hljs-literal">null</span>, buf).then(cb)</span><br><span class="line">  +++ &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>fn</code> 是个耗时的操作，必须再它完成后再 <code>cb</code></p>
+<p>然后按照 terser 和 child_process 的关键词找到了 <a href="https://github.com/bazelbuild/rules_nodejs/blob/master/packages/terser/index.js" target="_blank" rel="noopener">@bazel/rules_nodejs - terser</a> 这个包，简直是宝藏 …… 一顿大抄特抄，写死了 terser 执行参数，加了个 Promise 的返回值。上 pre 跑了一下，功德圆满！</p>
+<p><img src="/blog/images/parallel-computing-1.png" alt="快了整整 4.5 倍！"></p>
+<p>为啥这么快？看了下 CPU 数量，我惊呆了！</p>
+<p><img src="/blog/images/parallel-computing-2.png" alt="48 核？？？"></p>
+<p>顺便看了下 issue 里也有<a href="https://github.com/bazelbuild/rules_nodejs/issues/1177" target="_blank" rel="noopener">试图引入 works_thread</a>，不过 <code>child_process</code> 已经足够香了！</p>
+<p>不过 web 上毕竟一个 page 只有一个进程，所以要有 Web Worker 来让密集计算在主线程之外运行，而可预计到的是 Web Worker 和 work_thread 的关系就好比 wasm 和 wasi，激动人心的进展！</p>
+<p><img src="/blog/images/parallel-computing-3.png" alt="并行计算大势所趋"></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-image">
         <a href="/blog/2020/05/11/程序员应该写出怎样的代码/" class="image is-7by1">
             <img class="thumbnail" src="/blog/images/code-favor-1.jpeg" alt="程序员应该写出怎样的代码">
         </a>
@@ -255,76 +319,6 @@
 
 
 
-    <div class="card">
-    
-    <div class="card-image">
-        <a href="/blog/2020/03/13/通用设计/" class="image is-7by1">
-            <img class="thumbnail" src="/blog/images/general-design-2.png" alt="通用设计">
-        </a>
-    </div>
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-03-13T13:39:18.000Z">2020-03-13</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    7 分钟 读完 (大约 1033 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/blog/2020/03/13/通用设计/">通用设计</a>
-            
-        </h1>
-        <div class="content">
-            <p>我们知道页面是 web 设计中单次呈现给用户的一个功能整体，但功能的粒度随着 <code>AJAX</code> 的出现不仅仅限于表单即 <code>form</code> 与服务器的单次交互，变成了 <code>XMLHTTPRequest</code> 或 <code>fetch</code> 甚至 <code>WebSocket</code> 的多次往返，这样而言单一页面也可以承载更多的用户交互行为。与之同时带来的问题是如何有效划分功能区域以便实现最大程度的组件化，增强复用性和可维护性？</p>
-<h3 id="签约与填写身份信息分离"><a href="#签约与填写身份信息分离" class="headerlink" title="签约与填写身份信息分离"></a>签约与填写身份信息分离</h3><p>以某次产品设计为例，产品需要将 <code>签署合同</code> 和 <code>填写身份信息</code> 作为一个步骤页面放到拉力赛作品的创建流程里，原先的页面长成下图这样。</p>
-<p><img src="/blog/images/general-design-3.png" alt="原签署合同页面"></p>
-<p>产品的想法是直接复用这个页面，作为前端当即表达了反对：这个页面包含了签协议和填信息两种操作，但却共用一个接口，不利于今后业务逻辑更为复杂时拆分（当下就已经属于过度耦合了），建议将 <code>填写身份信息</code> 放到单独的页面去。但产品随即表达了反对，认为用户的操作流程不应该多一个页面跳转。这怎么办呢？</p>
-<p><strong>用弹窗啊！</strong></p>
-<p>弹窗作为一种全局模态框可以在不修改整体页面流式布局的基础上让用户看到额外信息，甚至进行交互操作。弹窗内的组件可以被复用，因为是动态挂载到页面上的，一般对页面已有数据的依赖较小。</p>
-<p><img src="/blog/images/general-design-1.png" alt="现签署合同页面"><br><img src="/blog/images/general-design-2.png" alt="在身份信息不全情形下会弹出弹窗以供填写"></p>
-<p>在实际代码构建时为了便于使用，将整个弹窗加上作者身份数据的获取、存储与更新逻辑整体封装到了一个 <code>hook</code> 中：<br><figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> &#123; agentInfo, loaded, showAgentInfoFormDialog &#125; = useAgentInfo(agentId)</span><br></pre></td></tr></table></figure></p>
-<p>这样将数据和方法返回给调用方，将代码的侵入性做到最低。如果以后有只需要身份信息而不需要修改弹窗的使用情形，也可以尽情复用。</p>
-<h3 id="更通用的标签筛选"><a href="#更通用的标签筛选" class="headerlink" title="更通用的标签筛选"></a>更通用的标签筛选</h3><p>一日接到了一个增加筛选器筛选条件的需求（筛选器是一个巨大的，有着上百个 CheckBox，相比各种电商筛选条件毫不逊色的怪物👹）。</p>
-<p><img src="/blog/images/general-design-6.png" alt="需求"></p>
-<p>作为一个凡是遇到需求不杠一杠就不开心的开发，我理直气壮地提出了自己的看法：这种一次性使用的需求，会在文件里留下谜一样的代码，而且根本不可能实现复用，如果要重构或者迁移都会是巨大的沉没成本。</p>
-<p>随后根据下图的需求来源项</p>
-<p><img src="/blog/images/general-design-4.png" alt="征文大赛筛选项，五个硬编码的分类条件，实则为普通分类"></p>
-<p>提取出了可以重复利用的「标签输入框」</p>
-<p><img src="/blog/images/general-design-5.png" alt="标签输入框"></p>
-<p>有人会问，这样经常需要输入特定标签会不会不方便呢？早就想过啦，可以使用「加入书签」功能</p>
-<p><img src="/blog/images/general-design-7.png" alt="加入书签"></p>
-<p>会映射成形如 <code>/admin/editorial_service?tags=亲密关系+轻装上场</code> 的 url 存储在 localStorage 中，方便下次使用。大功告成！</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通用设计可以提供组件的复用能力，尽可能做到少暴露接口给外界，毕竟多一行代码就多一分风险和维护的成本，同时通用性足够好的情形下也能促进产品往更高效的方向发展，而不是拘泥于小而美的自我天地。</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 
     
 <div class="card card-transparent">
@@ -397,7 +391,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        19
+                        20
                     </p>
                 </div>
             </div>
@@ -407,7 +401,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        3
+                        4
                     </p>
                 </div>
             </div>
@@ -417,7 +411,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        14
+                        16
                     </p>
                 </div>
             </div>
@@ -521,6 +515,14 @@
             <span class="level-end">
                 <span class="level-item tag">6</span>
             </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/blog/categories/生活/">
+            <span class="level-start">
+                <span class="level-item">生活</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
         </a></li>
             </ul>
         </div>
@@ -533,7 +535,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/blog/tags/Electron/" style="font-size: 20px;">Electron</a> <a href="/blog/tags/React/" style="font-size: 15px;">React</a> <a href="/blog/tags/UI/" style="font-size: 10px;">UI</a> <a href="/blog/tags/electron/" style="font-size: 10px;">electron</a> <a href="/blog/tags/electron-builder/" style="font-size: 10px;">electron-builder</a> <a href="/blog/tags/gulp/" style="font-size: 15px;">gulp</a> <a href="/blog/tags/node/" style="font-size: 10px;">node</a> <a href="/blog/tags/nodejs/" style="font-size: 15px;">nodejs</a> <a href="/blog/tags/rollup/" style="font-size: 10px;">rollup</a> <a href="/blog/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/blog/tags/前端/" style="font-size: 10px;">前端</a> <a href="/blog/tags/多线程/" style="font-size: 15px;">多线程</a> <a href="/blog/tags/编程/" style="font-size: 10px;">编程</a> <a href="/blog/tags/面试/" style="font-size: 10px;">面试</a>
+        <a href="/blog/tags/Electron/" style="font-size: 20px;">Electron</a> <a href="/blog/tags/React/" style="font-size: 15px;">React</a> <a href="/blog/tags/UI/" style="font-size: 10px;">UI</a> <a href="/blog/tags/electron/" style="font-size: 10px;">electron</a> <a href="/blog/tags/electron-builder/" style="font-size: 10px;">electron-builder</a> <a href="/blog/tags/gulp/" style="font-size: 15px;">gulp</a> <a href="/blog/tags/node/" style="font-size: 10px;">node</a> <a href="/blog/tags/nodejs/" style="font-size: 15px;">nodejs</a> <a href="/blog/tags/rollup/" style="font-size: 10px;">rollup</a> <a href="/blog/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/blog/tags/前端/" style="font-size: 10px;">前端</a> <a href="/blog/tags/多线程/" style="font-size: 15px;">多线程</a> <a href="/blog/tags/旅行/" style="font-size: 10px;">旅行</a> <a href="/blog/tags/编程/" style="font-size: 10px;">编程</a> <a href="/blog/tags/面试/" style="font-size: 10px;">面试</a> <a href="/blog/tags/风景/" style="font-size: 10px;">风景</a>
     </div>
 </div>
 
@@ -547,6 +549,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/blog/2021/02/06/travels-of-beijing-parks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/travels-of-beijing-parks/document_image_rId10.jpeg" alt="逛公园才是正经事">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-02-06T15:32:14.000Z">2021-02-06</time></div>
+                    <a href="/blog/2021/02/06/travels-of-beijing-parks/" class="has-link-black-ter is-size-6">逛公园才是正经事</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/生活/">生活</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -624,25 +645,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/blog/2020/08/20/electron-eat-shit/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/electron-eat-shit-1.jpg" alt="Electron 踩坑">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-20T11:51:09.000Z">2020-08-20</time></div>
-                    <a href="/blog/2020/08/20/electron-eat-shit/" class="has-link-black-ter is-size-6">Electron 踩坑</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a> / <a class="has-link-grey -link" href="/blog/categories/web/app/">app</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -654,6 +656,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2021/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/blog/archives/2020/12/">
@@ -885,6 +898,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/旅行/">
+                        <span class="tag">旅行</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/blog/tags/编程/">
                         <span class="tag">编程</span>
                         <span class="tag is-grey">1</span>
@@ -894,6 +914,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/blog/tags/面试/">
                         <span class="tag">面试</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/风景/">
+                        <span class="tag">风景</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -923,6 +950,25 @@
         
         <article class="media">
             
+            <a href="/blog/2021/02/06/travels-of-beijing-parks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/travels-of-beijing-parks/document_image_rId10.jpeg" alt="逛公园才是正经事">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-02-06T15:32:14.000Z">2021-02-06</time></div>
+                    <a href="/blog/2021/02/06/travels-of-beijing-parks/" class="has-link-black-ter is-size-6">逛公园才是正经事</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/生活/">生活</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/blog/2020/12/06/tencent-docs-desktop-practice/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/blog/images/tencent-docs-desktop-practice/document_image_rId9.png" alt="Electron 开发实践">
@@ -997,25 +1043,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/blog/2020/08/20/electron-eat-shit/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/electron-eat-shit-1.jpg" alt="Electron 踩坑">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-20T11:51:09.000Z">2020-08-20</time></div>
-                    <a href="/blog/2020/08/20/electron-eat-shit/" class="has-link-black-ter is-size-6">Electron 踩坑</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a> / <a class="has-link-grey -link" href="/blog/categories/web/app/">app</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1027,6 +1054,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2021/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/blog/archives/2020/12/">
@@ -1258,6 +1296,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/旅行/">
+                        <span class="tag">旅行</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/blog/tags/编程/">
                         <span class="tag">编程</span>
                         <span class="tag is-grey">1</span>
@@ -1267,6 +1312,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/blog/tags/面试/">
                         <span class="tag">面试</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/风景/">
+                        <span class="tag">风景</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -1292,7 +1344,7 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2020 msyfls123&nbsp;
+                &copy; 2021 msyfls123&nbsp;
                 Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
                 
                 </p>

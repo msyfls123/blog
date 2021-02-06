@@ -129,6 +129,122 @@
     <div class="card">
     
     <div class="card-image">
+        <a href="/blog/2020/11/02/丝般顺滑的Electron跨端开发体验/" class="image is-7by1">
+            <img class="thumbnail" src="/blog/images/electron-build.png" alt="丝般顺滑的 Electron 跨端开发体验">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-11-02T15:30:01.000Z">2020-11-02</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    24 分钟 读完 (大约 3667 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/blog/2020/11/02/丝般顺滑的Electron跨端开发体验/">丝般顺滑的 Electron 跨端开发体验</a>
+            
+        </h1>
+        <div class="content">
+            <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>减化软件开发复杂度的核心奥义是分层与抽象，汇编语言抹平了不同 CPU 实现的差异，做到了”中央处理器”的抽象，而操作系统则是抽象了各种计算机硬件，对应用程序暴露了系统层的接口，让应用程序不需要一对一地对接硬件。</p>
+<p>回到这篇文章的标题，目前主流的桌面端主要为 Windows、macOS 和 Linux 三种，考虑覆盖人群，实际做到覆盖前两端即可覆盖绝大多数用户。或许有同学就要问了，都 2020 年了还有必要开发桌面端应用吗？？Web 它不香吗？答案是：香，但它还不够香。网页因为各种安全方面的限制，现在还无法很好地和系统进行交互，比如文件读写（实际已经有了 Native File System [<a href="https://web.dev/file-system-access/" target="_blank" rel="noopener">https://web.dev/file-system-access/</a>）和更改各种系统配置的能力，这些往往是处于安全和兼容性的考虑。如果想强行在 Web 里做到这些部分也不是不可以，但相对普通 Web 开发，成本就显得过高了点，这点先按下不表。<br> 俗话讲”酒香不怕巷子深”，Web 在富 UI 应用的场景下已经一枝独秀遥遥领先于其他 GUI 方案，像早期 Qt、GTK 等跨端 GUI 开发方案已经几乎绝迹（PyQt 还过得比较滋润，主要是 Python 胶水语言的特性编写简单界面比较灵活），随着移动端浪潮的袭来以及 Node.js 的崛起，更多开发者选择 JavaScript （包括附属于其上的语言和框架）进行跨桌面、移动端和 Web 的混合开发，像 Ionic、Cordova(PhoneGap) 等框架在 2011 年以后如雨后春笋般冒了出来，当然随着 Facebook 和 Google 发布 React Native 和 Flutter，广大 Web 开发者终于可以喘口气，看到了只学一种框架就用上五年的曙光。</p>
+<p>移动端的竞争如此激烈，但桌面端则目前只有一个王者，那就是 Electron。我们来看看它究竟是什么?</p>
+<p><img src="/blog/images/electron-build/document_image_rId10.png" alt></p>
+<p>这个问题的答案很简单，Electron 就是 Chromium（Chrome 内核）、Node.js 和系统原生 API 的结合。它做的事情很简单，整个应用跑在一个 main process（主进程） 上，需要提供 GUI 界面时则创建一个 renderer process（渲染进程）去开启一个 Chromium 里的 BrowserWindow/BrowserView，实际就像是 Chrome 的一个窗口或者 Tab 页一样，而其中展示的既可以是本地网页也可以是线上网页，主进程和渲染进程间通过 IPC 进行通讯，主进程可以自由地调用 Electron 提供的系统 API 以及 Node.js 模块，可以控制其所辖渲染进程的生命周期。</p>
+<p><img src="/blog/images/electron-build/document_image_rId11.png" alt><br>Electron 做到了系统进程和展示界面的分离，类似于 Chrome或小程序的实现，这样的分层有利于<strong>多窗口应用</strong>的开发，天然地形成了 <strong>MVC架构</strong>。这里仅对其工作原理做大致介绍，并不会详尽阐述如何启动一个 Electron App 乃至创建 BrowserWindow 并与之通讯等，相反，本系列文章将着重于介绍适合 Web 开发者在编码之余需要关注的<strong>代码层次、测试、构建发布</strong>相关内容，以「腾讯文档桌面端」开发过程作为示例，阅读完本系列将使读者初步了解一个 Electron 从开发到上线所需经历的常见流程。</p>
+<p>在这里，笔者将着重介绍与读者探讨以下几个 Electron 开发相关方面的激动人心的主题：</p>
+<ul>
+<li><p>我只有一台 MacBook，可以用 Electron 开发出适用于其他平台的 App 吗？</p>
+</li>
+<li><p>我需要为不同平台分发不同的版本吗？它们的依赖关系如何？</p>
+</li>
+<li><p>如何让用户觉得我开发的应用是可信任的和被稳定维护的？</p>
+</li>
+<li><p>我想让用户在”更多场景”下使用我的应用，我该怎么做？</p>
+</li>
+<li><p>我是一个 Web 开发者，Electron 看起来是 C/S 架构，应该如何设计消息传递机制？</p>
+</li>
+<li><p>用 Electron 开发的 App 可测试性如何，可以在同一套测试配置下运行吗？</p>
+</li>
+</ul>
+<p>不用担心，以上问题的回答都是”Yes，Electron 都能做到”。下面我们就进入第一个主题吧，如何构建你的 Electron 应用。</p>
+<h1 id="打包应用"><a href="#打包应用" class="headerlink" title="打包应用"></a>打包应用</h1><p>首先我们假定你已经创建了一个 main.js 的文件，同时创建了一个名叫 renderer.html 的文件用于展示渲染内容，这时候你就可以直接将这个文件夹压缩后发给你的用户了，请用 Terminal 切换到该文件夹下，键入 <code>electron .</code> 并回车即可运行应用，全文完！撒花 ✿✿ヽ(°▽°)ノ✿</p>
+<p>当然不是这样简单，我们需要交付的是一个完整的独立运行的 App，至少我们得把代码和 Electron 的可执行文件都打包进去。但首先第一步是，既然用户是下载了一个大几十 M 的 App，我们是不是可以直接在 App 里 serve 源码了？简而言之，是的，你可以将你的源文件连同 node_modules 一起发给用户，但是 ——</p>
+<p><img src="/blog/images/electron-build/document_image_rId12.png" alt></p>
+<p>巨巨…… 怕了怕了，并且直接 server 源代码也可能会将一些敏感信息或者你写得不咋滴的代码直接暴露给用户，带来不必要的安全风险。这里介绍一下使用 Webpack 和 Rollup 打包 Electron App 的关键代码：</p>
+<h2 id="使用-Webpack-打包"><a href="#使用-Webpack-打包" class="headerlink" title="使用 Webpack 打包"></a>使用 Webpack 打包</h2><p>用 Webpack 打包还是相对简单的，只需要将 config.target 设置成 ‘electron-main’ 或者 ‘electron-renderer’ 即可<br> <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// webpack.config.js</span></span><br><span class="line"><span class="hljs-keyword">const</span> config = &#123;</span><br><span class="line">    target: <span class="hljs-string">'electron-main'</span> | <span class="hljs-string">'electron-renderer'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其原理是对不仅包括 Node.js 原生模块，同时也包括 Electron 相关模块都不打包了，交给 Electron 自己在运行时解决依赖，见链接：<a href="https://github.com/webpack/webpack/blob/3610012f42e4ba9cf80a0e8a58a165b5121d8582/lib/electron/ElectronTargetPlugin.js#L24-L64" target="_blank" rel="noopener">webpack/ElectronTargetPlugin.js#L24-L64</a></p>
+<h2 id="使用-Rollup-打包"><a href="#使用-Rollup-打包" class="headerlink" title="使用 Rollup 打包"></a>使用 Rollup 打包</h2><p>既然实际项目中都是拿 Webpack 打包的，何不尝试下新的方式呢，Rollup 作为打包 npm 模块的最佳工具，想必也是能打包 Electron 应用的吧…… 但 Rollup 就没有这么简便的配置方式了，需要做一番小小的手脚：</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// rollup.config.js</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> [</span><br><span class="line">    &#123;</span><br><span class="line">        input: <span class="hljs-string">'src/main-process/main.ts'</span>,</span><br><span class="line">        output: &#123;</span><br><span class="line">            format: <span class="hljs-string">'cjs'</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        external: [<span class="hljs-string">'electron'</span>],</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        input: <span class="hljs-string">'src/renderer/index.tsx'</span>,</span><br><span class="line">        output: &#123;</span><br><span class="line">            format: <span class="hljs-string">'iife'</span>,</span><br><span class="line">            globals: &#123;</span><br><span class="line">                electron: <span class="hljs-string">"require('electron')"</span>,</span><br><span class="line">            &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">        external: [<span class="hljs-string">'electron'</span>],</span><br><span class="line">    &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>解释一下，format 为 ‘cjs’ 或 ‘iife’ 是表明适用于 Node.js 环境的 commonjs 或者是浏览器环境的立即执行格式，而他们同样都需要将 electron 设置为外部依赖，同时在渲染进程里还需要指定 <code>electron = require(&#39;electron&#39;);</code>。等等，这里竟然在 window 下直接 require？？？是的，通过创建 BrowserWindow 时设置 <code>nodeIntergration: true</code> 即可在打开的网页里使用 Node.js 的各种功能，但能力越大所承担的风险也越大，所以是得禁止给在线网页开启这个属性的。</p>
+<p><img src="/blog/images/electron-build/document_image_rId14.png" alt></p>
+<p>这里还有个类似的属性 <code>enableRemoteModule</code>。 它的含义是是否开启远程模块，这样就能直接从渲染进程调用主进程的一些东西，但这样做同样有包括<a href="https://medium.com/@nornagon/electrons-remote-module-considered-harmful-70d69500f31" target="_blank" rel="noopener">[性能损耗在内的一系列问题]{.ul}</a>，所以 Electron 10.x 以后已经默认关闭了这个开关，手动开启同样需要慎重。</p>
+<p><img src="/blog/images/electron-build/document_image_rId16.png" alt></p>
+<h2 id="不进行打包的依赖"><a href="#不进行打包的依赖" class="headerlink" title="不进行打包的依赖"></a>不进行打包的依赖</h2><p>虽然 node_modules 确实很大，但因为是桌面应用，总有些库或者包里的内容是不需要或者说没法去打包的，这时候就要将他们拷贝到生成文件夹里去，比如项目里用到的 levelDB 针对 Windows 32 位和 64 位以及 macOS 都有不同的预编译文件，这时将它们直接拷贝过去就好啦。</p>
+<p>构建完成后，我们的应用已经有了直接 <code>electron .</code> 跑起来的能力，离可发布的 MVP 只差打包成可执行文件这一步了！</p>
+<h1 id="构建可执行文件"><a href="#构建可执行文件" class="headerlink" title="构建可执行文件"></a>构建可执行文件</h1><p>将代码打包成可执行文件同样需要市面上的第三方解决方案，有 electron-packager 和 electron-builder 可选，实际比较下来 electron-builder 提供了包括安装和更新在内的一系列流程，体验极好，所以只以其作为构建工具作介绍。</p>
+<p>electron-builder 也是一个对开发代码无侵入的打包构建工具，它只需要指定好各种路径以及需要构建的目标配置即可一键完成打包构建、签名、认证等一系列流程。</p>
+<p>electron-builder 是具有同时打包出多个平台 App 的能力的，具体在 Mac 上是通过 Wine 这个兼容层来实现的，Wine 是 Wine Is Not an Emulator 的缩写，从名字里强调它不是一个模拟器，它是对 Windows API 的抽象。打包后的应用与 Windows 上构建的应用没有区别，但构建时的 process.platform 会被锁在 ‘darwin’ 即 macOS，这是个看起来微不足道，但实则遇到会让人抓耳挠腮的情形，后面会详细展开。</p>
+<p><img src="/blog/images/electron-build/document_image_rId20.png" alt></p>
+<p>但 Windows 就没有这么好运气了，笔者并没有找到可以在 Windows 上打包出 macOS 可用执行文件的方式，所以上面的同时出两个平台可执行文件的方式亲测还是只能给 macOS 用的。</p>
+<p><img src="/blog/images/electron-build/document_image_rId21.png" alt></p>
+<h1 id="自动升级"><a href="#自动升级" class="headerlink" title="自动升级"></a>自动升级</h1><p>electron-builder 提供了生成自动升级文件的能力，配置好对应平台的 publish 字段后会同步生成升级 yml 文件，将它们和安装包一起上传到 CDN 并配置 electron-updater 即可以实现自动升级。<img src="/blog/images/electron-build/document_image_rId22.png" alt></p>
+<p>配置 electron-updater 需要注意以下三点：</p>
+<ol>
+<li><p>electron-builder 会在应用打包时偷偷塞进去一个 app-update.yml，本地开发时没有读到相似的开发配置会无法调试，需要手动复制一份并重命名成 dev-app-update.yml 放到开发目录下才能继续升级，但最后一定会自动升级失败，因为开发时的代码没有签名。</p>
+</li>
+<li><p>electron-updater 会去读 package.json 文件的 version 字段，如果是主目录和 App 目录不相同的开发模式的话，需要手动指定 autoUpdater.currentVersion。同样需要手动指定的还有 autoUpdater.channel，这里有个 bug，mac 虽然用的是 <code>latest-mac.yml</code> 文件但 channel 却要设置成 <code>latest</code>，electron-updater 似乎会自动补上 <code>-mac</code> 字样。</p>
+</li>
+<li><p>与 macOS 静默升级不同，nsis 包的 Windows 升级动静很大，所以如果用户不是想立马升级的话最好将 autoInstallOnQuit 设置成 false，否则用户就会惊奇地发现哪怕取消了自动安装还是在退出后立马更新了。</p>
+</li>
+</ol>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">autoUpdater.currentVersion = APP_VERSION;</span><br><span class="line">autoUpdater.autoInstallOnAppQuit = <span class="hljs-literal">false</span>;</span><br><span class="line">autoUpdater.channel = os.platform() === <span class="hljs-string">'darwin'</span> ? <span class="hljs-string">'latest'</span> : <span class="hljs-string">'latest-win32'</span>;</span><br></pre></td></tr></table></figure>
+<h1 id="文件关联"><a href="#文件关联" class="headerlink" title="文件关联"></a>文件关联</h1><p>在移动端 App 大杀四方，Web 大行其道，小程序蠢蠢欲动的当下，一个桌面应用的生存空间是极其狭小的，通常都不需要什么竞争对手，可能自身产品的其他端就把自己给分流耗竭而亡了……我们提到桌面端，不得不提的就是文件系统了，如果 iPhone &amp; Android 都有便捷好用的文件管理系统，那感觉桌面端的黄昏真的就来到了。</p>
+<p>但这里首先还是看一看 electron-builder 可以给我们带来什么能力吧。</p>
+<h2 id="系统关联文件类型"><a href="#系统关联文件类型" class="headerlink" title="系统关联文件类型"></a>系统关联文件类型</h2><p>这就是文件右键菜单里的打开方式了，设置方式也很简单，通过设置 electron-builder config 里的 fileAssocaitions 字段即可。<br><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> config = &#123;</span><br><span class="line">    fileAssociations: &#123;</span><br><span class="line">        ext: [<span class="hljs-string">'doc'</span>, <span class="hljs-string">'docx'</span>, <span class="hljs-string">'xls'</span>, <span class="hljs-string">'xlsx'</span>, <span class="hljs-string">'ppt'</span>, <span class="hljs-string">'pptx'</span>, <span class="hljs-string">'pdf'</span>, <span class="hljs-string">'txt'</span>, <span class="hljs-string">'csv'</span>],</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/blog/images/electron-build/document_image_rId23.png" alt></p>
+<p><img src="/blog/images/electron-build/document_image_rId24.png" alt></p>
+<h2 id="QQ-AIO-结构化消息打开应用（Windows）"><a href="#QQ-AIO-结构化消息打开应用（Windows）" class="headerlink" title="QQ AIO 结构化消息打开应用（Windows）"></a>QQ AIO 结构化消息打开应用（Windows）</h2><p>QQ 通过唤起写入注册表里的腾讯文档地址来打开腾讯文档 App 同时带上了 –url=<a href="https://docs.qq.com/xxx" target="_blank" rel="noopener">https://docs.qq.com/xxx</a> 的参数，继而打开对应的文档。</p>
+<p>electron-builder 配置 nsis.include 参数带上 nsh 脚本，写入如下设置（注：该配置并不完全）即可帮助 QQ 定位已安装的腾讯文档应用。</p>
+<figure class="highlight nsis hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">WriteRegStr</span> <span class="hljs-params">HKLM</span> <span class="hljs-string">"SOFTWARE\Tencent\TencentDocs"</span> <span class="hljs-string">"Install"</span> <span class="hljs-string">"<span class="hljs-variable">$INSTDIR</span>"</span></span><br></pre></td></tr></table></figure>
+<p>NSIS 脚本还可以做很多事情，比如卸载 App 后清理数据或者检查是否安装了老版本等，具体可参见其官方文档。</p>
+<figure class="highlight nsis hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">Delete</span> <span class="hljs-string">"<span class="hljs-variable">$APPDATA</span>\TDAppDesktop\*.*"</span></span><br><span class="line">RMDIR /r <span class="hljs-string">"<span class="hljs-variable">$APPDATA</span>\TDAppDesktop"</span></span><br></pre></td></tr></table></figure>
+<p>在 QQ 发起消息后，文档这边需要支持解析所带的参数，从进程参数中解出相关信息再打开对应 Tab 页面。</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> args = process.argv;</span><br><span class="line"><span class="hljs-keyword">if</span> (argv.length &gt; <span class="hljs-number">1</span>) &#123;</span><br><span class="line">    handleCommandArguments(argv.slice(<span class="hljs-number">1</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>本文简述了通过 Electron 构建应用过程中采用不同方式和配置打包文件、使用 electron-builder 构建可执行文件，同时用其提供的功能实现自动升级与文件关联，完成了在单个平台（macOS）开发并构建出跨端应用的任务。笔者接触 Electron 开发时间较短，行文中多是开发中所见所闻所感，如有错误纰漏之处，还望读者不吝包涵指正。后续文章将介绍在跨端开发中处理兼容性时遇到的问题，以及如何优雅地在产品设计和功能间进行取舍。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-image">
         <a href="/blog/2020/10/10/why-we-should-bundle-source-code/" class="image is-7by1">
             <img class="thumbnail" src="/blog/images/why-we-should-bundle-source-code-1.png" alt="为什么我们要打包源代码">
         </a>
@@ -274,87 +390,6 @@
 
 
 
-    <div class="card">
-    
-    <div class="card-image">
-        <a href="/blog/2020/06/27/format-and-validate/" class="image is-7by1">
-            <img class="thumbnail" src="/blog/images/format-and-validate-1.png" alt="格式化与验证">
-        </a>
-    </div>
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-06-27T14:12:41.000Z">2020-06-27</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    8 分钟 读完 (大约 1255 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/blog/2020/06/27/format-and-validate/">格式化与验证</a>
-            
-        </h1>
-        <div class="content">
-            <p>众所周知，前端很大程度上就是做数据的展示和收集工作，这时候用户看到的内容和服务端存储的数据中间就会有多层转换过程。</p>
-<h1 id="钱"><a href="#钱" class="headerlink" title="钱"></a>钱</h1><p>最重要的当然是 money 啦，相差一分钱都能让用户急得哇哇大叫。比如业务里有三种价格：</p>
-<ul>
-<li><code>fixed_price</code> 原价</li>
-<li><code>promotion_price</code> 特价，一般为 <code>fixed_price * promotion.discount</code></li>
-<li><code>vip_price</code> 会员价，一般为 <code>fixed_price * vip.discount</code>，可能为空</li>
-</ul>
-<p>经常出现的情形时既要显示折扣（<code>discount</code>）又要显示价格（promotion_price or vip_price），可不可以直接返回 <code>fixed_price</code> 和 <code>discount</code> 呢？不可以！细心的读者已经觉察到问题了 —— <code>discount</code> <code>为小数，fixed_price</code> 与其相乘很可能不是一个整数（这里要插一句，一般情况下价格都是记录为 int，以 cent 作为单位）。比如臭名昭著的 <code>JavaScript</code> 浮点数相加问题。</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; 0.1 + 0.2</span><br><span class="line">&lt; 0.30000000000000004</span><br><span class="line">&gt; 0.1 + 0.2 === 0.3</span><br><span class="line">&lt; false</span><br></pre></td></tr></table></figure>
-<p>原因就是 float 在计算机里存了 32 位，1 位符号位 + 8 位指数位 + 23 位尾数，反正就是不精确就完事了。那我们即使不精确也要保证各处拿到的是一个值，这个值只能以后端为准。</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@property</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">promotion_price</span><span class="hljs-params">(self)</span>:</span></span><br><span class="line">  promotion = self.get_active_promotion()</span><br><span class="line">    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> promotion:</span><br><span class="line">        <span class="hljs-keyword">return</span> self.fixed_price</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">if</span> self.is_chapter:</span><br><span class="line">        <span class="hljs-keyword">return</span> int(self.fixed_price * self.column.promotion_discount)</span><br><span class="line">    <span class="hljs-keyword">return</span> promotion.price</span><br></pre></td></tr></table></figure>
-<p>这个值是惰性的，也就是说只有用到时才会计算值，返回的一定是一个整数。有一些应用场景：</p>
-<ul>
-<li>直接展示价格：<code>(price / 100).toFixed(2)</code> =&gt; <code>0.99</code></li>
-<li>很多章节合并购买，<code>items.reduce((total, item) =&gt; total + item.price, 0)</code> 注意这个值可能会不等于整本的定价，这时就要引导或劝说用户直接买整本更划算呀</li>
-<li>满减活动，类似合并购买情形，只不过是有一些阈值情形<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">getMaxAvailableRebateAmountInGroup = <span class="hljs-function">(<span class="hljs-params">group</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> total = <span class="hljs-keyword">this</span>.getTotalPriceInGroup(group)</span><br><span class="line">  <span class="hljs-keyword">let</span> maxAmount = <span class="hljs-number">0</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (!group.event) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> maxAmount</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  group.event.availablecouponGroups.some(<span class="hljs-function">(<span class="hljs-params">coupon</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (total &gt; coupon[<span class="hljs-number">0</span>]) &#123;</span><br><span class="line">      maxAmount = coupon[<span class="hljs-number">1</span>]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> total &gt; coupon[<span class="hljs-number">0</span>]</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="hljs-keyword">return</span> maxAmount</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * Returns rebate threshold info.</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@param <span class="hljs-type">&#123;Object[]&#125;</span> <span class="hljs-variable">couponGroups</span></span> - Available coupons.</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@param <span class="hljs-type">&#123;number&#125;</span> </span>couponGroups[][0] - The threshold of coupon.</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@param <span class="hljs-type">&#123;number&#125;</span> </span>couponGroups[][1] - The amount of coupon, will be reduced from price when total meets threshold.</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@param <span class="hljs-type">&#123;numer&#125;</span> <span class="hljs-variable">total</span></span> - Total of prices.</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@returns <span class="hljs-type">&#123;[string, bool]&#125;</span> </span>Description String, isMaxThresholdMet</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-comment">// returned value: [descString, isMaxThresholdMet]</span></span><br><span class="line">getRebateThreshold = <span class="hljs-function">(<span class="hljs-params">couponGroups, total</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> mf = moneyformatShort</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (couponGroups.length === <span class="hljs-number">0</span> ) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> [<span class="hljs-string">'本活动满减券已全部用完'</span>, <span class="hljs-literal">true</span>]</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, prev_threshold = <span class="hljs-number">0</span>, prev_amount = <span class="hljs-number">0</span>; i &lt; couponGroups.length; i++) &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> [threshold, amount] = couponGroups[i]</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">if</span> (total &gt;= threshold) &#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (i === <span class="hljs-number">0</span>) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> [<span class="hljs-string">'已购满 '</span> + mf(threshold) + <span class="hljs-string">'，已减 '</span> + mf(amount), <span class="hljs-literal">true</span>]</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> [<span class="hljs-string">'已减 '</span> + mf(amount) +</span><br><span class="line">          <span class="hljs-string">'，再购 '</span> + mf(prev_threshold - total) + <span class="hljs-string">' 可减 '</span> + mf(prev_amount), <span class="hljs-literal">false</span>]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (i === couponGroups.length - <span class="hljs-number">1</span>) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> [<span class="hljs-string">'购满 '</span> + mf(threshold) + <span class="hljs-string">' 可减 '</span> + mf(amount) +</span><br><span class="line">          <span class="hljs-string">'，还差 '</span> + mf(threshold - total), <span class="hljs-literal">false</span>]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    [prev_threshold, prev_amount] = [threshold, amount]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">getTotalPriceInGroup = <span class="hljs-function">(<span class="hljs-params">group</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> group.itemList.reduce(<span class="hljs-function">(<span class="hljs-params">total, item</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (item.onSale &amp;&amp; item.selected) &#123;</span><br><span class="line">      total += item.salePrice</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> total</span><br><span class="line">  &#125;, <span class="hljs-number">0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>钱的计算大概就是这样，涉及到第三方支付就更头疼了。</p>
-<h1 id="时间"><a href="#时间" class="headerlink" title="时间"></a>时间</h1><p>金钱是宝贵的，时间是更宝贵的。而我们需要根据不同场景甚至用户所在时区去显示不同的时间格式，有一种方案是 <code>date-fns</code>，项目里也有根据 timestamp 转换成用户可读格式的各种函数，但有时候只是想简简单单显示一个时间，同时考虑各种情况下的复用性。上 <code>GraphQL</code>！</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> time</span><br><span class="line"><span class="hljs-keyword">from</span> libs.utils.date <span class="hljs-keyword">import</span> mtimeformat</span><br><span class="line"><span class="hljs-keyword">from</span> ..types <span class="hljs-keyword">import</span> TimeFormat</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">format_time</span><span class="hljs-params">(time_, format=TimeFormat.FULL_TIME.value)</span>:</span></span><br><span class="line">    <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">        TimeFormat.FURTHER: mtimeformat(time_),</span><br><span class="line">        TimeFormat.FULL_TIME: time_.strftime(<span class="hljs-string">'%Y-%m-%d %H:%M:%S'</span>),</span><br><span class="line">        TimeFormat.FULL_DAY: time_.strftime(<span class="hljs-string">'%Y-%m-%d'</span>),</span><br><span class="line">        TimeFormat.CHINESE_FULL_DAY: time_.strftime(<span class="hljs-string">'%Y 年 %-m 月 %-d 日'</span>),</span><br><span class="line">        TimeFormat.ISO: time_.isoformat(),</span><br><span class="line">        TimeFormat.TIMESTAMP: int(time.mktime(time_.timetuple()) * <span class="hljs-number">1000</span>),</span><br><span class="line">    &#125;[format]</span><br></pre></td></tr></table></figure>
-<p>其中 <code>TimeFormat</code> 是一个 <code>GraphQL</code> 的 enum 类型，<code>mtimeformat</code> 是一个可以根据相差时间来区别展示的函数，比如可以展示成「刚刚」「5 分钟前」这样的口语化格式。</p>
-<p><img src="/blog/images/format-and-validate-2.png" alt="实际效果"></p>
-<h1 id="表单"><a href="#表单" class="headerlink" title="表单"></a>表单</h1><p>表单的验证可以有很多实现，最简单的莫过于 <code>maxlength</code> 及 <code>require</code> 这种，直接交给浏览器，项目里也用到了一些 <code>jQuery</code> 的表单绑定，在提交之前一次性遍历表单项根据 <code>data-*</code> 来进行 check。</p>
-<p>现实是 react 相关的表单验证有以下两个痛点：</p>
-<h2 id="异步验证"><a href="#异步验证" class="headerlink" title="异步验证"></a>异步验证</h2><p>所幸的是 <code>formik</code> 支持了 <code>Promise</code> 的验证结果</p>
-<figure class="highlight jsx hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;Field name=&#123;name&#125; type=<span class="hljs-string">"number"</span></span><br><span class="line">  validate=&#123;<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> fetchAgent(value).then(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (res.agentExisted) &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (res.existed) &#123;</span><br><span class="line">          <span class="hljs-keyword">return</span> <span class="hljs-string">`该作者经纪合同已经存在，负责人：<span class="hljs-subst">$&#123;res.editorName&#125;</span>`</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-string">`'作者 ID' 为 <span class="hljs-subst">$&#123;value&#125;</span> 的用户不存在或不是作者身份`</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
-<h2 id="依赖另一输入"><a href="#依赖另一输入" class="headerlink" title="依赖另一输入"></a>依赖另一输入</h2><figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> Yup <span class="hljs-keyword">from</span> <span class="hljs-string">'yup'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> OTHER_NATIONALITY = <span class="hljs-string">'其他'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> validationSchema=Yup.object().shape(&#123;</span><br><span class="line">  nationality: Yup.string().nullable(<span class="hljs-literal">true</span>).required(<span class="hljs-string">'请选择国家或地区'</span>),</span><br><span class="line">  otherNationality: Yup.string().test(</span><br><span class="line">    <span class="hljs-string">'need-other-nationality'</span>,</span><br><span class="line">    <span class="hljs-string">'请填写其他国家或地区'</span>,</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">value</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.parent.nationality !== OTHER_NATIONALITY || !!value</span><br><span class="line">    &#125;</span><br><span class="line">  ),</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p><img src="/blog/images/format-and-validate-3.png" alt="实际情形为中间的输入框依赖于前面的下拉筛选框是否选了「其他」"></p>
-<h1 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h1><p>异步鉴权路由</p>
-<figure class="highlight jsx hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> PrivateRoute = <span class="hljs-function">(<span class="hljs-params">&#123; component: Component, ...rest &#125;</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> user = useSelector(<span class="hljs-function"><span class="hljs-params">state</span> =&gt;</span> selectors.user(state))</span><br><span class="line">  <span class="hljs-keyword">const</span> isLoaded = useSelector(<span class="hljs-function"><span class="hljs-params">state</span> =&gt;</span> selectors.isLoaded(state))</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> (</span><br><span class="line">    &lt;Route</span><br><span class="line">      &#123;...rest&#125;</span><br><span class="line">      render=&#123;(props) =&gt;</span><br><span class="line">        !isLoaded ? (</span><br><span class="line">          &lt;&gt;&lt;<span class="hljs-regexp">/&gt;</span></span><br><span class="line"><span class="hljs-regexp">        ) : user ? (</span></span><br><span class="line"><span class="hljs-regexp">          &lt;Component &#123;...props&#125; /</span>&gt;</span><br><span class="line">        ) : (</span><br><span class="line">          &lt;Redirect to=<span class="hljs-string">'/404'</span> /&gt;</span><br><span class="line">        )</span><br><span class="line">      &#125;</span><br><span class="line">    /&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 
     
 <div class="card card-transparent">
@@ -423,7 +458,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        19
+                        20
                     </p>
                 </div>
             </div>
@@ -433,7 +468,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        3
+                        4
                     </p>
                 </div>
             </div>
@@ -443,7 +478,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        14
+                        16
                     </p>
                 </div>
             </div>
@@ -547,6 +582,14 @@
             <span class="level-end">
                 <span class="level-item tag">6</span>
             </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/blog/categories/生活/">
+            <span class="level-start">
+                <span class="level-item">生活</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
         </a></li>
             </ul>
         </div>
@@ -559,7 +602,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/blog/tags/Electron/" style="font-size: 20px;">Electron</a> <a href="/blog/tags/React/" style="font-size: 15px;">React</a> <a href="/blog/tags/UI/" style="font-size: 10px;">UI</a> <a href="/blog/tags/electron/" style="font-size: 10px;">electron</a> <a href="/blog/tags/electron-builder/" style="font-size: 10px;">electron-builder</a> <a href="/blog/tags/gulp/" style="font-size: 15px;">gulp</a> <a href="/blog/tags/node/" style="font-size: 10px;">node</a> <a href="/blog/tags/nodejs/" style="font-size: 15px;">nodejs</a> <a href="/blog/tags/rollup/" style="font-size: 10px;">rollup</a> <a href="/blog/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/blog/tags/前端/" style="font-size: 10px;">前端</a> <a href="/blog/tags/多线程/" style="font-size: 15px;">多线程</a> <a href="/blog/tags/编程/" style="font-size: 10px;">编程</a> <a href="/blog/tags/面试/" style="font-size: 10px;">面试</a>
+        <a href="/blog/tags/Electron/" style="font-size: 20px;">Electron</a> <a href="/blog/tags/React/" style="font-size: 15px;">React</a> <a href="/blog/tags/UI/" style="font-size: 10px;">UI</a> <a href="/blog/tags/electron/" style="font-size: 10px;">electron</a> <a href="/blog/tags/electron-builder/" style="font-size: 10px;">electron-builder</a> <a href="/blog/tags/gulp/" style="font-size: 15px;">gulp</a> <a href="/blog/tags/node/" style="font-size: 10px;">node</a> <a href="/blog/tags/nodejs/" style="font-size: 15px;">nodejs</a> <a href="/blog/tags/rollup/" style="font-size: 10px;">rollup</a> <a href="/blog/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/blog/tags/前端/" style="font-size: 10px;">前端</a> <a href="/blog/tags/多线程/" style="font-size: 15px;">多线程</a> <a href="/blog/tags/旅行/" style="font-size: 10px;">旅行</a> <a href="/blog/tags/编程/" style="font-size: 10px;">编程</a> <a href="/blog/tags/面试/" style="font-size: 10px;">面试</a> <a href="/blog/tags/风景/" style="font-size: 10px;">风景</a>
     </div>
 </div>
 
@@ -573,6 +616,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/blog/2021/02/06/travels-of-beijing-parks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/travels-of-beijing-parks/document_image_rId10.jpeg" alt="逛公园才是正经事">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-02-06T15:32:14.000Z">2021-02-06</time></div>
+                    <a href="/blog/2021/02/06/travels-of-beijing-parks/" class="has-link-black-ter is-size-6">逛公园才是正经事</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/生活/">生活</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -650,25 +712,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/blog/2020/08/20/electron-eat-shit/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/electron-eat-shit-1.jpg" alt="Electron 踩坑">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-20T11:51:09.000Z">2020-08-20</time></div>
-                    <a href="/blog/2020/08/20/electron-eat-shit/" class="has-link-black-ter is-size-6">Electron 踩坑</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a> / <a class="has-link-grey -link" href="/blog/categories/web/app/">app</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -680,6 +723,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2021/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/blog/archives/2020/12/">
@@ -911,6 +965,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/旅行/">
+                        <span class="tag">旅行</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/blog/tags/编程/">
                         <span class="tag">编程</span>
                         <span class="tag is-grey">1</span>
@@ -920,6 +981,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/blog/tags/面试/">
                         <span class="tag">面试</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/风景/">
+                        <span class="tag">风景</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -949,6 +1017,25 @@
         
         <article class="media">
             
+            <a href="/blog/2021/02/06/travels-of-beijing-parks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/travels-of-beijing-parks/document_image_rId10.jpeg" alt="逛公园才是正经事">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-02-06T15:32:14.000Z">2021-02-06</time></div>
+                    <a href="/blog/2021/02/06/travels-of-beijing-parks/" class="has-link-black-ter is-size-6">逛公园才是正经事</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/生活/">生活</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/blog/2020/12/06/tencent-docs-desktop-practice/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/blog/images/tencent-docs-desktop-practice/document_image_rId9.png" alt="Electron 开发实践">
@@ -1023,25 +1110,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/blog/2020/08/20/electron-eat-shit/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/blog/images/electron-eat-shit-1.jpg" alt="Electron 踩坑">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-20T11:51:09.000Z">2020-08-20</time></div>
-                    <a href="/blog/2020/08/20/electron-eat-shit/" class="has-link-black-ter is-size-6">Electron 踩坑</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a> / <a class="has-link-grey -link" href="/blog/categories/web/app/">app</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1053,6 +1121,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2021/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/blog/archives/2020/12/">
@@ -1284,6 +1363,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/旅行/">
+                        <span class="tag">旅行</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/blog/tags/编程/">
                         <span class="tag">编程</span>
                         <span class="tag is-grey">1</span>
@@ -1293,6 +1379,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/blog/tags/面试/">
                         <span class="tag">面试</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/风景/">
+                        <span class="tag">风景</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -1318,7 +1411,7 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2020 msyfls123&nbsp;
+                &copy; 2021 msyfls123&nbsp;
                 Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
                 
                 </p>
