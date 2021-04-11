@@ -1,0 +1,1835 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>马猴烧酒</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="现在站在你面前的我 并不是幻影呀">
+<meta name="keywords" content="前端 感悟 技术">
+<meta property="og:type" content="website">
+<meta property="og:title" content="马猴烧酒">
+<meta property="og:url" content="https://msyfls123.github.io/blog/page/2/index.html">
+<meta property="og:site_name" content="马猴烧酒">
+<meta property="og:description" content="现在站在你面前的我 并不是幻影呀">
+<meta property="og:locale" content="zh-CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="马猴烧酒">
+<meta name="twitter:description" content="现在站在你面前的我 并不是幻影呀">
+
+
+
+
+
+<link rel="icon" href="/blog/images/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/blog/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/blog/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/blog/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/blog/">
+            
+                <img src="/blog/images/logo.jpg" alt="马猴烧酒" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/blog/">Home</a>
+                
+                <a class="navbar-item" href="/blog/archives">Archives</a>
+                
+                <a class="navbar-item" href="/blog/categories">Categories</a>
+                
+                <a class="navbar-item" href="/blog/tags">Tags</a>
+                
+                <a class="navbar-item" href="/blog/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
+    <div class="card">
+    
+    <div class="card-image">
+        <a href="/blog/2020/12/06/tencent-docs-desktop-practice/" class="image is-7by1">
+            <img class="thumbnail" src="/blog/images/tencent-docs-desktop-practice/document_image_rId9.png" alt="Electron 开发实践">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-12-06T15:56:00.000Z">2020-12-06</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    28 分钟 读完 (大约 4182 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/blog/2020/12/06/tencent-docs-desktop-practice/">Electron 开发实践</a>
+            
+        </h1>
+        <div class="content">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>首先介绍一下腾讯文档桌面端应用，以下简称桌面端，其通过嵌入 web 端腾讯文档应用并利用 Electron 封装本地系统接口的能力实现了独立分发的桌面端 App，兼顾了 macOS 和 Windows 两大操作系统，借此实现了腾讯文档的全端覆盖。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId9.png" alt></p>
+<p>两大平台，一个月时间，我们是如何做到从技术选型到项目上线的呢？</p>
+<p>这也太标题党了，跟市面上流传甚广的 21 天精通 C++ 简直一模一样。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId10.png" alt></p>
+<p>我们都知道罗马不是一天建成的，如果把软件开发比作建一座城市的话，我们的的确确在一个月时间内造出了腾讯文档桌面端应用。肯定有人要问了，为何是一个月时间呢？为什么不是半个月，三个月亦或是半年时间？</p>
+<p>事实上，这也是我们一开始进行技术选型和开发规划时所考虑的问题，因为选择了使用 JavaScript 及 Web 技术开发客户端，就注定了与 web 开发息息相关，包括迭代周期和开发顺序等方面，web 端腾讯文档的发布周期是一周两次发布，在一个月时间内差不多可以交付一系列完整的 API，这样可以做到桌面端与 web 端并行开发，最终整合成一个整体。如果等到半年时间才交付了桌面端，这时 web 端应用的 API 和 JSBridge 等接口规范都可能随之发生改变，容易造成返工甚至二次开发。</p>
+<p>下面，我们将从四个方面介绍腾讯文档桌面端开发实践内容：技术选型、DevOps 工程化实践、混合式开发基础建设和跨端统一用户体验。</p>
+<h2 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h2><p><strong>竞技场耸立，罗马屹立不倒；竞技场倒塌，罗马倒塌；罗马倒塌，整个世界都会崩溃。 ——圣徒比德</strong></p>
+<p>技术选型与古罗马的竞技的核心并无二致，都在于选优拔萃。而我们做技术选型的目的则不在于观赏，在于为了今后的开发找到正确的方向。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId11.png" alt></p>
+<p>首先是总体的开发框架选择，结果是没有疑问的，我们选择了 Electron，实际上 NW.js 前身 node-webkit 和 Electron 的开发团队具有继承关系，而 NW.js 的特点是以 html 作为启动文件，在窗口里直接调用 Node.js，但我们知道能力越大责任越大，同时风险系数也越高。Electron 的主进程是跑在 Node.js 环境下的，可以无缝使用 Node.js 能力，而单独的窗口，即渲染进程，需要显式地打开开关才能使用，这样就一定程度上降低窗口中的页面滥用 Node.js 能力对系统造成危害或者频繁调用 Node.js 能力对性能产生影响的可能性。在插件、第三方包、社区生态和搜索热度上， Electron 都完胜于 NW.js，所以我们就放心地使用 Electron 进行开发吧。</p>
+<h3 id="社区优质实践"><a href="#社区优质实践" class="headerlink" title="社区优质实践"></a>社区优质实践</h3><p>既然选定了 Electron 作为开发框架，先来看一看业界基于 Electron 的优质实践，首当其冲的是宇宙第一 IDE 的 Visual Studio 的 …… 挂名弟弟 …… Visual Studio Code，同样是微软出品，现已成为 web 开发事实上的标准 IDE。</p>
+<p>然后是 Github 出品的 Atom 编辑器，这里插一句题外话，Electron 原名”Atom Shell”，后来随着框架的进一步抽离和沉淀，改名为”Electron”，这点非常符合国外技术圈觉得”工具不好用就发明一个趁手的工具”的思路。以及同样是 GitHub 出品的 <strong>GitHub Desktop</strong> 客户端，其他知名的基于 Electron 开发的桌面软件还有协作办公软件 <strong>Slack</strong>、 IM 即时通讯软件 <strong>WhatsApp</strong> 和 知识协作软件 <strong>Notion</strong> 等。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId12.png" alt></p>
+<p>经过进一步调研，我们发现鹅厂内部也有一个基于 GitHub Desktop 定制的开源项目 <strong>Trinity</strong>，在与其作者进行沟通探讨后决定基于这两个项目作为脚手架，搭建腾讯文档客户端应用。在开发过程中，我们主要参考了上述两个项目的目录结构，比如都是双 package 模式，运行时代码和构建打包脚本分离，以及针对当前开发与线上构建环境特定的配置文件等等。</p>
+<h3 id="构建工具"><a href="#构建工具" class="headerlink" title="构建工具"></a>构建工具</h3><p>我们做桌面端应用与 web 端应用差异最大的在于分发方式不同，web 端应用打开页面浏览即为分发成功，而桌面端应用则必须要下载到本地安装后使用，所以提升下载与安装体验对用户增长率提升至关重要。而提到安装包，就不得不提一下 <strong>electron-builder</strong>，它不仅做到了轻配置快速构建，也带给了桌面端应用非常多的额外能力，例如系统级别的文件关联，自动签名认证功能，制品管理和安装流程定制等，这些都与后面讲到的工程化建设和跨端体验一致性密切相关。通过一套配置，即可构建出包括自动更新、App Store 发布包在内的多个制品。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId13.png" alt></p>
+<h3 id="单测框架"><a href="#单测框架" class="headerlink" title="单测框架"></a>单测框架</h3><p>如果说安装包是团队给用户的交付物的话，代码就是开发给团队的交付物。好的代码应该是可测试、可维护和承上启下的，要做到这些的最佳实践形式就是编写测试。而多种多样的测试里最方便快速的就是单元测试了，针对 Electron 的测试方式与常见 web 端测试不同，也可以认为是分别在 JSDOM 和 Node.js 两种环境下进行测试。经过调研，我们引入了 <strong>@jest-runner/electron</strong> 作为我们的单测框架，它的优势是一套配置，根据文件目录分发到两种执行环境下运行，也就是前面提到的主进程和渲染进程。并且具有代码无侵入，配置简单，速度飞快等特点。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId14.png" alt></p>
+<p>从下面的图可以看到，运行全部 200 多个用例仅耗时不到 30s，方便开发时快速验证功能完备性。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId15.png" alt></p>
+<h2 id="DevOps-工程化实践"><a href="#DevOps-工程化实践" class="headerlink" title="DevOps 工程化实践"></a>DevOps 工程化实践</h2><p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId16.png" alt></p>
+<p>然后是我们的 DevOps 实践。为什么要协作呢？一个团队单打独斗不舒服吗？因为不同团队不同开发人员间基础能力有差异，倒不一定是体现在技术能力，而是技术侧重点不一样。DevOps 则提供了平台赋能，将各个能力项拉齐到统一水准。就像罗马士兵拥有了统一的装备，将人变成了战士。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId17.png" alt></p>
+<p>同时要注意到的是选择协作工具时不仅仅要考虑当下，也要考虑系统的伸缩性，为未来的发展壮大留有余量。</p>
+<p>这里是我们用到的部分公司平台基础能力，例如蓝盾流水线托管构建流程，七彩石实现配置下发，Sentry 做日志监控等等。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId18.png" alt></p>
+<p>最终实现了”把控代码质量”，”托管构建过程”和”运行时保障”这三大目标。</p>
+<p>把控代码质量：</p>
+<p>静态代码分析、ESLint 扫描、圈复杂度扫描、重复代码扫描、单元测试、自动化测试</p>
+<p>托管构建过程：</p>
+<p>自动构建托管、自动签名认证、自动发布、自动转工单</p>
+<p>运行时保障：</p>
+<p>配置下发、灰度开关、自动化故障上报、日志监控、性能监控</p>
+<h2 id="混合式开发基础建设"><a href="#混合式开发基础建设" class="headerlink" title="混合式开发基础建设"></a>混合式开发基础建设</h2><p>前面讲到的都是外在条件，但文档内在是 web 项目。我们需要设想一下，对于一个 web 项目而言，包括 HTML、CSS、JavaScript 和其他媒体文件等等都是外部资源，如何建设好应用在于如何利用好外部资源。</p>
+<p>如果说将 web 应用改造成桌面端应用是建一座城的话，那么将外部的能力引入到应用内的混合式开发基础建设就像是建造罗马水道一样。将水源从山脉中引流到城市里供人饮用、灌溉农田菜圃，再将污水输送出城市，完成城市的资源循环。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId19.png" alt></p>
+<p>让我们先来看看这里都有哪些系统和外界网络提供的能力呢？比如<strong>本地的原生数据库，文件系统里存储的数据文件，服务器的计算资源和静态文件 CDN</strong> 等。</p>
+<h3 id="本地资源：数据库、文件-IO-和-JSBridge"><a href="#本地资源：数据库、文件-IO-和-JSBridge" class="headerlink" title="本地资源：数据库、文件 IO 和 JSBridge"></a>本地资源：数据库、文件 IO 和 JSBridge</h3><p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId20.png" alt></p>
+<p>首先是本地的资源，我们经过反复比较，最终选择了最高效的 <strong>LevelDB</strong> 作为底层数据库实现，它是由 Google 开发的 KV 数据库，具有很高的随机写，顺序读/写性能，同时原生数据库也给于客户端程序更多的操控权。我们在其上封装了包括多库多用户管理，请求指令封装、分发日志上报等能力，通过 electron 提供的基于 scheme 的渲染进程 URL 请求拦截，以及主进程 webContents 通过 executeJavaScript 向渲染进程执行脚本，实现了 JSBridge，将包括上面提到的 LevelDB 以及 <strong>electron-store</strong> 等存储能力引入到了 web 端，同时通过 Node.js 自带的 fs 模块将文件 IO 能力提供给桌面端应用。</p>
+<h2 id="外部资源"><a href="#外部资源" class="headerlink" title="外部资源"></a>外部资源</h2><p>然后要提到的是外界网络能力，包括服务器和静态文件 CDN 等。</p>
+<p>这两种能力都是通过 web 技术实现的，腾讯文档目前 web 上已经实现了有限的离线编辑能力，比如自动缓存增量编辑操作，进行版本冲突处理和提交等，在静态文件上正在开发基于 <strong>PWA</strong> 的离线缓存方案。同时因为是桌面端，前面提到的 LevelDB 是通过拷贝二进制可执行文件到发布资源中来实现分发的，所产生的问题是对不同系统需要分发不同的二进制文件，或带来工序上的复杂和计算资源的浪费，未来对类似需求可能考虑 <strong>WebAssembly Interface</strong> 来做跨端分发可执行文件。</p>
+<h2 id="跨端统一用户体验"><a href="#跨端统一用户体验" class="headerlink" title="跨端统一用户体验"></a>跨端统一用户体验</h2><p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId21.png" alt></p>
+<p>既然是应用开发，用户体验是重中之重。如何在跨端情况下保证用户体验的统一性，需要我们制定一系列的规范，像同时期的罗马和秦帝国一样，立国之初就统一了包括法典、文字度量衡等规范，这大大地有利于内部进行交流协作，在处理差异性问题时有据可循。</p>
+<h3 id="弹窗"><a href="#弹窗" class="headerlink" title="弹窗"></a>弹窗</h3><p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId22.png" alt></p>
+<p>以简单的一个系统设置弹窗为例，在设计规范中 Windows 和 macOS 上样式实现是不一致的，弹框的边框则是都采用了系统样式，但 Windows 同时需要定义标题和关闭按钮，而 macOS 则沿用了系统的红绿灯样式，同时考虑到代码一致性手动实现了标题部分。在内容部分，macOS 考虑到与系统 UI 一致，手动实现了弹窗内 tab 切换，主体内容则是基于 <strong>DUI</strong> 实现两端共用。这里带来的问题是，开发往往只会在一台机器上开发，如果开发需要每次都打包分发到另一个平台看效果也太麻烦了，可以通过加开关的形式进行调试。在完成对弹窗的封装以后，我们可以基于 BrowserWindow 和 React 对其进行统一的生命周期管理，保证同一类型弹窗只显示一个。</p>
+<h3 id="安装与升级"><a href="#安装与升级" class="headerlink" title="安装与升级"></a>安装与升级</h3><p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId23.png" alt></p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId24.png" alt></p>
+<p>然后是安装与升级，Windows 是覆盖安装，mac 是拖拽安装，Windows 可自定义安装前后行为，例如安装完写入注册表，卸载后清理用户数据，mac 版则利用了系统的静默升级。而 <strong>electron-updater</strong> 则让两者都实现了自动下载并一键升级的功能。</p>
+<h3 id="更多桌面平台特性"><a href="#更多桌面平台特性" class="headerlink" title="更多桌面平台特性"></a>更多桌面平台特性</h3><p>我们在开发过程中还遇到了更多的桌面特性，比较顺利的是 Electron 和 electron-builder 帮助实现了非常多的系统功能如：<strong>文件打开方式关联，QQ 消息链接自动打开 App 并打开文档，监测剪贴板链接自动打开在线文档</strong>等等。而其中不方便实现的则是全局的 Web UI 容器，因为 Electron 自带的系统 UI 控件非常少，也大多不符合 UI 规范，需要自定义 UI 界面只能通过打开渲染窗口并加载 HTML 文件的方式。如图所示的全局 toast 在项目中应用非常广泛，如何将其与 React DUI 组件进行共用呢？</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId25.png" alt></p>
+<h4 id="命令式创建-Web-UI-组件"><a href="#命令式创建-Web-UI-组件" class="headerlink" title="命令式创建 Web UI 组件"></a>命令式创建 Web UI 组件</h4><p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId26.png" alt></p>
+<p>首先要明确的是我们肯定是通过打开 BrowserWindow 窗口加载 html 来展示 UI。一种比较常见的思路是命令式创建 web UI 组件，比如创建 DialogManager 来统一管理多个 dialog，但这里的问题是有多少个 dialog 就需要多少个 dialog.html 文件，因为它们都是编译时就确定的，即使通过 url 分发，也必须至少创建一个 dialog 文件才能打开窗口。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId27.png" alt></p>
+<h4 id="声明式创建-Web-UI-组件"><a href="#声明式创建-Web-UI-组件" class="headerlink" title="声明式创建 Web UI 组件"></a>声明式创建 Web UI 组件</h4><p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId28.png" alt></p>
+<p>React 提供了声明式创建组件的方式，我们可否通过其创建组件呢？通过调研，我们发现了 React 的 createPortal 函数是可以将 React 组件挂载到新创建的 window 里去的，那么我们只需要定制新创建 window 的参数就可以实现无边框窗口加载 React DUI 组件的功能。即实现了利用 React 管理窗口的生命周期。</p>
+<ul>
+<li><p><strong>window.open</strong> 并通过 Electron 拦截定义新创建 Chromium 窗口</p>
+</li>
+<li><p><strong>React.createPortal</strong> 将组件（如 <snackbar>）</snackbar></p>
+</li>
+</ul>
+<p>挂载到新创建的窗口内</p>
+<ul>
+<li>利用 <strong>React</strong> 管理窗口的生命周期</li>
+</ul>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId29.png" alt></p>
+<p>这样可以把唤起 Web UI 的职责交给常驻后台的隐藏渲染窗口 webComponent，在其中自定义组合各种各样丰富的 React DUI，通过 React 进行统一管理，后续可以几乎零边际成本增添新组件，同时在组件与进程频繁交互时也方便通过组件树找出对应关系进行维护。</p>
+<p><strong>注：本文为笔者于第一届 QQ Tech 技术周作主题演讲《腾讯文档桌面端跨平台端开发实践》演讲稿整理而来。</strong></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-image">
+        <a href="/blog/2020/12/01/rendering-cause-me-to-exist/" class="image is-7by1">
+            <img class="thumbnail" src="/blog/images/rendering-cause-me-to-exist/document_image_rId9.png" alt="我渲染故我在，Electron 窗口开发指北">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-12-01T14:54:54.000Z">2020-12-01</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    37 分钟 读完 (大约 5521 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/blog/2020/12/01/rendering-cause-me-to-exist/">我渲染故我在，Electron 窗口开发指北</a>
+            
+        </h1>
+        <div class="content">
+            <h1 id="前情摘要"><a href="#前情摘要" class="headerlink" title="前情摘要"></a>前情摘要</h1><p>在前一篇文章中笔者主要介绍了使用 Electron 进行开发过程中打包、构建、自动升级与文件关联相关的内容，细心的读者可能已经发现其中并没有提到与界面相关的话题。时隔一个月，中间又经历了一些需求迭代开发和代码维护，这篇文章将会尽可能详细地介绍 Electron 跨端开发中用户界面部分与平台及系统差异相关的注意点，并探索建立支持自定义多范式的窗口管理方式。</p>
+<h1 id="窗口开发基础"><a href="#窗口开发基础" class="headerlink" title="窗口开发基础"></a>窗口开发基础</h1><p>我住长江头，君住长江尾，日日思君不见君，共饮长江水。 —— 李之仪</p>
+<h2 id="通信方式"><a href="#通信方式" class="headerlink" title="通信方式"></a>通信方式</h2><p>我们知道所有 Electron 自定义的窗口界面都是跑在渲染进程里的，而讲到渲染进程则不得不提到主进程。《卜算子》这首小令非常形象地道出了同一个应用里不同渲染进程和主进程之间的关系：一个应用实例只有一个主进程，而会有多个渲染进程。渲染进程之间是无法直接通信的，他们必须要通过主进程这条”长江”来通讯。</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId10.png" alt></p>
+<p>一个渲染进程就是管理一个 Window 的进程，通常意义上总是这样。它可以用 IPC 消息和主进程通讯，而主进程通常情况下是作为调度器来衔接各个渲染进程的，只能在收到消息后进行回复。但其实渲染进程和实际展示的网页还是有所不同的，下图简单梳理了一下「主进程 - 渲染进程 - 窗口」直接通信的方式。<img src="/blog/images/rendering-cause-me-to-exist/document_image_rId11.png" alt></p>
+<p>上图中，ipcMain 和 webContents 都存在在主进程里，它们之间可以无缝直接调用，每个 webContents 管理一个窗口，一一对应浏览器里的 window 对象，而每个 window 对象里通过打开 nodeIntegration 开关赋予调用 Electron 的 ipcRenderer 模块发送异步或同步消息则是进程间通信的关键点。</p>
+<p>这里有几个注意点，理清它们才能更好地规划应用的架构：</p>
+<ol>
+<li><p>ipcRenderer 通常是通信的发起者，ipcMain 只能作为通信的接受者，而 webContents 则作为中间枢纽，代理了部分 ipc 消息（如 send 或者 sendSync 消息可以直接被 webContents 截获并处理）。</p>
+</li>
+<li><p>ipcMain 只有在接受消息时才知晓渲染进程的存在，本身应该作为一个全局的无状态的服务器。</p>
+</li>
+<li><p>webContents 作为既存在于主进程又可以直接对应到单个 window     的对象，有效地隔离了 ipc 消息的作用域。</p>
+</li>
+</ol>
+<p>通常情形下，我们应该尽可能直接使用 webContents 和 ipcRenderer 之间的通讯，只有涉及到全局事件时才通过 ipcMain 进行调度。</p>
+<h2 id="窗口结构"><a href="#窗口结构" class="headerlink" title="窗口结构"></a>窗口结构</h2><p>Electron 提供了基于 Chromium 的丰富多彩的窗口能力，注意它是基于 Chromium，所以在 Electron 里看到的几乎所有窗口（有些文件选择弹窗之类的是系统原生实现）都是一个个浏览器。这些窗口都有很丰富的选项和能力，比如最强大的 nodeIntegration 可以在浏览器环境下使用 Node.js 的能力。</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId12.png" alt><br>一个简单的弹窗</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId13.png" alt><br>一个 DUI 的 Snackbar </p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId14.png" alt><br>一个复杂的多 Tab 应用</p>
+<p>它们都是 BrowserWindow。这时问题就产生了，如何有序地管理这些窗口？Electron 是一个客户端应用，但它跑在 Node.js 上，而 Node.js 最出色的特性比如 stream 和 Event Loop 和它似乎都没啥关系。那就看看我们所熟知的 Web 应用是如何管理”多任务”的吧：在服务端，我们有基于 MVC 的路由，根据 url 转发到不同的 view 进行处理并返回，在客户端，我们也有前端路由，同样根据 url，不过是渲染成不同的 DOM 节点。</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId15.png" width="380"><br><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId16.png" width="380"></p>
+<p>可见，任务组织结构与实际节点的物理/逻辑拓扑关系是息息相关的，任何组织结构都是服务于节点间更好地进行沟通交流，以及根节点对子节点有效的管理。所以，我们可以得出一个简单的结论：</p>
+<ol>
+<li><p>如果是抽象关联节点的话，可以用哈希表（如 Map）来对应单个窗口</p>
+</li>
+<li><p>如果是具象关联节点的话，可以用树状结构（如 XML）来对应单个窗口</p>
+</li>
+</ol>
+<p>但这时有一个问题，窗口内加载的仍是 web 页面，本质是一个个 HTML 文件，而我们知道 HTML 并不能互相嵌套 …… 虽然曾有过 HTML Imports，但其在 MDN docs 上已被标记为过时且不建议使用，我们仍然需要一个组合 HTML 的机制否则我们的页面文件随着需求的增加就会变成一个冗长的 entry 列表。</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId17.png" alt></p>
+<h2 id="代码风格"><a href="#代码风格" class="headerlink" title="代码风格"></a>代码风格</h2><blockquote>
+<p>“Imperative programming is like <strong>how</strong> you do something, and declarative programming is more like <strong>what</strong> you do.”</p>
+</blockquote>
+<p>我们知道代码风格有命令式和声明式两种，命令式编程意味着你告诉计算机每一步应该做什么，而声明式则更多关心计算机执行的最后结果，即告诉计算机要什么，怎么做到我不管。</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId18.png" alt></p>
+<p>上面两段代码估计早期前端开发都曾写过，第一个函数的作用是将数组的每一项乘以 2 并返回所得的新数组，第二个函数是求数组内所有项的和。</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId19.png" alt></p>
+<p>这一段代码在上一段代码基础上利用 Array.prototype 上的 map 和 reduce 高阶函数对迭代操作进行了封装，可以注意到函数的行数明显下降了，并且读者并不用关注具体迭代过程是怎么样的，也不用关注这些计算过程。</p>
+<p>阅读代码的人只需要知道：</p>
+<ol>
+<li><p>将 arr 的每一项都映射到这一项取值的 2 倍</p>
+</li>
+<li><p>设置初始值为 0，将 arr 的每一项加上初始值之后赋值给初始值</p>
+</li>
+</ol>
+<p>具体每一项是如何取值的，又是如何赋值的，写代码和阅读代码的人都不必关注。可能 map 和 reduce 的例子还不够充分，sort 这个方法是诠释声明式编程最好的例子。</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">arr.sort(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> a - b;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>如上图，如果 <code>a - b &lt; 0</code>，则将 a 放在 b 的左边，如果 <code>a - b === 0</code> 则保留两者位置不变，如果 <code>a - b &gt; 0</code>，则将 a 放到 b 的右边，简单朴素地说明了排序的基本原则，而具体排序是用什么方式，时间复杂度和空间复杂度都不要用户去关注（如果想要进一步了解 Array.sort 的实现可参见<a href="https://stackoverflow.com/questions/234683/javascript-array-sort-implementation" target="_blank" rel="noopener">这篇 StackOverflow 的回答</a>）。</p>
+<p>理清了上面这一点我们可以通过一个更进一步的例子来说明为什么声明式编程更适合 UI 开发？</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId21.png" alt></p>
+<p>这个例子是一个初学 jQuery 的学徒都可以轻松写出的代码，逻辑也比较清晰，但做的事情已经开始混杂了：</p>
+<ul>
+<li><p>highlight 这个 class 与文本的对应关系不明，需要更多上下文或者结合 HTML 考虑。</p>
+</li>
+<li><p>“Add Highlight” 被重复写了两遍，并且以 DOM 文本属性作为状态有点违背 Model View 分离的原则。</p>
+</li>
+</ul>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId22.png" alt></p>
+<p>上图则是 React 中表达一个 Btn 组件的方式，可以看到 highlight 存在于 this.state 之上，成为脱离 UI 的状态，并且 onToggleHighlight 将调用关系绑定给 handleToggleHighlight，而 highlight 属性则是绑定给了 state 里的同名值。用通俗的话讲就是将数据状态和 UI 给串联起来了，盘活了。一旦数据状态发生变化就会自动映射到 UI 上，而 UI 上接受到事件也可以对数据做出相应改变，一个数据状态就对应了一个 UI 状态，童叟无欺。</p>
+<p>这正是我们需要的组合 Web UI 的最佳形式。</p>
+<h2 id="窗口管理器"><a href="#窗口管理器" class="headerlink" title="窗口管理器"></a>窗口管理器</h2><p>综上所述，我们需要一个数据即 UI，惰性更新窗口样式以及生命周期能够被主进程统一管理的窗口管理器，它应该具有以下几个功能：</p>
+<ol>
+<li><p>提供包含组件及函数方法等多种创建销毁更新组件的方式</p>
+</li>
+<li><p>将数据与 UI 绑定，无需一一手动设置窗口样式</p>
+</li>
+<li><p>组件生则窗口生，组件卸载则窗口关闭</p>
+</li>
+<li><p>主进程与窗口可以进行直接或间接的通讯，交换数据</p>
+</li>
+</ol>
+<h1 id="Electron-及-React-相关-API-解析"><a href="#Electron-及-React-相关-API-解析" class="headerlink" title="Electron 及 React 相关 API 解析"></a>Electron 及 React 相关 API 解析</h1><p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId23.png" alt></p>
+<p>说好了不讲具体 API 的，摔！但不理解这些 API 就很难开发一个高效的窗口管理系统，遇到了具体问题也会找不着北，所以还是忍住睡意看一下会用到哪些神奇的<br>API 吧~</p>
+<h2 id="BrowserWindow"><a href="#BrowserWindow" class="headerlink" title="BrowserWindow"></a>BrowserWindow</h2><p>首先是 Electron 的窗口类，这是我们与窗口外观打交道的主要途径了，在它上面有从窗口尺寸位置到标题栏样式乃至窗口内包括 JavaScript 和各种 Web API 是否开启等设置项，可以说就是一个定制版的小 Chrome。下面列出比较重要的几项：</p>
+<ul>
+<li><p>frame: 窗口边框</p>
+</li>
+<li><p>titleBarStyle: 标题栏样式，包括 macOS 的红绿灯样式</p>
+</li>
+<li><p>webPreferences: web 相关设置</p>
+<ul>
+<li><p>nodeIntegration: 是否在内部浏览器开启 Node.js 环境</p>
+</li>
+<li><p>preload: 预加载脚本</p>
+</li>
+<li><p>enableRemoteModule: 启用远程模块，例如在浏览器中访问只属于主进程的 app 对象等</p>
+</li>
+<li><p><strong>nativeWindowOpen</strong>: 是否支持原生打开窗口，这个属性非常重要，是实现跨窗口通讯的基础，当前工作窗口必须设置为 true</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="webContents"><a href="#webContents" class="headerlink" title="webContents"></a>webContents</h2><p>webContent 是 BrowserWindow 下面具体管理 web 页面的一个对象，它同时也是一个 EventEmitter。我们只关心它上面关于创建窗口最重要的一个事件：<strong>‘new-window’</strong>。</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-built_in">window</span> = <span class="hljs-keyword">new</span> BrowserWindow(&#123;</span><br><span class="line">  webPreferences: &#123;</span><br><span class="line">      nativeWindowOpen: <span class="hljs-literal">true</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">window</span>.webContents.on(<span class="hljs-string">'new-window'</span>, (event, url, frameName, disposition, windowOptions) =&gt; &#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (frameName.startsWith(<span class="hljs-string">'windowPortal'</span>)) &#123;</span><br><span class="line">    event.preventDefault()</span><br><span class="line">    <span class="hljs-keyword">const</span> options: BrowserWindowConstructorOptions = &#123;</span><br><span class="line">      ...windowOptions,</span><br><span class="line">      frame: <span class="hljs-literal">false</span>,</span><br><span class="line">      titleBarStyle: <span class="hljs-string">'default'</span>,</span><br><span class="line">      skipTaskbar: <span class="hljs-literal">true</span>,</span><br><span class="line">      show: <span class="hljs-literal">false</span>,</span><br><span class="line">      width: <span class="hljs-number">0</span>,</span><br><span class="line">      height: <span class="hljs-number">0</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">const</span> newWindow = <span class="hljs-keyword">new</span> BrowserWindow(options)</span><br><span class="line">    event.newGuest = newWindow</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>上面这段代码的最终结果是将创建新窗口的过程的控制权交给 Electron 这边，比如设置无边框、默认标题栏样式、宽高都为 0 并且不显示，最后将这个完全为空的窗口交给 event.newGuest 交还给 window.opener。</p>
+<h2 id="React"><a href="#React" class="headerlink" title="React"></a>React</h2><p>关于 React 的教程网上也是汗牛充栋了，我们这里同样弱水三千，只取一瓢。</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ReactDOM.createPortal(child, container)</span><br></pre></td></tr></table></figure>
+<p><a href="https://reactjs.org/docs/portals.html" target="_blank" rel="noopener">createPortal API</a> 相信大家都用过，但大部分用途应该都只是将 React 组件渲染到 body 上变成模态框之类的，但如果我们<strong>将整个桌面看做一个 body，而其中的某个窗口看做一个 div 容器</strong>呢？答案是这样做可行！！！</p>
+<p>我们可以<strong>将 React 的组件直接 createPortal 到上面新生成的 window 里去</strong>，这样就走通了 React 组件化开发并管理 Electron 窗口的关键链路。</p>
+<h1 id="窗口管理器实践"><a href="#窗口管理器实践" class="headerlink" title="窗口管理器实践"></a>窗口管理器实践</h1><p>我们已经拥有了在渲染进程里动态创建一个 Electron 窗口的全部知识，下面话不多说直接贴代码，手把手教你玩转 <strong>Electron \’Portal\’</strong>！</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId25.png" alt></p>
+<h2 id="React-Electron"><a href="#React-Electron" class="headerlink" title="React + Electron"></a>React + Electron</h2><p>我们需要拷贝样式至新窗口，在网上找到了如下一段代码，可以将外部样式表 link 和内联样式表 style 统统拷贝到新打开的 document 里。</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">copyStyles</span>(<span class="hljs-params">sourceDoc: Document, targetDoc: Document</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> documentFragment = sourceDoc.createDocumentFragment();</span><br><span class="line">    <span class="hljs-built_in">Array</span>.from(sourceDoc.styleSheets).forEach(<span class="hljs-function">(<span class="hljs-params">styleSheet</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-comment">// for &lt;style&gt; elements</span></span><br><span class="line">        <span class="hljs-keyword">if</span> (styleSheet.cssRules) &#123;</span><br><span class="line">            <span class="hljs-keyword">const</span> newStyleEl = sourceDoc.createElement(<span class="hljs-string">'style'</span>);</span><br><span class="line"></span><br><span class="line">            <span class="hljs-built_in">Array</span>.from(styleSheet.cssRules).forEach(<span class="hljs-function">(<span class="hljs-params">cssRule</span>) =&gt;</span> &#123;</span><br><span class="line">                <span class="hljs-comment">// write the text of each rule into the body of the style element</span></span><br><span class="line">                newStyleEl.appendChild(sourceDoc.createTextNode(cssRule.cssText));</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">            documentFragment.appendChild(newStyleEl);</span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (styleSheet.href) &#123;</span><br><span class="line">            <span class="hljs-comment">// for &lt;link&gt; elements loading CSS from a URL</span></span><br><span class="line">            <span class="hljs-keyword">const</span> newLinkEl = sourceDoc.createElement(<span class="hljs-string">'link'</span>);</span><br><span class="line"></span><br><span class="line">            newLinkEl.rel = <span class="hljs-string">'stylesheet'</span>;</span><br><span class="line">            newLinkEl.href = styleSheet.href;</span><br><span class="line">            documentFragment.appendChild(newLinkEl);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    targetDoc.head.appendChild(documentFragment);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面是实现 Portal 的关键代码，关于其实现有以下几个技术要点：</p>
+<ul>
+<li><p>通过 <strong>forwardRef 暴露 getSize 等获取实际渲染元素的状态信息</strong>方法，因为这些也是命令式的方法，正好契合了 useImperativeHandle 的名字，可以被父组件用 ref 来缓存后用于计算多个组件的位置关系。</p>
+</li>
+<li><p>在 useEffect 中返回关闭 window 的方法以便销毁窗口。</p>
+</li>
+<li><p><strong>封装 getWorkArea 方法以便适配多显示器</strong>。</p>
+</li>
+<li><p>初次显示窗口时切记要<strong>先 show 一个 0×0 的窗口，将它移动到指定位置再扩张尺寸使其显示</strong>，如果 show 放在最后的话，在 macOS 全屏模式下会另起一个全屏窗口，这不是我们所需要的。</p>
+</li>
+<li><p>巧用 useEffect 的 dependency 监测 props 里位置信息的改变，自动映射到窗口上去。</p>
+</li>
+<li><p>灵活提供 mountNode 参数给子组件，以便一些原本挂载到 document.body 上的全局组件（如 Modal 和 Toast）渲染到指定位置，仿佛它们是挂载到了 desktop.body 上一样。</p>
+</li>
+</ul>
+<figure class="highlight jsx hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> Portal = (&#123;</span><br><span class="line">    children,</span><br><span class="line">    x,</span><br><span class="line">    y,</span><br><span class="line">    horizontalCenter,</span><br><span class="line">    verticalCenter,</span><br><span class="line">    inactive,</span><br><span class="line">    alwaysOnTop,</span><br><span class="line">&#125;, ref) =&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> [mountNode, setMountNode] = useState(<span class="hljs-literal">null</span>);</span><br><span class="line">    <span class="hljs-keyword">const</span> windowRef = useRef();</span><br><span class="line">    useImperativeHandle(ref, () =&gt; (&#123;</span><br><span class="line">        getSize: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (mountNode) &#123;</span><br><span class="line">                <span class="hljs-keyword">const</span> &#123; clientWidth, clientHeight &#125; = mountNode;</span><br><span class="line">                <span class="hljs-keyword">return</span> [clientWidth, clientHeight];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;));</span><br><span class="line">    <span class="hljs-comment">// 创建窗口和 mountNode</span></span><br><span class="line">    useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">const</span> div = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>);</span><br><span class="line">        div.style.display = <span class="hljs-string">'inline-block'</span>;</span><br><span class="line">        <span class="hljs-keyword">const</span> win = <span class="hljs-built_in">window</span>.open(<span class="hljs-string">'about:blank'</span>, <span class="hljs-string">`<span class="hljs-subst">$&#123;WINDOW_PORTAL&#125;</span>-<span class="hljs-subst">$&#123;<span class="hljs-built_in">String</span>(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().getTime())&#125;</span>`</span>);</span><br><span class="line">        <span class="hljs-keyword">if</span> (!win.document) <span class="hljs-keyword">return</span>;</span><br><span class="line">        copyStyles(<span class="hljs-built_in">document</span>, win.document);</span><br><span class="line">        win.document.body.appendChild(div);</span><br><span class="line">        windowRef.current = win;</span><br><span class="line">        setMountNode(div);</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (windowRef.current) &#123;</span><br><span class="line">                windowRef.current.close();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;, []);</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-comment">// 获取工作窗口的位置尺寸</span></span><br><span class="line">    <span class="hljs-keyword">const</span> getWorkArea = useCallback(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (windowRef.current) &#123;</span><br><span class="line">            <span class="hljs-keyword">const</span> &#123; remote &#125; = windowRef.current.require(<span class="hljs-string">'electron'</span>);</span><br><span class="line">            <span class="hljs-keyword">return</span> remote.screen.getDisplayNearestPoint(remote.screen.getCursorScreenPoint()).workArea;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, [windowRef.current]);</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">const</span> getPosition = useCallback(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">const</span> workArea = getWorkArea();</span><br><span class="line">        <span class="hljs-keyword">const</span> xPos = (horizontalCenter ? (workArea.width / <span class="hljs-number">2</span>) - (mountNode.clientWidth / <span class="hljs-number">2</span>) : x) | <span class="hljs-number">0</span>;</span><br><span class="line">        <span class="hljs-keyword">const</span> yPos = (verticalCenter ? (workArea.height / <span class="hljs-number">2</span>) - (mountNode.clientHeight / <span class="hljs-number">2</span>) : y) | <span class="hljs-number">0</span>;</span><br><span class="line">        <span class="hljs-keyword">return</span> [workArea.x + xPos, workArea.y + yPos];</span><br><span class="line">    &#125;, [getWorkArea, x, y, horizontalCenter, verticalCenter]);</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 初始化窗口</span></span><br><span class="line">    useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (mountNode &amp;&amp; windowRef.current) &#123;</span><br><span class="line">            <span class="hljs-keyword">const</span> win = windowRef.current;</span><br><span class="line">            <span class="hljs-keyword">const</span> &#123; clientWidth, clientHeight &#125; = mountNode;</span><br><span class="line">            <span class="hljs-keyword">const</span> &#123; remote &#125; = win.require(<span class="hljs-string">'electron'</span>);</span><br><span class="line">            <span class="hljs-keyword">const</span> browserWindow = remote.getCurrentWindow();</span><br><span class="line">            <span class="hljs-keyword">if</span> (inactive) &#123;</span><br><span class="line">                browserWindow.showInactive();</span><br><span class="line">            &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">                browserWindow.show();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">if</span> (alwaysOnTop) &#123;</span><br><span class="line">                browserWindow.setAlwaysOnTop(<span class="hljs-literal">true</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            browserWindow.setPosition(...getPosition());</span><br><span class="line">            browserWindow.setSize(clientWidth, clientHeight);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, [mountNode, windowRef.current]);</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 位移</span></span><br><span class="line">    useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (windowRef.current &amp;&amp; mountNode) &#123;</span><br><span class="line">            <span class="hljs-keyword">const</span> win = windowRef.current;</span><br><span class="line">            <span class="hljs-keyword">const</span> &#123; remote &#125; = win.require(<span class="hljs-string">'electron'</span>);</span><br><span class="line">            remote.getCurrentWindow().setPosition(...getPosition(), <span class="hljs-literal">true</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, [mountNode, windowRef.current, getPosition]);</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">return</span> mountNode &amp;&amp; createPortal(</span><br><span class="line">        children <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Function</span> ? children(&#123; mountNode &#125;) : children,</span><br><span class="line">        mountNode,</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> forwardRef(Portal);</span><br></pre></td></tr></table></figure>
+<h2 id="Svelte-Electron"><a href="#Svelte-Electron" class="headerlink" title="Svelte + Electron"></a>Svelte + Electron</h2><p>如果一种范式只有一种实现方式，那说明它还不够通用。为了证明这种管理 web 窗口的方式真的有意义，笔者尝试用 Svelte 实现了同样的功能。这里先向不了解Svelte 框架的同学安利一下这个神奇的框架，它一开始的口号是”消失的框架”，什么意思呢？它不像 React、Vue 之类的打包后还需要一个运行时的 lib 提供各种工具函数，比如 React.createElement 方法，它是完全的编译时框架，编译后只有组件代码即可运行。所以在只需要渲染一两个动态组件时，其体积和性能优势非常明显，尤其是配合其作者开发的 Rollup 时。由于 Electron 对其内 web 浏览器具有完全的操控权，我们可以放心地交付 ES6+ 的代码，不必过多 care 兼容性。下面给出试用 Svelte 写的 Portal 组件代码，感兴趣的同学可以尝试下哈，感受下别样的框架风情~</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">bind:this</span>=<span class="hljs-string">&#123;portal&#125;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"portal"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">slot</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">slot</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="hljs-undefined"></span></span><br><span class="line"><span class="hljs-undefined">  .portal &#123; display: inline-block; &#125;</span></span><br><span class="line"><span class="hljs-undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">context</span>=<span class="hljs-string">"module"</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"ts"</span>&gt;</span><span class="hljs-undefined"></span></span><br><span class="line"><span class="hljs-javascript">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">copyStyles</span>(<span class="hljs-params">sourceDoc: Document, targetDoc: Document</span>) </span>&#123;</span></span><br><span class="line"><span class="hljs-javascript">    <span class="hljs-built_in">Array</span>.from(sourceDoc.styleSheets).forEach(<span class="hljs-function"><span class="hljs-params">styleSheet</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="hljs-javascript">      <span class="hljs-keyword">if</span> (styleSheet.cssRules) &#123; <span class="hljs-comment">// for &lt;style&gt; elements</span></span></span><br><span class="line"><span class="hljs-javascript">        <span class="hljs-keyword">const</span> newStyleEl = sourceDoc.createElement(<span class="hljs-string">'style'</span>);</span></span><br><span class="line"><span class="hljs-undefined"></span></span><br><span class="line"><span class="hljs-javascript">        <span class="hljs-built_in">Array</span>.from(styleSheet.cssRules).forEach(<span class="hljs-function"><span class="hljs-params">cssRule</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="hljs-javascript">          <span class="hljs-comment">// write the text of each rule into the body of the style element</span></span></span><br><span class="line"><span class="hljs-undefined">          newStyleEl.appendChild(sourceDoc.createTextNode(cssRule.cssText));</span></span><br><span class="line"><span class="hljs-undefined">        &#125;);</span></span><br><span class="line"><span class="hljs-undefined"></span></span><br><span class="line"><span class="hljs-undefined">        targetDoc.head.appendChild(newStyleEl);</span></span><br><span class="line"><span class="hljs-javascript">      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (styleSheet.href) &#123; <span class="hljs-comment">// for &lt;link&gt; elements loading CSS from a URL</span></span></span><br><span class="line"><span class="hljs-javascript">        <span class="hljs-keyword">const</span> newLinkEl = sourceDoc.createElement(<span class="hljs-string">'link'</span>);</span></span><br><span class="line"><span class="hljs-undefined"></span></span><br><span class="line"><span class="hljs-javascript">        newLinkEl.rel = <span class="hljs-string">'stylesheet'</span>;</span></span><br><span class="line"><span class="hljs-undefined">        newLinkEl.href = styleSheet.href;</span></span><br><span class="line"><span class="hljs-undefined">        targetDoc.head.appendChild(newLinkEl);</span></span><br><span class="line"><span class="hljs-undefined">      &#125;</span></span><br><span class="line"><span class="hljs-undefined">    &#125;);</span></span><br><span class="line"><span class="hljs-undefined">  &#125;</span></span><br><span class="line"><span class="hljs-undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"ts"</span>&gt;</span><span class="hljs-undefined"></span></span><br><span class="line"><span class="hljs-javascript">  <span class="hljs-keyword">import</span> &#123; onMount, onDestroy &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'svelte'</span></span></span><br><span class="line"><span class="hljs-javascript">  <span class="hljs-keyword">import</span> type Electron <span class="hljs-keyword">from</span> <span class="hljs-string">'electron'</span></span></span><br><span class="line"><span class="hljs-undefined"></span></span><br><span class="line"><span class="hljs-undefined">  type PortalWindow = Window &amp; &#123;</span></span><br><span class="line"><span class="hljs-javascript">    <span class="hljs-built_in">require</span>: <span class="hljs-function">(<span class="hljs-params">...args: any</span>) =&gt;</span> &#123;</span></span><br><span class="line"><span class="hljs-undefined">      remote: Electron.Remote</span></span><br><span class="line"><span class="hljs-undefined">    &#125;</span></span><br><span class="line"><span class="hljs-undefined">  &#125;</span></span><br><span class="line"><span class="hljs-javascript">  <span class="hljs-keyword">let</span> windowRef: PortalWindow</span></span><br><span class="line"><span class="hljs-javascript">  <span class="hljs-keyword">let</span> portal: HTMLDivElement</span></span><br><span class="line"><span class="hljs-undefined">  </span></span><br><span class="line"><span class="hljs-javascript">  onMount(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="hljs-javascript">    windowRef = <span class="hljs-built_in">window</span>.open(<span class="hljs-string">'about:blank'</span>, <span class="hljs-string">'windowPortal'</span>) <span class="hljs-keyword">as</span> unknown <span class="hljs-keyword">as</span> PortalWindow</span></span><br><span class="line"><span class="hljs-javascript">    copyStyles(<span class="hljs-built_in">document</span>, windowRef.document)</span></span><br><span class="line"><span class="hljs-undefined">    windowRef.document.body.appendChild(portal)</span></span><br><span class="line"><span class="hljs-undefined"></span></span><br><span class="line"><span class="hljs-javascript">    <span class="hljs-keyword">const</span> &#123; clientWidth, clientHeight &#125; = portal</span></span><br><span class="line"><span class="hljs-javascript">    windowRef.requestAnimationFrame(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="hljs-javascript">      <span class="hljs-keyword">const</span> &#123; remote &#125; = windowRef.require(<span class="hljs-string">'electron'</span>)</span></span><br><span class="line"><span class="hljs-javascript">      <span class="hljs-keyword">const</span> win = remote.getCurrentWindow()</span></span><br><span class="line"><span class="hljs-javascript">      <span class="hljs-keyword">const</span> workArea = remote.screen.getDisplayNearestPoint(remote.screen.getCursorScreenPoint()).bounds</span></span><br><span class="line"><span class="hljs-undefined">      win.showInactive();</span></span><br><span class="line"><span class="hljs-undefined">      win.setPosition(workArea.x + 50, workArea.y + 50);</span></span><br><span class="line"><span class="hljs-undefined">      win.setSize(clientWidth, clientHeight);</span></span><br><span class="line"><span class="hljs-undefined">    &#125;)</span></span><br><span class="line"><span class="hljs-undefined">  &#125;)</span></span><br><span class="line"><span class="hljs-undefined">  </span></span><br><span class="line"><span class="hljs-javascript">  onDestroy(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="hljs-javascript">    <span class="hljs-keyword">if</span> (windowRef) &#123;</span></span><br><span class="line"><span class="hljs-undefined">      windowRef.close()</span></span><br><span class="line"><span class="hljs-undefined">    &#125;</span></span><br><span class="line"><span class="hljs-undefined">  &#125;)</span></span><br><span class="line"><span class="hljs-undefined">  </span></span><br><span class="line"><span class="hljs-undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>对 Svelte 和 Electron 结合感兴趣的同学还可以移步我的个人项目地址：<a href="https://github.com/msyfls123/diablo2-wiki" target="_blank" rel="noopener">https://github.com/msyfls123/diablo2-wiki</a></p>
+<h2 id="“中央处理器”"><a href="#“中央处理器”" class="headerlink" title="“中央处理器”"></a>“中央处理器”</h2><p>The last but not the least.</p>
+<p>前面我们从一个带有 nativeWindowOpen 的 BrowserWindow 开始，经过 React.createPortal 创建新的 BrowserWindow 并将其交还给 React 渲染组件，并通过一系列的 effect 和 ref 方法使其得到了良好的管理，但实际上这个”窗口管理器”只存在渲染进程中，它与外界的通讯必须通过最开始那个 BrowserWindow 进行。我们需要将它封装成一个”中央处理器”，以便处理更加多样的调用。</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId27.png" alt></p>
+<p>这里不再赘述如何去用代码实现一个 WebUI 的类，因为它是全局唯一的，所以需要单例模式。在主进程入口，创建一个上面提到的用于承载各种窗口的 BrowserWindow，将这个 Window 通过 WebUI 的 init 方法注入到实例上，后续就可以通过公共的方法来调用这个中央处理器了。</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WebUI</span> </span>&#123;</span><br><span class="line">    init(<span class="hljs-built_in">window</span>) &#123;</span><br><span class="line">         <span class="hljs-keyword">this</span>.window = <span class="hljs-built_in">window</span>;</span><br><span class="line">         <span class="hljs-keyword">this</span>.window.webContents.on(<span class="hljs-string">'ipc-message'</span>, <span class="hljs-keyword">this</span>.handleIpcMessage);</span><br><span class="line">    &#125;</span><br><span class="line">    showDialog(type, payload) &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.window) &#123;</span><br><span class="line">            <span class="hljs-keyword">this</span>.window.webContents.send(<span class="hljs-string">'show-dialog'</span>, type, payload);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    handleIpcMessage(event, channel, payload) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>主进程中使用只需要直接调用单例的方法，如果需要暴露给渲染进程则可以如法炮制一个 ipcServer 转发来自其他渲染进程的消息。</p>
+<h2 id="意义"><a href="#意义" class="headerlink" title="意义"></a>意义</h2><p>首先是声明式渲染 vs 命令式渲染，声明式责任在自己，命令式责任在对方。为啥呢？从 Electron 加载页面的方式就可以看出来了，加载一个 GitHub 的首页，只要网页一变，必然需要调用方处理相关的改动，且是被动处理。</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId28.png" alt></p>
+<p>改为声明式渲染则可以把主动权把握在自己手里。因为不存在 URL，所以无需考虑跳转之类的问题，仅需考虑最大程度复用组件，可做到比 SPA 更进一步。但这里存在一个小小的问题，没有 URL 也意味着相对路径引用的文件资源统统不可用了，比如 ‘./images/a.png’ 这样简单的引用图片的方式是无法做到的，只能变成绝对路径或者是 dataURL 内联，后续将进一步探索更合适的资源加载方案。</p>
+<p>然后是这种后台常驻一个渲染服务进程看似和市面上常见的预加载 + 显示隐藏窗口提升性能的方案大同小异，其实不然，那种方式本质上还是多对多地维护”窗口缓存”，数量上去了一样很卡。但这套方案后台渲染进程恒为 1，做到了 O(1) 空间复杂度，并且在页面加载上完全无需考虑 DOM 解析和 JavaScript 加载（因为根本就不需要，Portal 的渲染都在已经加载完成的那个窗口进行），做到了最小化资源占用。像 Serverless 追求的也是快速热启动，既然我们已知用户所有的操作路径，又有最高效的窗口管理方式，何乐而不为呢。</p>
+<p>还有一点是，通过 Portal 可以实现<strong>任意渲染窗口不借助主进程独立创建并管理一个新的渲染窗口</strong>，这一点给了 Electron 更多新的玩法，比如自定义右键菜单、常驻任务栏等都可以借此实现，直接脱离原 DOM 树，给予更多的 UI 操作自由和想象空间。</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId29.png" alt></p>
+<h1 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h1><h2 id="编译时与运行时区分"><a href="#编译时与运行时区分" class="headerlink" title="编译时与运行时区分"></a>编译时与运行时区分</h2><p>因为是跨端开发，所以一套代码会运行在多个平台上，需要区分编译时和运行时。</p>
+<ul>
+<li><p>编译时可以确定的值应该使用 webpack.DefinePlugin 替换成常量，如 process.env.NODE_ENV，这些是一旦打包以后再也不会发生改变了。</p>
+</li>
+<li><p>运行时确定的值应该尽可能使用 os.platform 动态判断，原因是如果某一平台不支持某些属性，而开发时为了 debug 将功能开启，却忘了删 debug 开关，上线即造成这一平台的用户体验 crash 套餐。</p>
+</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><p><a href="https://ui.dev/imperative-vs-declarative-programming/" target="_blank" rel="noopener">https://ui.dev/imperative-vs-declarative-programming/</a></p>
+</li>
+<li><p><a href="https://www.electronjs.org/docs/api/browser-window" target="_blank" rel="noopener">https://www.electronjs.org/docs/api/browser-window</a></p>
+</li>
+<li><p><a href="https://medium.com/hackernoon/using-a-react-16-portal-to-do-something-cool-2a2d627b0202" target="_blank" rel="noopener">https://medium.com/hackernoon/using-a-react-16-portal-to-do-something-cool-2a2d627b0202</a></p>
+</li>
+</ol>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId33.png" alt></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-image">
+        <a href="/blog/2020/11/02/丝般顺滑的Electron跨端开发体验/" class="image is-7by1">
+            <img class="thumbnail" src="/blog/images/electron-build.png" alt="丝般顺滑的 Electron 跨端开发体验">
+        </a>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-11-02T15:30:01.000Z">2020-11-02</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    24 分钟 读完 (大约 3667 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/blog/2020/11/02/丝般顺滑的Electron跨端开发体验/">丝般顺滑的 Electron 跨端开发体验</a>
+            
+        </h1>
+        <div class="content">
+            <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>减化软件开发复杂度的核心奥义是分层与抽象，汇编语言抹平了不同 CPU 实现的差异，做到了”中央处理器”的抽象，而操作系统则是抽象了各种计算机硬件，对应用程序暴露了系统层的接口，让应用程序不需要一对一地对接硬件。</p>
+<p>回到这篇文章的标题，目前主流的桌面端主要为 Windows、macOS 和 Linux 三种，考虑覆盖人群，实际做到覆盖前两端即可覆盖绝大多数用户。或许有同学就要问了，都 2020 年了还有必要开发桌面端应用吗？？Web 它不香吗？答案是：香，但它还不够香。网页因为各种安全方面的限制，现在还无法很好地和系统进行交互，比如文件读写（实际已经有了 Native File System [<a href="https://web.dev/file-system-access/" target="_blank" rel="noopener">https://web.dev/file-system-access/</a>）和更改各种系统配置的能力，这些往往是处于安全和兼容性的考虑。如果想强行在 Web 里做到这些部分也不是不可以，但相对普通 Web 开发，成本就显得过高了点，这点先按下不表。<br> 俗话讲”酒香不怕巷子深”，Web 在富 UI 应用的场景下已经一枝独秀遥遥领先于其他 GUI 方案，像早期 Qt、GTK 等跨端 GUI 开发方案已经几乎绝迹（PyQt 还过得比较滋润，主要是 Python 胶水语言的特性编写简单界面比较灵活），随着移动端浪潮的袭来以及 Node.js 的崛起，更多开发者选择 JavaScript （包括附属于其上的语言和框架）进行跨桌面、移动端和 Web 的混合开发，像 Ionic、Cordova(PhoneGap) 等框架在 2011 年以后如雨后春笋般冒了出来，当然随着 Facebook 和 Google 发布 React Native 和 Flutter，广大 Web 开发者终于可以喘口气，看到了只学一种框架就用上五年的曙光。</p>
+<p>移动端的竞争如此激烈，但桌面端则目前只有一个王者，那就是 Electron。我们来看看它究竟是什么?</p>
+<p><img src="/blog/images/electron-build/document_image_rId10.png" alt></p>
+<p>这个问题的答案很简单，Electron 就是 Chromium（Chrome 内核）、Node.js 和系统原生 API 的结合。它做的事情很简单，整个应用跑在一个 main process（主进程） 上，需要提供 GUI 界面时则创建一个 renderer process（渲染进程）去开启一个 Chromium 里的 BrowserWindow/BrowserView，实际就像是 Chrome 的一个窗口或者 Tab 页一样，而其中展示的既可以是本地网页也可以是线上网页，主进程和渲染进程间通过 IPC 进行通讯，主进程可以自由地调用 Electron 提供的系统 API 以及 Node.js 模块，可以控制其所辖渲染进程的生命周期。</p>
+<p><img src="/blog/images/electron-build/document_image_rId11.png" alt><br>Electron 做到了系统进程和展示界面的分离，类似于 Chrome或小程序的实现，这样的分层有利于<strong>多窗口应用</strong>的开发，天然地形成了 <strong>MVC架构</strong>。这里仅对其工作原理做大致介绍，并不会详尽阐述如何启动一个 Electron App 乃至创建 BrowserWindow 并与之通讯等，相反，本系列文章将着重于介绍适合 Web 开发者在编码之余需要关注的<strong>代码层次、测试、构建发布</strong>相关内容，以「腾讯文档桌面端」开发过程作为示例，阅读完本系列将使读者初步了解一个 Electron 从开发到上线所需经历的常见流程。</p>
+<p>在这里，笔者将着重介绍与读者探讨以下几个 Electron 开发相关方面的激动人心的主题：</p>
+<ul>
+<li><p>我只有一台 MacBook，可以用 Electron 开发出适用于其他平台的 App 吗？</p>
+</li>
+<li><p>我需要为不同平台分发不同的版本吗？它们的依赖关系如何？</p>
+</li>
+<li><p>如何让用户觉得我开发的应用是可信任的和被稳定维护的？</p>
+</li>
+<li><p>我想让用户在”更多场景”下使用我的应用，我该怎么做？</p>
+</li>
+<li><p>我是一个 Web 开发者，Electron 看起来是 C/S 架构，应该如何设计消息传递机制？</p>
+</li>
+<li><p>用 Electron 开发的 App 可测试性如何，可以在同一套测试配置下运行吗？</p>
+</li>
+</ul>
+<p>不用担心，以上问题的回答都是”Yes，Electron 都能做到”。下面我们就进入第一个主题吧，如何构建你的 Electron 应用。</p>
+<h1 id="打包应用"><a href="#打包应用" class="headerlink" title="打包应用"></a>打包应用</h1><p>首先我们假定你已经创建了一个 main.js 的文件，同时创建了一个名叫 renderer.html 的文件用于展示渲染内容，这时候你就可以直接将这个文件夹压缩后发给你的用户了，请用 Terminal 切换到该文件夹下，键入 <code>electron .</code> 并回车即可运行应用，全文完！撒花 ✿✿ヽ(°▽°)ノ✿</p>
+<p>当然不是这样简单，我们需要交付的是一个完整的独立运行的 App，至少我们得把代码和 Electron 的可执行文件都打包进去。但首先第一步是，既然用户是下载了一个大几十 M 的 App，我们是不是可以直接在 App 里 serve 源码了？简而言之，是的，你可以将你的源文件连同 node_modules 一起发给用户，但是 ——</p>
+<p><img src="/blog/images/electron-build/document_image_rId12.png" alt></p>
+<p>巨巨…… 怕了怕了，并且直接 server 源代码也可能会将一些敏感信息或者你写得不咋滴的代码直接暴露给用户，带来不必要的安全风险。这里介绍一下使用 Webpack 和 Rollup 打包 Electron App 的关键代码：</p>
+<h2 id="使用-Webpack-打包"><a href="#使用-Webpack-打包" class="headerlink" title="使用 Webpack 打包"></a>使用 Webpack 打包</h2><p>用 Webpack 打包还是相对简单的，只需要将 config.target 设置成 ‘electron-main’ 或者 ‘electron-renderer’ 即可<br> <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// webpack.config.js</span></span><br><span class="line"><span class="hljs-keyword">const</span> config = &#123;</span><br><span class="line">    target: <span class="hljs-string">'electron-main'</span> | <span class="hljs-string">'electron-renderer'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其原理是对不仅包括 Node.js 原生模块，同时也包括 Electron 相关模块都不打包了，交给 Electron 自己在运行时解决依赖，见链接：<a href="https://github.com/webpack/webpack/blob/3610012f42e4ba9cf80a0e8a58a165b5121d8582/lib/electron/ElectronTargetPlugin.js#L24-L64" target="_blank" rel="noopener">webpack/ElectronTargetPlugin.js#L24-L64</a></p>
+<h2 id="使用-Rollup-打包"><a href="#使用-Rollup-打包" class="headerlink" title="使用 Rollup 打包"></a>使用 Rollup 打包</h2><p>既然实际项目中都是拿 Webpack 打包的，何不尝试下新的方式呢，Rollup 作为打包 npm 模块的最佳工具，想必也是能打包 Electron 应用的吧…… 但 Rollup 就没有这么简便的配置方式了，需要做一番小小的手脚：</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// rollup.config.js</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> [</span><br><span class="line">    &#123;</span><br><span class="line">        input: <span class="hljs-string">'src/main-process/main.ts'</span>,</span><br><span class="line">        output: &#123;</span><br><span class="line">            format: <span class="hljs-string">'cjs'</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        external: [<span class="hljs-string">'electron'</span>],</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        input: <span class="hljs-string">'src/renderer/index.tsx'</span>,</span><br><span class="line">        output: &#123;</span><br><span class="line">            format: <span class="hljs-string">'iife'</span>,</span><br><span class="line">            globals: &#123;</span><br><span class="line">                electron: <span class="hljs-string">"require('electron')"</span>,</span><br><span class="line">            &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">        external: [<span class="hljs-string">'electron'</span>],</span><br><span class="line">    &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>解释一下，format 为 ‘cjs’ 或 ‘iife’ 是表明适用于 Node.js 环境的 commonjs 或者是浏览器环境的立即执行格式，而他们同样都需要将 electron 设置为外部依赖，同时在渲染进程里还需要指定 <code>electron = require(&#39;electron&#39;);</code>。等等，这里竟然在 window 下直接 require？？？是的，通过创建 BrowserWindow 时设置 <code>nodeIntergration: true</code> 即可在打开的网页里使用 Node.js 的各种功能，但能力越大所承担的风险也越大，所以是得禁止给在线网页开启这个属性的。</p>
+<p><img src="/blog/images/electron-build/document_image_rId14.png" alt></p>
+<p>这里还有个类似的属性 <code>enableRemoteModule</code>。 它的含义是是否开启远程模块，这样就能直接从渲染进程调用主进程的一些东西，但这样做同样有包括<a href="https://medium.com/@nornagon/electrons-remote-module-considered-harmful-70d69500f31" target="_blank" rel="noopener">[性能损耗在内的一系列问题]{.ul}</a>，所以 Electron 10.x 以后已经默认关闭了这个开关，手动开启同样需要慎重。</p>
+<p><img src="/blog/images/electron-build/document_image_rId16.png" alt></p>
+<h2 id="不进行打包的依赖"><a href="#不进行打包的依赖" class="headerlink" title="不进行打包的依赖"></a>不进行打包的依赖</h2><p>虽然 node_modules 确实很大，但因为是桌面应用，总有些库或者包里的内容是不需要或者说没法去打包的，这时候就要将他们拷贝到生成文件夹里去，比如项目里用到的 levelDB 针对 Windows 32 位和 64 位以及 macOS 都有不同的预编译文件，这时将它们直接拷贝过去就好啦。</p>
+<p>构建完成后，我们的应用已经有了直接 <code>electron .</code> 跑起来的能力，离可发布的 MVP 只差打包成可执行文件这一步了！</p>
+<h1 id="构建可执行文件"><a href="#构建可执行文件" class="headerlink" title="构建可执行文件"></a>构建可执行文件</h1><p>将代码打包成可执行文件同样需要市面上的第三方解决方案，有 electron-packager 和 electron-builder 可选，实际比较下来 electron-builder 提供了包括安装和更新在内的一系列流程，体验极好，所以只以其作为构建工具作介绍。</p>
+<p>electron-builder 也是一个对开发代码无侵入的打包构建工具，它只需要指定好各种路径以及需要构建的目标配置即可一键完成打包构建、签名、认证等一系列流程。</p>
+<p>electron-builder 是具有同时打包出多个平台 App 的能力的，具体在 Mac 上是通过 Wine 这个兼容层来实现的，Wine 是 Wine Is Not an Emulator 的缩写，从名字里强调它不是一个模拟器，它是对 Windows API 的抽象。打包后的应用与 Windows 上构建的应用没有区别，但构建时的 process.platform 会被锁在 ‘darwin’ 即 macOS，这是个看起来微不足道，但实则遇到会让人抓耳挠腮的情形，后面会详细展开。</p>
+<p><img src="/blog/images/electron-build/document_image_rId20.png" alt></p>
+<p>但 Windows 就没有这么好运气了，笔者并没有找到可以在 Windows 上打包出 macOS 可用执行文件的方式，所以上面的同时出两个平台可执行文件的方式亲测还是只能给 macOS 用的。</p>
+<p><img src="/blog/images/electron-build/document_image_rId21.png" alt></p>
+<h1 id="自动升级"><a href="#自动升级" class="headerlink" title="自动升级"></a>自动升级</h1><p>electron-builder 提供了生成自动升级文件的能力，配置好对应平台的 publish 字段后会同步生成升级 yml 文件，将它们和安装包一起上传到 CDN 并配置 electron-updater 即可以实现自动升级。<img src="/blog/images/electron-build/document_image_rId22.png" alt></p>
+<p>配置 electron-updater 需要注意以下三点：</p>
+<ol>
+<li><p>electron-builder 会在应用打包时偷偷塞进去一个 app-update.yml，本地开发时没有读到相似的开发配置会无法调试，需要手动复制一份并重命名成 dev-app-update.yml 放到开发目录下才能继续升级，但最后一定会自动升级失败，因为开发时的代码没有签名。</p>
+</li>
+<li><p>electron-updater 会去读 package.json 文件的 version 字段，如果是主目录和 App 目录不相同的开发模式的话，需要手动指定 autoUpdater.currentVersion。同样需要手动指定的还有 autoUpdater.channel，这里有个 bug，mac 虽然用的是 <code>latest-mac.yml</code> 文件但 channel 却要设置成 <code>latest</code>，electron-updater 似乎会自动补上 <code>-mac</code> 字样。</p>
+</li>
+<li><p>与 macOS 静默升级不同，nsis 包的 Windows 升级动静很大，所以如果用户不是想立马升级的话最好将 autoInstallOnQuit 设置成 false，否则用户就会惊奇地发现哪怕取消了自动安装还是在退出后立马更新了。</p>
+</li>
+</ol>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">autoUpdater.currentVersion = APP_VERSION;</span><br><span class="line">autoUpdater.autoInstallOnAppQuit = <span class="hljs-literal">false</span>;</span><br><span class="line">autoUpdater.channel = os.platform() === <span class="hljs-string">'darwin'</span> ? <span class="hljs-string">'latest'</span> : <span class="hljs-string">'latest-win32'</span>;</span><br></pre></td></tr></table></figure>
+<h1 id="文件关联"><a href="#文件关联" class="headerlink" title="文件关联"></a>文件关联</h1><p>在移动端 App 大杀四方，Web 大行其道，小程序蠢蠢欲动的当下，一个桌面应用的生存空间是极其狭小的，通常都不需要什么竞争对手，可能自身产品的其他端就把自己给分流耗竭而亡了……我们提到桌面端，不得不提的就是文件系统了，如果 iPhone &amp; Android 都有便捷好用的文件管理系统，那感觉桌面端的黄昏真的就来到了。</p>
+<p>但这里首先还是看一看 electron-builder 可以给我们带来什么能力吧。</p>
+<h2 id="系统关联文件类型"><a href="#系统关联文件类型" class="headerlink" title="系统关联文件类型"></a>系统关联文件类型</h2><p>这就是文件右键菜单里的打开方式了，设置方式也很简单，通过设置 electron-builder config 里的 fileAssocaitions 字段即可。<br><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> config = &#123;</span><br><span class="line">    fileAssociations: &#123;</span><br><span class="line">        ext: [<span class="hljs-string">'doc'</span>, <span class="hljs-string">'docx'</span>, <span class="hljs-string">'xls'</span>, <span class="hljs-string">'xlsx'</span>, <span class="hljs-string">'ppt'</span>, <span class="hljs-string">'pptx'</span>, <span class="hljs-string">'pdf'</span>, <span class="hljs-string">'txt'</span>, <span class="hljs-string">'csv'</span>],</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/blog/images/electron-build/document_image_rId23.png" alt></p>
+<p><img src="/blog/images/electron-build/document_image_rId24.png" alt></p>
+<h2 id="QQ-AIO-结构化消息打开应用（Windows）"><a href="#QQ-AIO-结构化消息打开应用（Windows）" class="headerlink" title="QQ AIO 结构化消息打开应用（Windows）"></a>QQ AIO 结构化消息打开应用（Windows）</h2><p>QQ 通过唤起写入注册表里的腾讯文档地址来打开腾讯文档 App 同时带上了 –url=<a href="https://docs.qq.com/xxx" target="_blank" rel="noopener">https://docs.qq.com/xxx</a> 的参数，继而打开对应的文档。</p>
+<p>electron-builder 配置 nsis.include 参数带上 nsh 脚本，写入如下设置（注：该配置并不完全）即可帮助 QQ 定位已安装的腾讯文档应用。</p>
+<figure class="highlight nsis hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">WriteRegStr</span> <span class="hljs-params">HKLM</span> <span class="hljs-string">"SOFTWARE\Tencent\TencentDocs"</span> <span class="hljs-string">"Install"</span> <span class="hljs-string">"<span class="hljs-variable">$INSTDIR</span>"</span></span><br></pre></td></tr></table></figure>
+<p>NSIS 脚本还可以做很多事情，比如卸载 App 后清理数据或者检查是否安装了老版本等，具体可参见其官方文档。</p>
+<figure class="highlight nsis hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">Delete</span> <span class="hljs-string">"<span class="hljs-variable">$APPDATA</span>\TDAppDesktop\*.*"</span></span><br><span class="line">RMDIR /r <span class="hljs-string">"<span class="hljs-variable">$APPDATA</span>\TDAppDesktop"</span></span><br></pre></td></tr></table></figure>
+<p>在 QQ 发起消息后，文档这边需要支持解析所带的参数，从进程参数中解出相关信息再打开对应 Tab 页面。</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> args = process.argv;</span><br><span class="line"><span class="hljs-keyword">if</span> (argv.length &gt; <span class="hljs-number">1</span>) &#123;</span><br><span class="line">    handleCommandArguments(argv.slice(<span class="hljs-number">1</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>本文简述了通过 Electron 构建应用过程中采用不同方式和配置打包文件、使用 electron-builder 构建可执行文件，同时用其提供的功能实现自动升级与文件关联，完成了在单个平台（macOS）开发并构建出跨端应用的任务。笔者接触 Electron 开发时间较短，行文中多是开发中所见所闻所感，如有错误纰漏之处，还望读者不吝包涵指正。后续文章将介绍在跨端开发中处理兼容性时遇到的问题，以及如何优雅地在产品设计和功能间进行取舍。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+    
+<div class="card card-transparent">
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+        <div class="pagination-previous">
+            <a class="is-flex-grow has-text-black-ter" href="/blog/">上一页</a>
+        </div>
+        <div class="pagination-next">
+            <a class="is-flex-grow has-text-black-ter" href="/blog/page/3/">下一页</a>
+        </div>
+        <ul class="pagination-list is-hidden-mobile">
+            
+            <li><a class="pagination-link has-text-black-ter" href="/blog/">1</a></li>
+            
+            <li><a class="pagination-link is-current" href="/blog/page/2/">2</a></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/blog/page/3/">3</a></li>
+            
+            <li><span class="pagination-ellipsis has-text-black-ter">&hellip;</span></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/blog/page/8/">8</a></li>
+            
+        </ul>
+    </nav>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="https://www.gravatar.com/avatar/ec56b0250e1a422107277db28a26e7ef?s=128" alt="Kimi Ma">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        Kimi Ma
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        F2E Engineer
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Beijing, China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        22
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        4
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        20
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/msyfls123" target="_blank">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/msyfls123">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Facebook" href="https://www.facebook.com/profile.php?id=100002470633349">
+                
+                <i class="fab fa-facebook"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Twitter" href="https://twitter.com/msyfls123">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="RSS" href="/blog/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://douban.com/people/kimimama" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">Douban</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">douban.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/blog/categories/web/">
+            <span class="level-start">
+                <span class="level-item">web</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">13</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/blog/categories/web/app/">
+            <span class="level-start">
+                <span class="level-item">app</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/blog/categories/想法/">
+            <span class="level-start">
+                <span class="level-item">想法</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">7</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/blog/categories/生活/">
+            <span class="level-start">
+                <span class="level-item">生活</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/blog/tags/Electron/" style="font-size: 20px;">Electron</a> <a href="/blog/tags/React/" style="font-size: 15px;">React</a> <a href="/blog/tags/UI/" style="font-size: 10px;">UI</a> <a href="/blog/tags/data-flow/" style="font-size: 10px;">data-flow</a> <a href="/blog/tags/electron/" style="font-size: 10px;">electron</a> <a href="/blog/tags/electron-builder/" style="font-size: 10px;">electron-builder</a> <a href="/blog/tags/gulp/" style="font-size: 15px;">gulp</a> <a href="/blog/tags/node/" style="font-size: 10px;">node</a> <a href="/blog/tags/nodejs/" style="font-size: 15px;">nodejs</a> <a href="/blog/tags/rollup/" style="font-size: 10px;">rollup</a> <a href="/blog/tags/rxjs/" style="font-size: 10px;">rxjs</a> <a href="/blog/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/blog/tags/前端/" style="font-size: 10px;">前端</a> <a href="/blog/tags/多线程/" style="font-size: 15px;">多线程</a> <a href="/blog/tags/旅行/" style="font-size: 10px;">旅行</a> <a href="/blog/tags/编程/" style="font-size: 10px;">编程</a> <a href="/blog/tags/解谜/" style="font-size: 10px;">解谜</a> <a href="/blog/tags/逻辑/" style="font-size: 10px;">逻辑</a> <a href="/blog/tags/面试/" style="font-size: 10px;">面试</a> <a href="/blog/tags/风景/" style="font-size: 10px;">风景</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/blog/2021/04/11/use-rxjs-to-handle-data-flows/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/use-rxjs-to-handle-data-flows/19-54-25.png" alt="使用 RxJS 处理前端数据流">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-04-11T10:54:41.000Z">2021-04-11</time></div>
+                    <a href="/blog/2021/04/11/use-rxjs-to-handle-data-flows/" class="has-link-black-ter is-size-6">使用 RxJS 处理前端数据流</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2021/02/17/cube-calendar/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/cube-calendar-1.jpg" alt="方块日历">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-02-17T15:02:32.000Z">2021-02-17</time></div>
+                    <a href="/blog/2021/02/17/cube-calendar/" class="has-link-black-ter is-size-6">方块日历</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2021/02/06/travels-of-beijing-parks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/travels-of-beijing-parks/document_image_rId10.jpeg" alt="逛公园才是正经事">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-02-06T15:32:14.000Z">2021-02-06</time></div>
+                    <a href="/blog/2021/02/06/travels-of-beijing-parks/" class="has-link-black-ter is-size-6">逛公园才是正经事</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/生活/">生活</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2020/12/06/tencent-docs-desktop-practice/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/tencent-docs-desktop-practice/document_image_rId9.png" alt="Electron 开发实践">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-06T15:56:00.000Z">2020-12-06</time></div>
+                    <a href="/blog/2020/12/06/tencent-docs-desktop-practice/" class="has-link-black-ter is-size-6">Electron 开发实践</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2020/12/01/rendering-cause-me-to-exist/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/rendering-cause-me-to-exist/document_image_rId9.png" alt="我渲染故我在，Electron 窗口开发指北">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-01T14:54:54.000Z">2020-12-01</time></div>
+                    <a href="/blog/2020/12/01/rendering-cause-me-to-exist/" class="has-link-black-ter is-size-6">我渲染故我在，Electron 窗口开发指北</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2021/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2021/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/Electron/">
+                        <span class="tag">Electron</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/React/">
+                        <span class="tag">React</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/UI/">
+                        <span class="tag">UI</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/data-flow/">
+                        <span class="tag">data-flow</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/electron/">
+                        <span class="tag">electron</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/electron-builder/">
+                        <span class="tag">electron-builder</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/gulp/">
+                        <span class="tag">gulp</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/node/">
+                        <span class="tag">node</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/nodejs/">
+                        <span class="tag">nodejs</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/rollup/">
+                        <span class="tag">rollup</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/rxjs/">
+                        <span class="tag">rxjs</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/webpack/">
+                        <span class="tag">webpack</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/前端/">
+                        <span class="tag">前端</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/多线程/">
+                        <span class="tag">多线程</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/旅行/">
+                        <span class="tag">旅行</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/编程/">
+                        <span class="tag">编程</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/解谜/">
+                        <span class="tag">解谜</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/逻辑/">
+                        <span class="tag">逻辑</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/面试/">
+                        <span class="tag">面试</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/风景/">
+                        <span class="tag">风景</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/blog/2021/04/11/use-rxjs-to-handle-data-flows/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/use-rxjs-to-handle-data-flows/19-54-25.png" alt="使用 RxJS 处理前端数据流">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-04-11T10:54:41.000Z">2021-04-11</time></div>
+                    <a href="/blog/2021/04/11/use-rxjs-to-handle-data-flows/" class="has-link-black-ter is-size-6">使用 RxJS 处理前端数据流</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2021/02/17/cube-calendar/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/cube-calendar-1.jpg" alt="方块日历">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-02-17T15:02:32.000Z">2021-02-17</time></div>
+                    <a href="/blog/2021/02/17/cube-calendar/" class="has-link-black-ter is-size-6">方块日历</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/想法/">想法</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2021/02/06/travels-of-beijing-parks/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/travels-of-beijing-parks/document_image_rId10.jpeg" alt="逛公园才是正经事">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-02-06T15:32:14.000Z">2021-02-06</time></div>
+                    <a href="/blog/2021/02/06/travels-of-beijing-parks/" class="has-link-black-ter is-size-6">逛公园才是正经事</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/生活/">生活</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2020/12/06/tencent-docs-desktop-practice/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/tencent-docs-desktop-practice/document_image_rId9.png" alt="Electron 开发实践">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-06T15:56:00.000Z">2020-12-06</time></div>
+                    <a href="/blog/2020/12/06/tencent-docs-desktop-practice/" class="has-link-black-ter is-size-6">Electron 开发实践</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/blog/2020/12/01/rendering-cause-me-to-exist/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/rendering-cause-me-to-exist/document_image_rId9.png" alt="我渲染故我在，Electron 窗口开发指北">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-01T14:54:54.000Z">2020-12-01</time></div>
+                    <a href="/blog/2020/12/01/rendering-cause-me-to-exist/" class="has-link-black-ter is-size-6">我渲染故我在，Electron 窗口开发指北</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/web/">web</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2021/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2021/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/blog/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/Electron/">
+                        <span class="tag">Electron</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/React/">
+                        <span class="tag">React</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/UI/">
+                        <span class="tag">UI</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/data-flow/">
+                        <span class="tag">data-flow</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/electron/">
+                        <span class="tag">electron</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/electron-builder/">
+                        <span class="tag">electron-builder</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/gulp/">
+                        <span class="tag">gulp</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/node/">
+                        <span class="tag">node</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/nodejs/">
+                        <span class="tag">nodejs</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/rollup/">
+                        <span class="tag">rollup</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/rxjs/">
+                        <span class="tag">rxjs</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/webpack/">
+                        <span class="tag">webpack</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/前端/">
+                        <span class="tag">前端</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/多线程/">
+                        <span class="tag">多线程</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/旅行/">
+                        <span class="tag">旅行</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/编程/">
+                        <span class="tag">编程</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/解谜/">
+                        <span class="tag">解谜</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/逻辑/">
+                        <span class="tag">逻辑</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/面试/">
+                        <span class="tag">面试</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/风景/">
+                        <span class="tag">风景</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/blog/">
+                
+                    <img src="/blog/images/logo.jpg" alt="马猴烧酒" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 msyfls123&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/blog/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/blog/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/blog/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/blog/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/blog/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/blog/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/blog/js/insight.js" defer></script>
+<link rel="stylesheet" href="/blog/css/search.css">
+<link rel="stylesheet" href="/blog/css/insight.css">
+    
+</body>
+</html>
