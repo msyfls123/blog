@@ -174,6 +174,8 @@ img.thumbnail
 .article
     .article-meta
         margin-bottom: 0.5rem !important
+    h1.title
+        color: darken(goldenrod, 10%)
     .content
         font-size: 1.1rem
         blockquote.pullquote
@@ -186,6 +188,22 @@ img.thumbnail
         table
           display: block
           overflow-x: auto
+        h1, h2, h3
+          color: #072
+        h1
+          counter-reset: h2
+          counter-increment: h1
+          &::before
+            content: counter(h1, cjk-ideographic) '. '
+        h2
+          counter-reset: h3
+          counter-increment: h2
+          &::before
+            content: counter(h1) '.' counter(h2) '. '
+        h3
+          counter-increment: h3
+          &::before
+            content: counter(h1) '.' counter(h2) '.' counter(h3) '. '
 
 .rtl
      direction: rtl
