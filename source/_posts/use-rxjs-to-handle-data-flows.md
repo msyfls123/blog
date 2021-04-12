@@ -19,7 +19,7 @@ disqusId: use-rxjs-to-handle-data-flows
 
 ## 问题 1：简单识别 URL
 
-![](/blog/images/use-rxjs-to-handle-data-flows/21-42-51.png)
+![识别 URL](/blog/images/use-rxjs-to-handle-data-flows/21-42-51.png)
 
 如上图所示，左侧是一个 window，从其他地方将一个带有超链接的文本复制到剪贴板之后切换到这个 window，我们希望在 window 的 focus 事件发出时能够识别到这个链接并打开。
 
@@ -44,7 +44,7 @@ thisWindow.on('focus', () => {
 
 ## 问题 2：记忆已识别的文本
 
-![](/blog/images/use-rxjs-to-handle-data-flows/22-06-27.png)
+![记忆已识别的文本](/blog/images/use-rxjs-to-handle-data-flows/22-06-27.png)
 
 如果有多个窗口呢？希望能只在一个窗口触发一次，那就需要一个中心化的缓存值，缓存之前处理过的文本。
 
@@ -81,7 +81,7 @@ function handleClipboardText(text) {
 
 这时产品觉得只拿到 URL 信息展示给用户没有太大的价值，要求展示成带有丰富信息的卡片格式，问题一下子变得复杂起来。
 
-![](/blog/images/use-rxjs-to-handle-data-flows/22-43-16.png)
+![链接卡片](/blog/images/use-rxjs-to-handle-data-flows/22-43-16.png)
 
 当然还是可以直接在每个 window 下去发起并接受 HTTP 请求，但这样代码就会变得越来越臃肿，该怎么办呢？
 
@@ -118,7 +118,49 @@ export function checkUrlInClipboard(windowId) {
 
 上面的代码创建了 `textInClipboard` Subject，并创建 checkUrlInClipboard 函数，在其中将当前剪贴板里的值传递给 `textInClipboard`，这样在 window 侧只需要调用这个方法就可以触发后面的一系列数据操作了。
 
+```diff
+thisWindow.on('focus', () => {
+  const text = clipboard.getText();
+-   handleClipboardText(text);
++   checkUrlInClipboard(text);
+})
+```
+
 ## 数据~~根据 memorized text~~去重
+
+创建完了接受用户操作的数据流之后，就需要对输入做去重，连续触发多次（例如用户在多个窗口间切换并不会连续识别 URL，而是只识别**不同的第一个**。
+
+![去重](/blog/images/use-rxjs-to-handle-data-flows/23-51-12.png)
+
+这在 RxJS 中非常容易实现，可以使用 [distinctUntilKeyChanged](https://rxjs-dev.firebaseapp.com/api/operators/distinctUntilKeyChanged) 运算符。
+
+加上常用的 [filter](https://rxjs-dev.firebaseapp.com/api/operators/filter) 和 [map](https://rxjs-dev.firebaseapp.com/api/operators/map)，我们就组合出了一套简易过滤**有效 URL**的管道，将上面的 `textInClipboard` 灌进去试一试。
+
+```js
+import { map, filter, distinctUntilKeyChanged } from 'rxjs/operators';
+
+const URL_REG = /(?:(?:https|http):\/\/)?docs\.qq\.com\/\w+/;
+
+const filteredUrlInClipboard$ = textInClipboard.pipe(
+  distinctUntilKeyChanged('text'),
+  map(({ text, ...rest }) => {
+    const matched = text.match(URL_REG);
+    if (matched) {
+      return {
+        url: matched[0],
+        ...rest,
+      }
+    }
+  }),
+  filter(Boolean(e?.url)),
+);
+
+filteredUrlInClipboard$.subscribe(console.log);
+```
+
+演示一下。
+
+![](/blog/images/use-rxjs-to-handle-data-flows/00-52-12.gif))
 
 ## 分发 HTTP 请求后的数据
 
