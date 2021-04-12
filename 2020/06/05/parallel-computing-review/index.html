@@ -8,7 +8,7 @@
 
 
     <meta name="description" content="接续前一篇《并行化密集型计算》，发现实际上线时 parallel terser 并没有提升速度。反而比单线程还要慢，这就有点不科学了。首先想本地跑起来没有出错，大概不是程序逻辑问题，再想想看，估计是配置问题，与 SA 进行了一波有力的交流。  原来 os.cpus() 拿到的是真实的计算机 CPU 核数，而 k8s 会限制容器的 CPU 使用量，所以我们应该手动将 NODE_ENV=product">
-<meta name="keywords" content="nodejs,gulp,webpack,多线程">
+<meta name="keywords" content="nodejs,gulp,多线程,webpack">
 <meta property="og:type" content="article">
 <meta property="og:title" content="复盘一次 gulp &amp; webpack 构建优化">
 <meta property="og:url" content="https://msyfls123.github.io/blog/2020/06/05/parallel-computing-review/index.html">
