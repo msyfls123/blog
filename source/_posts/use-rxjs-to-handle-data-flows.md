@@ -126,7 +126,7 @@ thisWindow.on('focus', () => {
 })
 ```
 
-## 数据~~根据 memorized text~~去重
+## 数据去重
 
 创建完了接受用户操作的数据流之后，就需要对输入做去重，连续触发多次（例如用户在多个窗口间切换并不会连续识别 URL，而是只识别**不同的第一个**。
 
@@ -162,7 +162,7 @@ filteredUrlInClipboard$.subscribe(console.log);
 
 ![](/blog/images/use-rxjs-to-handle-data-flows/00-52-12.gif)
 
-## 分发 HTTP 请求后的数据
+## 发送 HTTP 请求
 
 处理完了重复的文本，下面就该将筛选出的 URL 通过 HTTP 请求去获取详细信息了。
 
@@ -240,14 +240,95 @@ const docInfo$ = filteredUrlInClipboard$.pipe(
 然后特别需要重点注意的是，这里替换掉了 `from` 创建符，而使用 `defer` 代替，为什么？
 
 **因为 from 是 hot observable，也就是无论有么有被订阅都会自顾自发出值，并且再次订阅后也不会重复发出已有值，就像直播一样。**
-**而 defer 则像是视频，它是 cold observable，每次被订阅都会重新走一遍流程。**
+**而 defer 则像是点播，它是 cold observable，每次被订阅都会重新走一遍流程。**
 
 这点非常重要，所以在需要重复操作的地方还是需要 `defer` 来重复创建可利用的 Observable。
 
 而在最后我们 `catchError` 里，处理掉错误信息并打 log 后，直接返回 `NEVER`，也就意味着这个错误将消失在漫漫长河里，不会对下游造成影响。
 
+## 接受 HTTP 请求的结果
+
+一般而言，订阅一个 Observable 只需要 `subscribe` 即可，但这里出了一点小小的问题，还记得上面传入 `checkUrlInClipboard` 的参数 `windowId` 吗？我们需要给不同的 window 订阅不同的 URL 检查结果。如果同时 `subscribe` 一个 Observable 多次会发生什么？
+
+![](/blog/images/use-rxjs-to-handle-data-flows/23-33-03.png)
+
+答案是 `subscribe` 几次中间的 pipe 过程会走几次，这与我们所期望的不一致啊，总不能为了每个 window 发一次 HTTP 请求？
+
+![](/blog/images/use-rxjs-to-handle-data-flows/23-36-51.png)
+
+甚至可能出现多个请求返回结果不一致的情形，那就乱套了。
+
+事实上前面所用的 RxJS 操作符都是单播，也就是一对一，如果要一对多的话需要用到 `multicast`，但其实还有先后订阅的问题，这里就不展开了，可以参见[这篇文章](https://itnext.io/the-magic-of-rxjs-sharing-operators-and-their-differences-3a03d699d255)。我们直接使用 [`share`](https://rxjs-dev.firebaseapp.com/api/operators/share) 来共享这里的 HTTP 请求。
+
+```diff
++ import { share } from 'rxjs/operators';
+const docInfo$ = filteredUrlInClipboard$.pipe(
+  mergeMap(url => (
+    defer(() => fetch(`${CGI_URL}?url=${encodeURIComponent(url)}`)).pipe(
+      retryThreeTimesWith500msDelay,
+      catchError((error) => {
+        console.error(`获取 url=${url} 的信息失败`, error.toString());
+        return NEVER;
+      })
+    )
+  )),
++ share(),
+);
+```
+
+![](/blog/images/use-rxjs-to-handle-data-flows/23-49-16.png)
+
+加完以后可以清楚地发现 HTTP 请求只发送了一次！至此我们已经完美地按照产品的需求完成了「多 window 并发检查剪贴板中 URL 数据」的开发，整个流程使用 RxJS 划分地整整齐齐。在 window 调用处只需要简单地调用 `checkUrlInClipboard` 并订阅相应的 `docInfo$` 即可轻松接入剪贴板监听功能，so easy。
+
+```js
+thisWindow.on('focus', () => {
+  const text = clipboard.getText();
+  checkUrlInClipboard(text);
+});
+
+docInfo$.subscribe((info) => {
+  if (info.windowId === thisWindow.id) {
+    openDialog(info);
+  }
+});
+```
+
 ## 拓展边界
+
+如果这时产品经理告诉你又有新功能了，需要支持进程间共享剪贴板状态，WTF!如果平时可能就骂娘了，但 RxJS 基于流和操作符的特性拯救了所有的不开心，因为肯定有个 master 进程，只需要在 master 存一份检查过的 URL 文本就可以啦。
+
+![](/blog/images/use-rxjs-to-handle-data-flows/00-10-02.png)
+
+```diff
+const filteredUrlInClipboard$ = textInClipboard.pipe(
+- distinctUntilKeyChanged('text'),
++ mergeMap((payload) => (
++   from(checkIfUrlChangedInMaster(payload.url)).then(isChanged => isChanged ? payload : null)
++ )),
++ filter(Boolean),
+  map(({ text, ...rest }) => {
+    const matched = text.match(URL_REG);
+    if (matched) {
+      return {
+        url: matched[0],
+        ...rest,
+      }
+    }
+  }),
+  filter(Boolean(e?.url)),
+);
+```
+
+* `checkIfUrlChangedInMaster` 是与 master 通讯的异步方法，如果检查与前一次不同则返回 true，否则返回 false。
 
 # RxJS 的意义
 
-（未完待续
+这里给出上面各种操作的示例代码，可以实际修改并操作感受下 RxJS 的魅力。
+
+https://stackblitz.com/edit/rxjs-check-clipboard-demo?file=index.ts
+
+RxJS 单向数据流的设计符合函数式编程、纯函数单一输入输出无副作用的趋势，其强大的根据时间参数操作变量的能力给予了前端在处理并发事件时从容不迫的信心。
+
+最后放张老图~
+
+![](/blog/images/use-rxjs-to-handle-data-flows/00-32-29.png)
