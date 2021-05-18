@@ -1,0 +1,7 @@
+{
+  "pasteImage.defaultName": "HH-mm-ss",
+  "pasteImage.basePath": "/blog/images/${currentFileNameWithoutExt}/",
+  "pasteImage.path": "${projectRoot}/source/images/${currentFileNameWithoutExt}",
+  "pasteImage.showFilePathConfirmInputBox": true,
+  "pasteImage.insertPattern": "${imageSyntaxPrefix}/blog/images/${currentFileNameWithoutExt}/${imageFileName}${imageSyntaxSuffix}",
+}
