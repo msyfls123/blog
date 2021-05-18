@@ -1,0 +1,120 @@
+version: 4.0.0
+favicon: /images/favicon.ico
+rss: 
+logo: /images/logo.jpg
+open_graph:
+    fb_app_id: 
+    fb_admins: 
+    twitter_id: 
+    twitter_site: 
+    google_plus: 
+navbar:
+    menu:
+        Home: /
+        Archives: /archives
+        Categories: /categories
+        Tags: /tags
+        About: /about
+    links: 
+footer:
+    links:
+        Creative Commons:
+            icon: fab fa-creative-commons
+            url: 'https://creativecommons.org/'
+        Attribution 4.0 International:
+            icon: fab fa-creative-commons-by
+            url: 'https://creativecommons.org/licenses/by/4.0/'
+        Download on GitHub:
+            icon: fab fa-github
+            url: 'http://github.com/ppoffice/hexo-theme-icarus'
+article:
+    highlight:
+        # Code highlight themes
+        # https://github.com/highlightjs/highlight.js/tree/master/src/styles
+        theme: atom-one-light
+        # Show copy code button
+        clipboard: true
+        # Default folding status of the code blocks. Can be "", "folded", "unfolded"
+        fold: unfolded
+search:
+    type: insight
+comment:
+    type: disqus
+    shortname: msyfls123
+donate:
+    -
+        type: alipay
+        qrcode: /images/alipay.jpg
+    -
+        type: wechat
+        qrcode: /images/wechat.png
+share:
+    type: addtoany
+sidebar:
+    left:
+        sticky: false
+    right:
+        sticky: false
+widgets:
+    -
+        type: profile
+        position: left
+        author: Kimi Ma
+        author_title: F2E Engineer
+        location: 'Beijing, China'
+        avatar: 
+        gravatar: shenyan@douban.com
+        avatar_rounded: false
+        follow_link: 'http://github.com/msyfls123'
+        social_links:
+            Github:
+                icon: fab fa-github
+                url: 'http://github.com/msyfls123'
+            Facebook:
+                icon: fab fa-facebook
+                url: 'https://www.facebook.com/profile.php?id=100002470633349'
+            Twitter:
+                icon: fab fa-twitter
+                url: 'https://twitter.com/msyfls123'
+            RSS:
+                icon: fas fa-rss
+                url: /
+    -
+        type: toc
+        position: left
+    -
+        type: links
+        position: left
+        links:
+            Douban: 'https://douban.com/people/kimimama'
+    -
+        type: categories
+        position: left
+    -
+        type: tags
+        position: left
+    -
+        type: recent_posts
+        position: right
+    -
+        type: archives
+        position: right
+plugins:
+    animejs: true
+    gallery: true
+    outdated-browser: true
+    mathjax: true
+    back-to-top: true
+    google-analytics:
+        tracking_id: 
+    baidu-analytics:
+        tracking_id: 
+    hotjar:
+        site_id: 
+    progressbar: true
+    clipboard: true
+    busuanzi: false
+providers:
+    cdn: jsdelivr
+    fontcdn: google
+    iconcdn: fontawesome
