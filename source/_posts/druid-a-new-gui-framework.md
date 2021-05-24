@@ -33,7 +33,7 @@ cargo-edit v0.7.0:
 
 [官网第一个 case](https://github.com/linebender/druid/blob/ea8ec4728d459e9ffa0b3818b5d988d6a3436e4d/README.md) 就让我们栽了跟头，这里的 `log_to_console` 和 `ui_builder` 都不太对劲，改成如下代码就可以跑出首个界面啦。
 
-```rs
+```rust
 use druid::widget::{Button, Flex, Label};
 use druid::{AppLauncher, LocalizedString, PlatformError, Widget, WidgetExt, WindowDesc};
 
@@ -68,7 +68,7 @@ fn ui_builder() -> impl Widget<u32> {
 
 首先是类型定义，`Druid` 提供了 [Data](https://docs.rs/druid/0.7.0/druid/trait.Data.html) 和 [Lens](https://docs.rs/druid/0.7.0/druid/trait.Lens.html) 两个重要的 trait，它们分别提供了如何判断数据相等和如何从一大块数据中提取所需要数据的方式。
 
-```rs
+```rust
 use druid::{Data, Lens};
 use tokio::sync::mpsc::{UnboundedSender}
 
@@ -96,7 +96,7 @@ pub struct State {
 
 需要注意的是，发送的消息和接受的消息都需要以唯一的 `Selector` 识别，示例如下：
 
-```rs
+```rust
 use druid::{Selector, AppDelegate};
 
 const NEW_DAY: Selector<String> = Selector::new("new-day");
@@ -118,7 +118,69 @@ impl AppDelegate<State> for AppDelegater {
 ```
 
 ## 控制器
-## 上下文
+
+控制器即 [Controller](https://docs.rs/druid/0.7.0/druid/widget/trait.Controller.html)，它和 App 上的消息代理类似，但不同之处在于它往往是局部的，能提供针对某种 Event，组件生命周期和内外数据变化的精细控制。
+
+例如，我们想要在窗口中实现一个右键菜单：每当用户操纵鼠标在窗口内右键单击时调用 `make_demo_menu` 创建一个菜单。
+
+```rust
+use druid::widget::{Controller};
+use druid::{Widget, Event, ContextMenu};
+use crate::components::menu::make_demo_menu;
+use crate::types::{State};
+
+pub struct WindowController;
+
+impl <W: Widget<State>> Controller<State, W> for WindowController {
+    fn event(
+        &mut self,
+        child: &mut W,
+        ctx: &mut druid::EventCtx<'_, '_>,
+        event: &druid::Event,
+        data: &mut State,
+        env: &druid::Env
+    ) {
+        match event {
+            Event::MouseDown(ref mouse) if mouse.button.is_right() => {
+                let context_menu = ContextMenu::new(make_demo_menu(), mouse.pos);
+                ctx.show_context_menu(context_menu);
+            },
+            _ => child.event(ctx, event, data, env),
+        }
+    }
+}
+```
+
+需要注意的是没有处理的 `Event` 需要显式交给 child 继续处理，这与浏览器的 DOM 事件不同，是向下“冒泡”的。
+## 环境变量
+
+这里的环境变量不是指系统的环境变量，而是 Druid App 组件相关的整体设定，例如窗口颜色和按钮尺寸等等。
+环境变量分两种：一种全局，一种局部。
+
+全局的环境变量通过 launcher 的 `configure_env` 设置。
+
+```rust
+launcher.use_simple_logger()
+    .configure_env(|env, _| {
+        env.set(theme::WINDOW_BACKGROUND_COLOR, Color::WHITE);
+        env.set(theme::LABEL_COLOR, Color::AQUA);
+        env.set(theme::BUTTON_LIGHT, Color::WHITE);
+        env.set(theme::BUTTON_DARK, Color::WHITE);
+        env.set(theme::BACKGROUND_DARK, Color::GRAY);
+        env.set(theme::BACKGROUND_LIGHT, Color::WHITE);
+    })
+```
+
+而局部的环境变量则可以通过 [EnvScope](https://docs.rs/druid/0.7.0/druid/widget/struct.EnvScope.html) 来设置，就可以做到组件样式隔离。
+
+```rust
+EnvScope::new(
+    |env, data| {
+        env.set(theme::LABEL_COLOR, Color::WHITE);
+    },
+    Label::new("White text!")
+)
+```
 
 # 界面
 ## 组件
