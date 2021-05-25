@@ -121,6 +121,8 @@ impl AppDelegate<State> for AppDelegater {
 
 控制器即 [Controller](https://docs.rs/druid/0.7.0/druid/widget/trait.Controller.html)，它和 App 上的消息代理类似，但不同之处在于它往往是局部的，能提供针对某种 Event，组件生命周期和内外数据变化的精细控制。
 
+![](/blog/images/druid-a-new-gui-framework/00-34-37.png)
+
 例如，我们想要在窗口中实现一个右键菜单：每当用户操纵鼠标在窗口内右键单击时调用 `make_demo_menu` 创建一个菜单。
 
 ```rust
@@ -183,10 +185,107 @@ EnvScope::new(
 ```
 
 # 界面
+
+所谓界面，就是窗口中显示的那部分东西，通常来说是布局和组件的有机结合，当然也可以自定义组件的展示和行为，只需定义好所需的更新方式、事件处理、生命周期等即可，这样就带来了更多的可扩展性。
 ## 组件
 
+最常见的组件莫过于文本块 [Label](https://docs.rs/druid/0.7.0/druid/widget/struct.Label.html) 和按钮 [Button](https://docs.rs/druid/0.7.0/druid/widget/struct.Button.html) 了。剩下的比如 Tab 栏、进度条、单选多选项、输入框等也是基本都有。
+展示一下基本的按钮和文本块的创建方法。
+
+```rust
+let button = Button::new(button_text)
+    .on_click(|_ctx, data: &mut State, _env| {
+        data.count += 1;
+    })
+    .padding(5.0);
+let label = Label::new("hello world");
+```
+
 ## 布局
+
+```
+ -------non-flex----- -flex-----
+|       child #1     | child #2 |
+
+
+ ----flex------- ----flex-------
+|    child #1   |    child #2   |
+
+```
+
+Druid 提供了 Flex 布局，熟悉 CSS 的同学一定很快就能理解，但类似以下这种命令式的创建方式还是让人皱眉头且怀念 CSS。
+
+```rust
+use druid::widget::{Flex, FlexParams, Label, Slider, CrossAxisAlignment};
+
+let my_row = Flex::row()
+    .cross_axis_alignment(CrossAxisAlignment::Center)
+    .must_fill_main_axis(true)
+    .with_child(Label::new("hello"))
+    .with_default_spacer()
+    .with_flex_child(Slider::new(), 1.0);
+```
+
+## 新建窗口
+
+光靠组件和布局，仅仅是在窗口之内操作肯定是不足以创建出足够具有动态的应用的，我们还需要动态创建窗口的能力！Druid 也提供了在 `EventCtx` 或 `DelegateCtx` 上创建窗口的能力。
+
+![](/blog/images/druid-a-new-gui-framework/00-02-55.png)
+
+比如我们可以在全局 `AppDelegate` 上注册新窗口的 `Command`。
+
+```rust
+pub struct AppDelegater;
+
+impl AppDelegate<State> for AppDelegater {
+    fn command(
+        &mut self,
+        ctx: &mut DelegateCtx,
+        _target: Target,
+        cmd: &Command,
+        data: &mut State,
+        _env: &Env,
+    ) -> Handled {
+        if let Some(_) = cmd.get(NEW_WINDOW) {
+            ctx.new_window(WindowDesc::new(new_window_builder)
+                .window_size((400.0, 300.0)));
+            Handled::Yes
+        } else {
+            Handled::No
+        }
+    }
+}
+```
 ## 图片
+
+![](/blog/images/druid-a-new-gui-framework/00-34-02.png)
+
+图片是个复杂的东东，目前看到 Druid 的处理方式是直接将图片的二进制数据编译进去，在运行时转变成像素进行渲染，需要安装 `image` 这个 crate 进行处理。后续 Druid 的版本会简化这一流程，但当前还是得这么写 …… 且图像会被变成黑白照片，不知道为啥，有知道的同学请不吝赐教。
+
+```rust
+use druid::widget::{Image, SizedBox};
+use druid::{Widget, ImageBuf, WidgetExt, Color};
+use druid::piet::{ImageFormat};
+
+use crate::types::State;
+
+pub fn make_image() -> impl Widget<State> {
+  let raw_image = include_bytes!("../../resources/image/example.jpg");
+  let image_data = image::load_from_memory(raw_image).map_err(|e| e).unwrap();
+  let rgb_image = image_data.to_rgb8();
+  let size_of_image = rgb_image.dimensions();
+  let image_buf = ImageBuf::from_raw(
+    rgb_image.to_vec(),
+    ImageFormat::Rgb,
+    size_of_image.0 as usize,
+    size_of_image.1 as usize,
+  );
+  SizedBox::new(Image::new(image_buf))
+    .fix_width(size_of_image.0 as f64 / 8.0)
+    .fix_height(size_of_image.1 as f64 / 8.0)
+    .border(Color::grey(0.6), 2.0).center().boxed()
+}
+```
 
 # 其他
 ## 菜单与快捷键
