@@ -13,7 +13,7 @@
 <li>PriceActions</li>
 <li><code>PriceActions.tsx</code> -&gt; <code>StartPromotionButton.tsx</code> -&gt; <code>StartPromotionForm.tsx</code></li>
 </ol>
-<p>一个页面上小小的组件，被封装在 9 层目录之下，同目录平级之间还有嵌套关系。当然组件化分治思想也是 React 一直火到现在的根本原因，但有时也会想想这种扁平化的目录结构是否真的合适项目的发展，或者说在业务需求猛增前提下如何科学组织目录结构以便修改维护也是门学问了，当然最好的方式是：不组织。根据实际发展来让文件自行组织，见 <a href="https://github.com/benawad/destiny" target="_blank" rel="noopener">destiny</a>。</p>
+<p>一个页面上小小的组件，被封装在 9 层目录之下，同目录平级之间还有嵌套关系。当然组件化分治思想也是 React 一直火到现在的根本原因，但有时也会想想这种扁平化的目录结构是否真的合适项目的发展，或者说在业务需求猛增前提下如何科学组织目录结构以便修改维护也是门学问了，当然最好的方式是：不组织。根据实际发展来让文件自行组织，见 <a target="_blank" rel="noopener" href="https://github.com/benawad/destiny">destiny</a>。</p>
 <p>拉扯这么多包装的弊端，但包装实际上是一项很重要的工序，因为不包装带来的风险，往往是看不见的：<br>小吕去年写了个活动页的接口，因为是第一次办这种活动，小吕本着以产品需求为约束的理念写好了无届数限制的 API 接口，然后前端同学以此接口封装了一个组件给页面加了上去。转眼间一年过去了，活动办了第二届，产品要求有新功能，小吕又哼哧哼哧写了一个第二届活动的 API，但这时候出分歧了：前端觉得接口应该稳定，如果每做一届都要回溯一遍做过的接口映射，太累且容易出错；而后端觉得分离 API 有助于更清晰地业务逻辑。大家说的都没错，怎么办呢？包装一下接口吧！</p>
 <p><img src="/blog/images/over-packaging-2.jpg" alt="原俩接口实现，红线为本次修改"><br><img src="/blog/images/over-packaging-3.jpg" alt="Adapter 模式"></p>
 <p>可以看出是适当的包装有助于分清业务界限，明确各端职责是非常值得提倡的。</p>

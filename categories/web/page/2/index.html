@@ -6,7 +6,8 @@
 <p><strong>用弹窗啊！</strong></p>
 <p>弹窗作为一种全局模态框可以在不修改整体页面流式布局的基础上让用户看到额外信息，甚至进行交互操作。弹窗内的组件可以被复用，因为是动态挂载到页面上的，一般对页面已有数据的依赖较小。</p>
 <p><img src="/blog/images/general-design-1.png" alt="现签署合同页面"><br><img src="/blog/images/general-design-2.png" alt="在身份信息不全情形下会弹出弹窗以供填写"></p>
-<p>在实际代码构建时为了便于使用，将整个弹窗加上作者身份数据的获取、存储与更新逻辑整体封装到了一个 <code>hook</code> 中：<br><figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> &#123; agentInfo, loaded, showAgentInfoFormDialog &#125; = useAgentInfo(agentId)</span><br></pre></td></tr></table></figure></p>
+<p>在实际代码构建时为了便于使用，将整个弹窗加上作者身份数据的获取、存储与更新逻辑整体封装到了一个 <code>hook</code> 中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; agentInfo, loaded, showAgentInfoFormDialog &#125; = useAgentInfo(agentId)</span><br></pre></td></tr></table></figure>
 <p>这样将数据和方法返回给调用方，将代码的侵入性做到最低。如果以后有只需要身份信息而不需要修改弹窗的使用情形，也可以尽情复用。</p>
 <h3 id="更通用的标签筛选"><a href="#更通用的标签筛选" class="headerlink" title="更通用的标签筛选"></a>更通用的标签筛选</h3><p>一日接到了一个增加筛选器筛选条件的需求（筛选器是一个巨大的，有着上百个 CheckBox，相比各种电商筛选条件毫不逊色的怪物👹）。</p>
 <p><img src="/blog/images/general-design-6.png" alt="需求"></p>
@@ -25,331 +26,325 @@
 <h3 id="syncState"><a href="#syncState" class="headerlink" title="syncState"></a>syncState</h3><table>
 <thead>
 <tr>
-<th style="text-align:left">名称</th>
-<th style="text-align:left">值</th>
+<th align="left">名称</th>
+<th align="left">值</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td style="text-align:left">inline_styles</td>
-<td style="text-align:left"><code>{ &quot;BOLD&quot;: false, \n&quot;CODE&quot;: false, &quot;ITALIC&quot;: false, &quot;STRIKETHROUGH&quot;: false },</code></td>
+<tbody><tr>
+<td align="left">inline_styles</td>
+<td align="left"><code>&#123; &quot;BOLD&quot;: false, \n&quot;CODE&quot;: false, &quot;ITALIC&quot;: false, &quot;STRIKETHROUGH&quot;: false &#125;,</code></td>
 </tr>
 <tr>
-<td style="text-align:left">block_type</td>
-<td style="text-align:left">“unstyled”</td>
+<td align="left">block_type</td>
+<td align="left">“unstyled”</td>
 </tr>
 <tr>
-<td style="text-align:left">alignment</td>
-<td style="text-align:left">“left”</td>
+<td align="left">alignment</td>
+<td align="left">“left”</td>
 </tr>
 <tr>
-<td style="text-align:left">disabled_buttons</td>
-<td style="text-align:left">[ “BOLD”, “unstyled”, “header-one”, …]</td>
+<td align="left">disabled_buttons</td>
+<td align="left">[ “BOLD”, “unstyled”, “header-one”, …]</td>
 </tr>
 <tr>
-<td style="text-align:left">undo_disabled</td>
-<td style="text-align:left">true</td>
+<td align="left">undo_disabled</td>
+<td align="left">true</td>
 </tr>
 <tr>
-<td style="text-align:left">redo_disabled</td>
-<td style="text-align:left">false</td>
+<td align="left">redo_disabled</td>
+<td align="left">false</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <h3 id="操作栏"><a href="#操作栏" class="headerlink" title="操作栏"></a>操作栏</h3><table>
 <thead>
 <tr>
 <th>行为</th>
 <th>value</th>
-<th style="text-align:left">disabled</th>
-<th style="text-align:left">toggle</th>
-<th style="text-align:left">insert</th>
-<th style="text-align:left">update</th>
-<th style="text-align:left">remove</th>
-<th style="text-align:left">native 帮帮我</th>
-<th style="text-align:left">交给你了 web</th>
+<th align="left">disabled</th>
+<th align="left">toggle</th>
+<th align="left">insert</th>
+<th align="left">update</th>
+<th align="left">remove</th>
+<th align="left">native 帮帮我</th>
+<th align="left">交给你了 web</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>加粗</td>
 <td>‘BOLD’</td>
-<td style="text-align:left">‘BOLD’ in syncState.disabled_buttons</td>
-<td style="text-align:left">AEW.toggleInlineStyle(‘BOLD’)</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘BOLD’ in syncState.disabled_buttons</td>
+<td align="left">AEW.toggleInlineStyle(‘BOLD’)</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>楷体</td>
 <td>‘ITALIC’</td>
-<td style="text-align:left">‘ITALIC’ in syncState.disabled_buttons</td>
-<td style="text-align:left">AEW.toggleInlineStyle(‘ITALIC’)</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘ITALIC’ in syncState.disabled_buttons</td>
+<td align="left">AEW.toggleInlineStyle(‘ITALIC’)</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>删除线</td>
 <td>‘STRIKETHROUGH’</td>
-<td style="text-align:left">‘STRIKETHROUGH’ in syncState.disabled_buttons</td>
-<td style="text-align:left">AEW.toggleInlineStyle(‘STRIKETHROUGH’)</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘STRIKETHROUGH’ in syncState.disabled_buttons</td>
+<td align="left">AEW.toggleInlineStyle(‘STRIKETHROUGH’)</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>行内代码</td>
 <td>‘CODE’</td>
-<td style="text-align:left">‘CODE’ in syncState.disabled_buttons</td>
-<td style="text-align:left">AEW.toggleInlineStyle(‘CODE’)</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘CODE’ in syncState.disabled_buttons</td>
+<td align="left">AEW.toggleInlineStyle(‘CODE’)</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>链接</td>
 <td>‘LINK’</td>
-<td style="text-align:left">‘LINK’ in syncState.disabled_buttons</td>
-<td style="text-align:left">AEW.toggleLink()</td>
-<td style="text-align:left">AEW.insertLink(url)</td>
-<td style="text-align:left">AEW.updateLink(entityKey, url)</td>
-<td style="text-align:left">AEW.removeLink()</td>
-<td style="text-align:left">AEN.showLinkEditor(entityKey, url)</td>
-<td style="text-align:left"></td>
+<td align="left">‘LINK’ in syncState.disabled_buttons</td>
+<td align="left">AEW.toggleLink()</td>
+<td align="left">AEW.insertLink(url)</td>
+<td align="left">AEW.updateLink(entityKey, url)</td>
+<td align="left">AEW.removeLink()</td>
+<td align="left">AEN.showLinkEditor(entityKey, url)</td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>注释</td>
 <td>‘FOOTNOTE’</td>
-<td style="text-align:left">‘FOOTNOTE’ in syncState.disabled_buttons</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">AEW.insertFootnote(content)</td>
-<td style="text-align:left">AEW.updateFootnote(entityKey, content)</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">AEN.showFootnoteEditor(entityKey, content)</td>
-<td style="text-align:left"></td>
+<td align="left">‘FOOTNOTE’ in syncState.disabled_buttons</td>
+<td align="left"></td>
+<td align="left">AEW.insertFootnote(content)</td>
+<td align="left">AEW.updateFootnote(entityKey, content)</td>
+<td align="left"></td>
+<td align="left">AEN.showFootnoteEditor(entityKey, content)</td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>标题（ 总称，无实际意义）</td>
 <td>‘headlines’</td>
-<td style="text-align:left">‘headlines’ in syncState.disabled_buttons</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘headlines’ in syncState.disabled_buttons</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>一级标题</td>
 <td>‘header-one’</td>
-<td style="text-align:left">‘header-one’ in syncState.disabled_buttons</td>
-<td style="text-align:left">AEW.toggleBlockType(‘header-one’)</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘header-one’ in syncState.disabled_buttons</td>
+<td align="left">AEW.toggleBlockType(‘header-one’)</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>二级标题</td>
 <td>‘header-two’</td>
-<td style="text-align:left">‘header-two’ in syncState.disabled_buttons</td>
-<td style="text-align:left">AEW.toggleBlockType(‘header-two’)</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘header-two’ in syncState.disabled_buttons</td>
+<td align="left">AEW.toggleBlockType(‘header-two’)</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>三级标题</td>
 <td>‘header-three’</td>
-<td style="text-align:left">‘header-three’ in syncState.disabled_buttons</td>
-<td style="text-align:left">AEW.toggleBlockType(‘header-three’)</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘header-three’ in syncState.disabled_buttons</td>
+<td align="left">AEW.toggleBlockType(‘header-three’)</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>四级标题</td>
 <td>‘header-four’</td>
-<td style="text-align:left">‘header-four’ in syncState.disabled_buttons</td>
-<td style="text-align:left">AEW.toggleBlockType(‘header-four’)</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘header-four’ in syncState.disabled_buttons</td>
+<td align="left">AEW.toggleBlockType(‘header-four’)</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>五级标题</td>
 <td>‘header-five’</td>
-<td style="text-align:left">‘header-five’ in syncState.disabled_buttons</td>
-<td style="text-align:left">AEW.toggleBlockType(‘header-five’)</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘header-five’ in syncState.disabled_buttons</td>
+<td align="left">AEW.toggleBlockType(‘header-five’)</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>六级标题</td>
 <td>‘header-six’</td>
-<td style="text-align:left">‘header-six’ in syncState.disabled_buttons</td>
-<td style="text-align:left">AEW.toggleBlockType(‘header-six’)</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘header-six’ in syncState.disabled_buttons</td>
+<td align="left">AEW.toggleBlockType(‘header-six’)</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>默认文字块</td>
 <td>‘unstyled’</td>
-<td style="text-align:left">‘unstyled’ in syncState.disabled_buttons</td>
-<td style="text-align:left">AEW.toggleBlockType(‘unstyled’)</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘unstyled’ in syncState.disabled_buttons</td>
+<td align="left">AEW.toggleBlockType(‘unstyled’)</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>对齐</td>
 <td>‘alignments’</td>
-<td style="text-align:left">‘alignments’ in syncState.disabled_buttons</td>
-<td style="text-align:left">AEW.toggleAlignment(‘left’\</td>
-<td style="text-align:left">‘center’\</td>
-<td style="text-align:left">‘right’)</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td></td>
-<td></td>
+<td align="left">‘alignments’ in syncState.disabled_buttons</td>
+<td align="left">AEW.toggleAlignment(‘left’|’center’|’right’)</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>有序列表</td>
 <td>‘ordered-list-item’</td>
-<td style="text-align:left">‘ordered-list-item’ in syncState.disabled_buttons</td>
-<td style="text-align:left">AEW.toggleBlockType(‘ordered-list-item’)</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘ordered-list-item’ in syncState.disabled_buttons</td>
+<td align="left">AEW.toggleBlockType(‘ordered-list-item’)</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>无序列表</td>
 <td>‘unordered-list-item’</td>
-<td style="text-align:left">‘unordered-list-item’ in syncState.disabled_buttons</td>
-<td style="text-align:left">AEW.toggleBlockType(‘unordered-list-item’)</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘unordered-list-item’ in syncState.disabled_buttons</td>
+<td align="left">AEW.toggleBlockType(‘unordered-list-item’)</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>引用</td>
 <td>‘blockquote’</td>
-<td style="text-align:left">‘blockquote’ in syncState.disabled_buttons</td>
-<td style="text-align:left">AEW.toggleBlockType(‘blockquote’)</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘blockquote’ in syncState.disabled_buttons</td>
+<td align="left">AEW.toggleBlockType(‘blockquote’)</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>图片</td>
 <td>‘FIGURE’</td>
-<td style="text-align:left">‘atomic’ in syncState.disabled_buttons</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left">AEW.selectImage()</td>
+<td align="left">‘atomic’ in syncState.disabled_buttons</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">AEW.selectImage()</td>
 </tr>
 <tr>
 <td>代码块</td>
 <td>‘code-block’</td>
-<td style="text-align:left">‘code-block’ in syncState.disabled_buttons</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">AEW.insertCodeBlock()</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘code-block’ in syncState.disabled_buttons</td>
+<td align="left"></td>
+<td align="left">AEW.insertCodeBlock()</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>分割线</td>
 <td>‘PAGEBREAK’</td>
-<td style="text-align:left">‘ atomic’ in syncState.disabled_buttons</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">AEW.insertPagebreak()</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘ atomic’ in syncState.disabled_buttons</td>
+<td align="left"></td>
+<td align="left">AEW.insertPagebreak()</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>分行</td>
 <td></td>
-<td style="text-align:left">‘ atomic’ in syncState.disabled_buttons</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">AEW.insertSoftNewLine()</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
+<td align="left">‘ atomic’ in syncState.disabled_buttons</td>
+<td align="left"></td>
+<td align="left">AEW.insertSoftNewLine()</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
 </tr>
 <tr>
 <td>撤销</td>
 <td></td>
-<td style="text-align:left">syncState.undo_disabled</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left">AEW.undo()</td>
+<td align="left">syncState.undo_disabled</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">AEW.undo()</td>
 </tr>
 <tr>
 <td>重做</td>
 <td></td>
-<td style="text-align:left">syncState.redo_disabled</td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left">AEW.redo()</td>
+<td align="left">syncState.redo_disabled</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">AEW.redo()</td>
 </tr>
 <tr>
 <td>清除行内样式</td>
 <td></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left"></td>
-<td style="text-align:left">AEW.removeFormat()</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">AEW.removeFormat()</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <p>优先级原则：</p>
 <ul>
 <li>先判断是不是 <code>disabled</code></li>
@@ -363,7 +358,7 @@
 <li>需要找到优雅的 debug 方式，出现过直接传 JS Object，native 端得到 <code>undefined</code></li>
 <li>异步操作可能需要加锁</li>
 </ul>
-<p>当然现在开发还在对接联调期，包括保存等功能还没有加上，与从零开始的搭建也不可同日而语。编辑器和阅读器都是电子阅读产品的重头戏，之前则是看了这篇<a href="https://zhuanlan.zhihu.com/p/35303567" target="_blank" rel="noopener">《Visual Studio Code有哪些工程方面的亮点》</a>，对编辑器的开发充满了崇敬的心情。VS Code 也是我们现在开发的主力工具，包括其丰富的插件体系、LSP 和宛如神器的 Remote 模式，都使我惊叹于其<a href="https://www.zhihu.com/question/363365943" target="_blank" rel="noopener">良好的实现</a>。不说了，去下单<a href="https://book.douban.com/subject/1052241/" target="_blank" rel="noopener">《设计模式》</a>了。</p>
+<p>当然现在开发还在对接联调期，包括保存等功能还没有加上，与从零开始的搭建也不可同日而语。编辑器和阅读器都是电子阅读产品的重头戏，之前则是看了这篇<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/35303567">《Visual Studio Code有哪些工程方面的亮点》</a>，对编辑器的开发充满了崇敬的心情。VS Code 也是我们现在开发的主力工具，包括其丰富的插件体系、LSP 和宛如神器的 Remote 模式，都使我惊叹于其<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/363365943">良好的实现</a>。不说了，去下单<a target="_blank" rel="noopener" href="https://book.douban.com/subject/1052241/">《设计模式》</a>了。</p>
 </div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-12-03T13:10:40.000Z" title="12/3/2019, 9:10:40 PM">2019-12-03</time>发表</span><span class="level-item"><time dateTime="2019-12-29T13:50:30.375Z" title="12/29/2019, 9:50:30 PM">2019-12-29</time>更新</span><span class="level-item"><a class="link-muted" href="/blog/categories/web/">web</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/blog/2019/12/03/%E5%89%8D%E7%AB%AF%E6%96%87%E4%BB%B6%E6%89%93%E5%8C%85%E4%BC%98%E5%8C%96/">前端文件打包优化</a></h1><div class="content"><p>前端开发除了 HTML 模板外最重要的就是 JS/CSS 文件了，现今开发者都是本地书写 ES6/Stylus/Sass 然后经打包发布至 CDN 等环境，于此带来的问题是一些不需要的代码被打包了进来，甚至更严重的是一份代码被打包几遍。当然，Webpack 这样的工具出现就是为了解决这些问题，不过考虑到打包过程是一次性的编译，运行时代码的区别仍然需要开发者手动对待。</p>
 <h2 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h2><h3 id="1-重复打包了类库文件"><a href="#1-重复打包了类库文件" class="headerlink" title="1. 重复打包了类库文件"></a>1. 重复打包了类库文件</h3><p><img src="/blog/images/js-bundle-1.png" alt="backbone、underscore 被同时打包进了 vendor 和 setup 入口文件"></p>
 <p>上图中可以看到 vendor 和 setup 里都有 backbone、underscore 和 zepto 等库文件，这是为什么呢？</p>
@@ -376,15 +371,15 @@
 <p><img src="/blog/images/js-bundle-5.png" alt="date-fns/esm"></p>
 <p>好在它们文档都比较全：</p>
 <ul>
-<li>RxJS <a href="https://github.com/ReactiveX/rxjs/blob/865b7d36c1fc59d065072e7026e959c3a0e01ce7/doc/pipeable-operators.md#build-and-treeshaking" target="_blank" rel="noopener">Pipeable Operators</a></li>
-<li>date-fns <a href="https://date-fns.org/v2.0.0-alpha.7/docs/ECMAScript-Modules" target="_blank" rel="noopener">ECMAScript-Modules</a></li>
+<li>RxJS <a target="_blank" rel="noopener" href="https://github.com/ReactiveX/rxjs/blob/865b7d36c1fc59d065072e7026e959c3a0e01ce7/doc/pipeable-operators.md#build-and-treeshaking">Pipeable Operators</a></li>
+<li>date-fns <a target="_blank" rel="noopener" href="https://date-fns.org/v2.0.0-alpha.7/docs/ECMAScript-Modules">ECMAScript-Modules</a></li>
 </ul>
 <p>如下图一顿修改。<br><img src="/blog/images/js-bundle-7.png" alt="import function from &#39;date-fns/function&#39; directly"></p>
 <p>见证奇迹的时刻！<br><img src="/blog/images/js-bundle-6.png" alt="date-fns/esm mini"></p>
 <h3 id="3-运行时才能确认使用的重依赖模块"><a href="#3-运行时才能确认使用的重依赖模块" class="headerlink" title="3. 运行时才能确认使用的重依赖模块"></a>3. 运行时才能确认使用的重依赖模块</h3><p><img src="/blog/images/js-bundle-8.png" alt="membership app 内出现了 jQuery 等依赖"></p>
 <p>一个 React App 内竟然出现了 jQuery 依赖 …… 一定是哪里出了问题，经过不懈的努力，终于找到了是在 web 和 mobile 公用的组件里用了微信支付的 module，而这个 module 开头就直接引入了 backbone/underscore/zepto 三大金刚 ……</p>
 <p><img src="/blog/images/js-bundle-11.png" alt="weixin_wap_payment 依赖了 backbone 等库"></p>
-<p>Webpack 编译时并不能知道运行时究竟在不在手机环境，怎么办呢？我们可以通过 webpack <a href="https://webpack.js.org/api/module-methods/#require-amd-version" target="_blank" rel="noopener">require AMD 模式</a> 来拆分代码。</p>
+<p>Webpack 编译时并不能知道运行时究竟在不在手机环境，怎么办呢？我们可以通过 webpack <a target="_blank" rel="noopener" href="https://webpack.js.org/api/module-methods/#require-amd-version">require AMD 模式</a> 来拆分代码。</p>
 <p><img src="/blog/images/js-bundle-10.png" alt="AMD require weixin_wap_payment"></p>
 <p>其实这个打出来的 34 号包永远也不会被 import ……<br><img src="/blog/images/js-bundle-9.png" alt="jQuery/backbone/underscore 等都被打包出去了"></p>
 <h2 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h2><h3 id="1-重复-CSS-Variables-定义"><a href="#1-重复-CSS-Variables-定义" class="headerlink" title="1. 重复 CSS Variables 定义"></a>1. 重复 CSS Variables 定义</h3><p>开发小王接到了一个任务，改进项目 css 代码以支持当下新出的黑夜模式（Dare Mode），小王犯了愁，一个个颜色变量替换也太苦逼了，小王挠挠头想出了一个在 source 文件定义 CSS Variables 的方法。</p>

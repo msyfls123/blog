@@ -11,15 +11,15 @@
 <p><img src="/blog/images/js-bundle-5.png" alt="date-fns/esm"></p>
 <p>好在它们文档都比较全：</p>
 <ul>
-<li>RxJS <a href="https://github.com/ReactiveX/rxjs/blob/865b7d36c1fc59d065072e7026e959c3a0e01ce7/doc/pipeable-operators.md#build-and-treeshaking" target="_blank" rel="noopener">Pipeable Operators</a></li>
-<li>date-fns <a href="https://date-fns.org/v2.0.0-alpha.7/docs/ECMAScript-Modules" target="_blank" rel="noopener">ECMAScript-Modules</a></li>
+<li>RxJS <a target="_blank" rel="noopener" href="https://github.com/ReactiveX/rxjs/blob/865b7d36c1fc59d065072e7026e959c3a0e01ce7/doc/pipeable-operators.md#build-and-treeshaking">Pipeable Operators</a></li>
+<li>date-fns <a target="_blank" rel="noopener" href="https://date-fns.org/v2.0.0-alpha.7/docs/ECMAScript-Modules">ECMAScript-Modules</a></li>
 </ul>
 <p>如下图一顿修改。<br><img src="/blog/images/js-bundle-7.png" alt="import function from &#39;date-fns/function&#39; directly"></p>
 <p>见证奇迹的时刻！<br><img src="/blog/images/js-bundle-6.png" alt="date-fns/esm mini"></p>
 <h3 id="3-运行时才能确认使用的重依赖模块"><a href="#3-运行时才能确认使用的重依赖模块" class="headerlink" title="3. 运行时才能确认使用的重依赖模块"></a>3. 运行时才能确认使用的重依赖模块</h3><p><img src="/blog/images/js-bundle-8.png" alt="membership app 内出现了 jQuery 等依赖"></p>
 <p>一个 React App 内竟然出现了 jQuery 依赖 …… 一定是哪里出了问题，经过不懈的努力，终于找到了是在 web 和 mobile 公用的组件里用了微信支付的 module，而这个 module 开头就直接引入了 backbone/underscore/zepto 三大金刚 ……</p>
 <p><img src="/blog/images/js-bundle-11.png" alt="weixin_wap_payment 依赖了 backbone 等库"></p>
-<p>Webpack 编译时并不能知道运行时究竟在不在手机环境，怎么办呢？我们可以通过 webpack <a href="https://webpack.js.org/api/module-methods/#require-amd-version" target="_blank" rel="noopener">require AMD 模式</a> 来拆分代码。</p>
+<p>Webpack 编译时并不能知道运行时究竟在不在手机环境，怎么办呢？我们可以通过 webpack <a target="_blank" rel="noopener" href="https://webpack.js.org/api/module-methods/#require-amd-version">require AMD 模式</a> 来拆分代码。</p>
 <p><img src="/blog/images/js-bundle-10.png" alt="AMD require weixin_wap_payment"></p>
 <p>其实这个打出来的 34 号包永远也不会被 import ……<br><img src="/blog/images/js-bundle-9.png" alt="jQuery/backbone/underscore 等都被打包出去了"></p>
 <h2 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h2><h3 id="1-重复-CSS-Variables-定义"><a href="#1-重复-CSS-Variables-定义" class="headerlink" title="1. 重复 CSS Variables 定义"></a>1. 重复 CSS Variables 定义</h3><p>开发小王接到了一个任务，改进项目 css 代码以支持当下新出的黑夜模式（Dare Mode），小王犯了愁，一个个颜色变量替换也太苦逼了，小王挠挠头想出了一个在 source 文件定义 CSS Variables 的方法。</p>

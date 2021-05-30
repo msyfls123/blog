@@ -6,7 +6,8 @@
 <p><strong>用弹窗啊！</strong></p>
 <p>弹窗作为一种全局模态框可以在不修改整体页面流式布局的基础上让用户看到额外信息，甚至进行交互操作。弹窗内的组件可以被复用，因为是动态挂载到页面上的，一般对页面已有数据的依赖较小。</p>
 <p><img src="/blog/images/general-design-1.png" alt="现签署合同页面"><br><img src="/blog/images/general-design-2.png" alt="在身份信息不全情形下会弹出弹窗以供填写"></p>
-<p>在实际代码构建时为了便于使用，将整个弹窗加上作者身份数据的获取、存储与更新逻辑整体封装到了一个 <code>hook</code> 中：<br><figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> &#123; agentInfo, loaded, showAgentInfoFormDialog &#125; = useAgentInfo(agentId)</span><br></pre></td></tr></table></figure></p>
+<p>在实际代码构建时为了便于使用，将整个弹窗加上作者身份数据的获取、存储与更新逻辑整体封装到了一个 <code>hook</code> 中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; agentInfo, loaded, showAgentInfoFormDialog &#125; = useAgentInfo(agentId)</span><br></pre></td></tr></table></figure>
 <p>这样将数据和方法返回给调用方，将代码的侵入性做到最低。如果以后有只需要身份信息而不需要修改弹窗的使用情形，也可以尽情复用。</p>
 <h3 id="更通用的标签筛选"><a href="#更通用的标签筛选" class="headerlink" title="更通用的标签筛选"></a>更通用的标签筛选</h3><p>一日接到了一个增加筛选器筛选条件的需求（筛选器是一个巨大的，有着上百个 CheckBox，相比各种电商筛选条件毫不逊色的怪物👹）。</p>
 <p><img src="/blog/images/general-design-6.png" alt="需求"></p>
