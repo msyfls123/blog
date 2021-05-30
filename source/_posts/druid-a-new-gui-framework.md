@@ -288,7 +288,101 @@ pub fn make_image() -> impl Widget<State> {
 ```
 
 # 其他
+
+通常来说 GUI 程序拥有数据和界面就够了，这也就是典型的 MVC 架构，但实际上作为跨平台框架还需要考虑系统原生接口和国际化等问题，甚至包括富文本的处理。只有这些都面面俱到了，才能做到开发者无痛接入，一发入魂。
+
 ## 菜单与快捷键
+
+Windows 和 macOS 的菜单不太一样，Windows 是挂在每个窗口标题栏下，而 macOS 则是挂在屏幕边缘，实际上它们都是作为窗口的一部分存在的，所以在设计时也是统一在窗口初始化时传入。
+
+```rust
+let menu = MenuDesc::new(LocalizedString::new("start"))
+    .append(make_file_menu());
+    .append(make_window_menu());
+let main_window = WindowDesc::new(ui_builder).menu(menu);
+```
+
 ## 国际化 i18n
+ 
+Druid 的国际化是通过 `LocalizedString` 来实现的，例如在界面中有如下一段文本。
+
+```rust
+let text = LocalizedString::new("hello-counter")
+    .with_arg("count", |data: &State, _env| data.count.into());
+```
+
+则可以通过创建一个 `resources/i18n/en-CN/builtin.ftl` 的文件（具体以 Druid 启动时的输出语言为准），在其中写入对应 `hello-counter`，其中的 `count` 就会被替换成实际的数据。
+![DEBUG 启动时输出了 en-CN](/blog/images/druid-a-new-gui-framework/23-48-06.png)
+
+```yaml
+# resources/i18n/en-CN/builtin.ftl
+hello-counter = 现在的值是 { $count }
+```
+![展示结果](/blog/images/druid-a-new-gui-framework/23-52-02.png)
+
+{% img /images/druid-a-new-gui-framework/23-50-36.png 300 300 '"" "路径示意"' %}
+
 ## 富文本渲染、编辑
+
+我们知道，经典物理学只是茫茫科学中限于低速宏观之中极小的一块研究区域，同理，一个简单的输入框也是富文本编辑的一个缩影。
+
+[![](/blog/images/druid-a-new-gui-framework/00-13-22.png)](https://docs.rs/druid/0.7.0/druid/text/index.html)
+完整的 text 模块包含了很多东西，但简单一点考虑，我们实现一个富文本编辑器只需要一个 `Editor` 和一个 `RichText` 的展示容器即可。
+
+而 RichText 本质上是一串字符串与数个按索引设置的属性的数据集合。
+
+```rust
+pub fn generate_example_rich_data(text: &str) -> RichText {
+    let attr = Attribute::TextColor(KeyOrValue::Concrete(Color::PURPLE));
+    RichText::new(text.into())
+        .with_attribute(6..=10, attr)
+}
+```
+
+![显示效果](/blog/images/druid-a-new-gui-framework/00-25-05.png)
+
+Druid 并不支持 `WYSIWYG` 所见即所得的编辑模式，所以编辑器和富文本内容是分离的，在数据中实际存储的应该是一段 raw 文本和数个属性的集合，在渲染时组成 `RichText` 传递给 `RawLabel` 进行渲染。
+
+详情可见官方示例 - [markdown_preview](https://github.com/linebender/druid/blob/master/druid/examples/markdown_preview.rs)。
+
 ## 调试
+
+在万能的 VS Code 里调试 Rust 程序是比较方便的。在创建 Rust 项目后，VS Code 就会提示按照 llvm 相关组件以便启用 DEBUG 模式。
+
+在 `.vscode/launch.json` 中添加 `lldb` 为目标的配置后，即可在调试侧边栏一键开启调试模式。
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug executable 'gui'",
+      "cargo": {
+        "args": [
+          "build",
+          "--bin=gui",
+          "--package=gui"
+        ],
+        "filter": {
+          "name": "gui",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
+```
+
+![断点调试](/blog/images/druid-a-new-gui-framework/00-31-55.png)
+
+如图所示，断点处的变量、调用栈、上下文等信息一览无余。
+
+## 结语
+
+本文简单介绍了 Rust GUI 框架 Druid 的基本架构和使用，通过笔者自行摸索解决了 Druid 实际运行版本和 Demo 及文档脱钩的问题，希望能对读者有所裨益。
+
+后附笔者调试测试用的 Demo 仓库地址：https://github.com/msyfls123/rust-gui
