@@ -39,7 +39,7 @@ napi_create_string_utf8(env, "hello", NAPI_AUTO_LENGTH, &js_str);
 
 哎~ 怎么看起来也不是很简单嘛？。。。
 
-别骂了，别骂了，要知道 Node.js 为了兼容不同版本付出了多大的努力吗？相对来说上述的 API 调用算是很简单的了。`env` 是执行的上下文，`js_str` 是创建出来的 JS 字符串，`NAPI_AUTO_LENGTH` 是自动计算的长度，这里还隐含了一个变量，就是 `napi_create_string_utf8` 的返回值 `napi_status`，这个值一般平平无奇，但万一要是出了 bug 就得靠它来甄别各处调用是否成功了。
+别骂了，别骂了，要知道 Node.js 为了兼容不同版本付出了多大的努力吗？相对来说上述的 API 调用算是很简单的了，最重要的是它很稳定，基本不随着 Node.js 和 V8 的版本更迭而变化。`env` 是执行的上下文，`js_str` 是创建出来的 JS 字符串，`NAPI_AUTO_LENGTH` 是自动计算的长度，这里还隐含了一个变量，就是 `napi_create_string_utf8` 的返回值 `napi_status`，这个值一般平平无奇，但万一要是出了 bug 就得靠它来甄别各处调用是否成功了。
 
 C++ addons 实战
 ===
@@ -111,19 +111,64 @@ https://code.visualstudio.com/docs/languages/cpp
 }
 ```
 
-这段 JSON 最重要的就是要指向 node 头文件的 includePath，上面分别提供了当前安装版本和 node-gyp 缓存的路径，以供参考。
+这段 JSON 最重要的就是要指向 node 头文件的 `includePath`，上面分别提供了当前 Node.js 安装版本和 node-gyp 缓存的路径，以供参考。
+
+### Hello world
+
+凡事怎么少得了 `hello world` 呢？这里假设你已经装好了 `node-gyp` 了。
+
+先创建一个 `main.cpp`，写入以下内容。
+
+```cpp
+#include <node_api.h>
+
+napi_value Init(napi_env env, napi_value exports){
+  napi_value hello_str;
+  napi_create_string_utf8(env, "hello", NAPI_AUTO_LENGTH, &hello_str);
+  napi_set_property(env, exports, hello_str, hello_str);
+  return exports;
+}
+
+NAPI_MODULE(NODE_GYP_MODULE_NAME, Init)
+```
+
+创建一个 `binding.gyp`，写入以下内容。
+```json
+{
+  "targets": [
+    {
+      "target_name": "native",
+      "sources": ["./main.cpp"],
+    }
+  ]
+}
+```
+
+然后执行 `npx node-gyp configure build`，不出意外的话会生成一个 `build` 目录，build/Release/native.node 就是我们所要的货了。
+
+![生成的原生模块](/blog/images/node-native-addons/00-43-04.png)
+
+如何使用呢？很简单，打开 Node.js REPL，直接 `require` 就行。
+
+```sh
+Welcome to Node.js v16.6.0.
+Type ".help" for more information.
+> require('./build/Release/native').hello
+< 'hello'
+```
+大功告成！
 
 ## 小试牛刀：开发一个简单的 Defer 模块
 
 在学习新知识点时，以熟悉的概念切入会更有学下去的动力。我们就小试牛刀，先实现一个非常非常简陋只支持一个 Promise 调用的 Defer 模块吧！
 
-先让我们看一下最终需要的调用方式，从 JS 侧看就是加载一个 *.node 的原生模块，然后 new 了一个对象出来，最后调用一下它的 run 方法。可能 JS 写起来 10 行都不到，但这次的目标是将 C++ 与 JS 联动，这中间的过程就有点让人摸不着头脑了。
+先让我们看一下最终需要的调用方式，从 JS 侧看就是加载一个 *.node 的原生模块，然后 new 了一个对象出来，最后调用一下它的 `run` 方法。可能 JS 写起来 10 行都不到，但这次的目标是将 C++ 与 JS 联动，这中间的过程就有点让人摸不着头脑了。
 
 ![简单的 Defer 模块](/blog/images/node-native-addons/22-21-18.png)
 
-别慌，遇事不决先定类型，前文中提到过，类型就是编程中的量纲，分析量纲就能得出解题思路。
+别慌，遇事不决先确定接口类型，类型就是编程中的量纲，分析量纲就能得出解题思路。
 
-### 类型定义
+### JS 接口类型定义
 
 抛开语言的差异，来分析一下这个 Deferred 类，它的构造函数接受一个字符串进行初始化，然后有个 public 的 `run` 方法接受一个数字并返回一个 Promise，以这个数字所代表的毫秒数来延迟 resolve 所返回的 Promise。
 
@@ -134,19 +179,93 @@ class Deferred {
 }
 ```
 
-咦，这么简单吗？是的，JS 本就为了开发效率而生，但事情到 C++ 层面可就不那么简单了……
+咦，这么简单吗？是的，JS 本就为了开发效率而生，但事情整到 C++ 层面可就不那么简单了 …… 但天下大事，必作于细，良好的职责划分有利于用不同的工具切准要害，逐个突破，我们接着往下看。
 
 ### 划分 C++ 与 JavaScript 职责
 
 ![JavaScript 与 C++ 各自的职责](/blog/images/node-native-addons/23-47-59.png)
 
-为了 OOP，我们将数据和行为都存在 C++ 一侧，这会带来一些问题，就是我们需要思考如何在 C++ 侧创造一个 JS 的类来承载这些数据。也可以将 C++ 作为一个无状态的服务，每次都将数据从 JS 传过来，计算完了传回去即可，但这样会造成序列化的开销，需要根据具体问题具体分析。
+为了 OOP，我们将数据和行为都存放在一起，这会带来一些问题，就是数据该由谁持有？如果 JS 持有数据，将 C++ 作为一个无状态的服务，每次都将数据从 JS 传过来，计算完了传回去，但这样会造成序列化的开销。如果 C++ 持有数据，JS 侧就相当于一个代理，只是把用户请求代理到 C++ 这一边，计算完再转发给用户侧。
 
-但作为示例，我们还是按照最通用的来，就是实实在在地在 C++ 侧定义好 constructor 和类上的方法，暴露给 JS 调用即可。
+实际情况是，一旦涉及到原生调用，C++ 持有的数据很有可能是 JS 处理不了的不可序列化数据，比如二进制的文件，线程 / IO 信息等等，所以还是 C++ 做主导，JS 只做接口比较好。但这样就不可避免地要从 C++ CRUD 一些 JS 对象了，接着往下走。
 
 ### 创建 C++ 类
-### 创建 JS class 的 constructor
+
+激动的心，颤抖的手，终于开始写 C++ 代码了 …… 老规矩，还是先定义一个 class 吧。
+```cpp
+#include <string>
+#include <functional>
+#include <node_api.h>
+
+class NativeDeferred {
+  public:
+    Defer(char *str);
+    void run(int milliseconds, std::function<void(char *str)> complete);
+  private:
+    char *_str;
+};
+```
+
+看起来和 JS 侧的代码也很像嘛，只不过换成了 callback 的方式。如何使它能在 JS 侧使用呢？
+
+### 创建 JS class
+
+![napi_define_class](/blog/images/node-native-addons/01-14-19.png)
+
+N-API 提供了丰富地创建 JS 对象地方法，各种 primitive 都有，擒贼先擒王，一上来就找到了用于创建 class 的 [napi_define_class](https://nodejs.org/api/n-api.html#napi_define_class)。读了一遍定义后，发现需要提供 `napi_callback constructor` 和 `const napi_property_descriptor* properties` 作为参数。又马不停蹄地找到了 [napi_callback](https://nodejs.org/api/n-api.html#napi_callback)，这个函数是我们后面会经常遇到的。
+
+![napi_callback](/blog/images/node-native-addons/01-01-08.png)
+
+`napi_callback` 接受一个 `napi_env` 和 `napi_callback_info`，前者是创建 JS 对象所必须的环境信息，而后者是 JS 传入的信息。
+
+如何解读这些信息呢？有[napi_get_cb_info](https://nodejs.org/api/n-api.html#napi_get_cb_info) 这个方法。通过它可以读出包括 `this` 和各种 ArrayLike 的参数。
+
+![napi_get_cb_info](/blog/images/node-native-addons/01-17-07.png)
+
+我们在讨论如何创建一个 JS 的 class 啊，这是不是绕太远了？等等，你提到了 `this`？有的面试题里会考如何手写一个 Object.create，难道这就是那里面默认的 `this`？你猜对了，这个 `this` 在通过 Function 创建时，在构造器里是用 v8 的 [ObjectTemplate](https://v8docs.nodesource.com/node-0.8/db/d5f/classv8_1_1_object_template.html) 来实例化一个 instance 的。（PS: 如果 napi_callback 是从 JS 侧调用，那它就是 JS 的那个 `this`。）
+
+从 JS class 创建对象的话，这个 `napi_callback` 就是 JS 定义的 `constructor`，执行完返回 `this` 就行了，但既然是深度融合 C++ 的功能，我们当然还有别的事要做。
+
+### 将 C++ 对象封装到 JS instance 上
+
+前面声明了一个非常简易的 C++ 对象 `NativeDeferred`，我们要将它封装到刚创建的 `this` 上，返回给 JS 侧。为啥要这样做？因为前面提到了，我们要用 C++ 对象持有一些数据和状态，这些不便于在 JS 和 C++ 来回传递的数据需要一个可追溯的容器来承载（即 NativeDeferred），我们可以假设这个容器有两种存储方式：
+
+1. 全局对象，也就是 V8 里的 global，然后生成一个 key 给 JS instance。
+1. 挂到 JS instance 上（N-API 支持这种操作）。
+
+很明显第一种方法不仅污染了全局对象，也避免不了 JS instance 需要持有一个值，那还不如直接把 C++ 对象绑到它上面。
+
+![从 napi_callback 中读出 C++ 对象](/blog/images/node-native-addons/02-23-59.png)
+
+取出 C++ 对象的过程形成了 napi_callback -> JS Deferred(this) -> unwrap C++ NativeDeferred 这样一个线路，需要用到 [napi_wrap](https://nodejs.org/api/n-api.html#napi_wrap) 和 [napi_unwrap](https://nodejs.org/api/n-api.html#napi_unwrap) 方法。
+
+![napi_wrap](/blog/images/node-native-addons/02-08-06.png)
+
+这里又有个坑，`finalize_cb` 是必须要赋值的，而且它应该去调用 NativeDeferred 的析构函数。
+
+```cpp
+static void Destructor(napi_env env, void *instance_ptr,
+                       void * /*finalize_hint*/)
+{
+  reinterpret_cast<NativeDeferred *>(instance_ptr)->~NativeDeferred();
+}
+
+napi_value js_constructor(napi_env env, napi_callback_info info)
+{
+    // 中间省略了获取 js_this 和 name 的步骤
+    NativeDeferred deferred = new NativeDeferred(name);
+
+    napi_wrap(env, js_this, reinterpret_cast<void *>(deferred),
+            Destructor, nullptr, nullptr);
+    return js_this;
+}
+```
+
+这样，我们就设置好了一个在 constructor 里会生成并自动绑定 C++ 对象的 JS class。
+
 ### 设置 JS class 上的调用方法
+
+### 通过 define class 将所有内容组合起来
 
 ## 高级技巧
 ### 线程安全调用
