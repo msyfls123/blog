@@ -24,11 +24,11 @@ C++ addons 的原理
 
 没错，这就是上古时期 Node.js C++ addons 的开发方式，需要指定 Node.js 的版本进行编译，只有在指定 ABI 的版本下才能运行。
 
-https://nodejs.org/api/addons.html#hello-world，有兴趣的读者可以阅读下 Node.js 官网对于 C++ addons 的简易劝退教程，里面展示了不少早期 Node.js 开发者与 C++ 对象搏斗的真实记录。
+https://nodejs.org/api/addons.html#hello-world ，有兴趣的读者可以阅读下 Node.js 官网对于 C++ addons 的简易劝退教程，里面展示了不少早期 Node.js 开发者与 C++ 对象搏斗的真实记录。
 
 ## 兼容性
 
-在经历了刀耕火种的日子后，盼星星盼月亮终于迎来了 Node.js 的原生抽象 ———— N-API。它利用宏封装了不同 V8 版本之间的 API 差异，统一暴露了多种识别、创建、修改 JS 对象的方法。让我们来看看如何创建一个字符串呢？
+在经历了刀耕火种的日子后，盼星星盼月亮终于迎来了 Node.js 的原生抽象 —— N-API。它利用宏封装了不同 V8 版本之间的 API 差异，统一暴露了多种识别、创建、修改 JS 对象的方法。让我们来看看如何创建一个字符串呢？
 
 ```cpp
 #include <node_api.h>
@@ -39,7 +39,7 @@ napi_create_string_utf8(env, "hello", NAPI_AUTO_LENGTH, &js_str);
 
 哎~ 怎么看起来也不是很简单嘛？。。。
 
-别骂了，别骂了，要知道 Node.js 为了兼容不同版本付出了多大的努力吗？相对来说上述的 API 调用算是很简单的了。`env` 是执行的上下文，`js_str` 是创建出来的 JS 字符串，`NAPI_AUTO_LENGTH` 是自动计算的长度，这里还隐含了一个变量，就是 `napi_create_string_utf8` 的返回值 `napi_status`，这个值一般时候平平无奇，但万一要是出了 bug 就得靠它来甄别各处调用是否成功了。
+别骂了，别骂了，要知道 Node.js 为了兼容不同版本付出了多大的努力吗？相对来说上述的 API 调用算是很简单的了。`env` 是执行的上下文，`js_str` 是创建出来的 JS 字符串，`NAPI_AUTO_LENGTH` 是自动计算的长度，这里还隐含了一个变量，就是 `napi_create_string_utf8` 的返回值 `napi_status`，这个值一般平平无奇，但万一要是出了 bug 就得靠它来甄别各处调用是否成功了。
 
 C++ addons 实战
 ===
@@ -111,9 +111,39 @@ https://code.visualstudio.com/docs/languages/cpp
 }
 ```
 
-## 开发一个简单的 Defer 模块
+这段 JSON 最重要的就是要指向 node 头文件的 includePath，上面分别提供了当前安装版本和 node-gyp 缓存的路径，以供参考。
+
+## 小试牛刀：开发一个简单的 Defer 模块
+
+在学习新知识点时，以熟悉的概念切入会更有学下去的动力。我们就小试牛刀，先实现一个非常非常简陋只支持一个 Promise 调用的 Defer 模块吧！
+
+先让我们看一下最终需要的调用方式，从 JS 侧看就是加载一个 *.node 的原生模块，然后 new 了一个对象出来，最后调用一下它的 run 方法。可能 JS 写起来 10 行都不到，但这次的目标是将 C++ 与 JS 联动，这中间的过程就有点让人摸不着头脑了。
+
+![简单的 Defer 模块](/blog/images/node-native-addons/22-21-18.png)
+
+别慌，遇事不决先定类型，前文中提到过，类型就是编程中的量纲，分析量纲就能得出解题思路。
+
 ### 类型定义
+
+抛开语言的差异，来分析一下这个 Deferred 类，它的构造函数接受一个字符串进行初始化，然后有个 public 的 `run` 方法接受一个数字并返回一个 Promise，以这个数字所代表的毫秒数来延迟 resolve 所返回的 Promise。
+
+```typescript
+class Deferred {
+    constructor(private name: string)
+    public run(delay: number): Promise<string>
+}
+```
+
+咦，这么简单吗？是的，JS 本就为了开发效率而生，但事情到 C++ 层面可就不那么简单了……
+
 ### 划分 C++ 与 JavaScript 职责
+
+![JavaScript 与 C++ 各自的职责](/blog/images/node-native-addons/23-47-59.png)
+
+为了 OOP，我们将数据和行为都存在 C++ 一侧，这会带来一些问题，就是我们需要思考如何在 C++ 侧创造一个 JS 的类来承载这些数据。也可以将 C++ 作为一个无状态的服务，每次都将数据从 JS 传过来，计算完了传回去即可，但这样会造成序列化的开销，需要根据具体问题具体分析。
+
+但作为示例，我们还是按照最通用的来，就是实实在在地在 C++ 侧定义好 constructor 和类上的方法，暴露给 JS 调用即可。
+
 ### 创建 C++ 类
 ### 创建 JS class 的 constructor
 ### 设置 JS class 上的调用方法
