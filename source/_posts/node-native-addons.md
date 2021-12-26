@@ -212,7 +212,7 @@ class NativeDeferred {
 
 ![napi_define_class](/blog/images/node-native-addons/01-14-19.png)
 
-N-API 提供了丰富地创建 JS 对象地方法，各种 primitive 都有，擒贼先擒王，一上来就找到了用于创建 class 的 [napi_define_class](https://nodejs.org/api/n-api.html#napi_define_class)。读了一遍定义后，发现需要提供 `napi_callback constructor` 和 `const napi_property_descriptor* properties` 作为参数。又马不停蹄地找到了 [napi_callback](https://nodejs.org/api/n-api.html#napi_callback)，这个函数是我们后面会经常遇到的。
+N-API 提供了各种直接创建 JS 对象的方法，包括字符串、数字、undefined 等基本量，也有函数和对象等等。擒贼先擒王，一上来就找到了用于创建 class 的 [napi_define_class](https://nodejs.org/api/n-api.html#napi_define_class)。读了一遍定义后，发现需要提供 `napi_callback constructor` 和 `const napi_property_descriptor* properties` 作为参数。又马不停蹄地找到了 [napi_callback](https://nodejs.org/api/n-api.html#napi_callback)，这个函数是我们后面会经常遇到的。
 
 ![napi_callback](/blog/images/node-native-addons/01-01-08.png)
 
@@ -264,6 +264,47 @@ napi_value js_constructor(napi_env env, napi_callback_info info)
 这样，我们就设置好了一个在 constructor 里会生成并自动绑定 C++ 对象的 JS class。
 
 ### 设置 JS class 上的调用方法
+
+数据只有实际被使用才能发挥其价值，对应到 JS Deferred 上面，就是要让 JS 侧 run 方法顺利地调用到 C++ 侧的 run，这里面又要经历前面所说的从 `napi_callback` 一直到拿到原生 NativeDeferred 的过程，但如何让这个 `napi_callback` 可以被 Deferred 实例后的对象应用呢？
+
+聪明的读者已经猜到了，就是将它设到 Deferred 这个类的原型链上，具体来说就是前面 `napi_define_class` 时的 `const napi_property_descriptor* properties`，我们来看一下它的定义。
+
+![napi_property_descriptor](/blog/images/node-native-addons/12-32-23.png)
+
+[napi_property_descriptor](https://nodejs.org/api/n-api.html#napi_property_descriptor) 上其他属性都比较常见，似乎跟 `Object.defineProperty` 有些相似，但 `enumerable` 和 `configurable` 这些值呢？。我们注意到了 [napi_property_attributes](https://nodejs.org/api/n-api.html#napi_property_attributes) 这个参数，
+
+![napi_property_attributes](/blog/images/node-native-addons/12-37-58.png)
+
+找到了找到了，这就是我们需要的属性了。
+
+```cpp
+#include<node_api.h>
+
+napi_property_descriptor runDesc = {"run", 0, js_run,           0,
+                                    0,     0, napi_default_jsproperty, 0};
+napi_value js_class;
+napi_property_descriptor descs[1] = {runDesc};
+napi_define_class(env, "Deferrered", NAPI_AUTO_LENGTH, js_constructor,
+                  nullptr, 1, descs,
+                  &js_class);
+```
+*`js_run` 和 `js_constructor` 都是 napi_callback 类型，可以自行实现。
+
+上面的 `js_class` 就是我们一开始定义的 JS Deferred 了，将他定义到 hello world 中的 exports 上就能被 Node.js 访问啦。
+
+这里还有个坑，`napi_default_jsproperty` 是被定义在 if 里，需要我们预先 `define NAPI_VERSION`。
+![NAPI_VERSION 需要 8 以上](/blog/images/node-native-addons/12-58-36.png)
+
+让我们打开 `binding.gyp`，在 target 里加入以下内容，就可以啦。
+
+```json
+{
+    "defines": [
+        "NAPI_EXPERIMENTAL",
+        "NAPI_VERSION=8",
+    ],
+}
+```
 
 ### 通过 define class 将所有内容组合起来
 
