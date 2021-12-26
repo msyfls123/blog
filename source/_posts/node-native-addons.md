@@ -199,7 +199,7 @@ class Deferred {
 
 class NativeDeferred {
   public:
-    Defer(char *str);
+    NativeDeferred(char *str);
     void run(int milliseconds, std::function<void(char *str)> complete);
   private:
     char *_str;
@@ -218,7 +218,7 @@ N-API 提供了各种直接创建 JS 对象的方法，包括字符串、数字�
 
 `napi_callback` 接受一个 `napi_env` 和 `napi_callback_info`，前者是创建 JS 对象所必须的环境信息，而后者是 JS 传入的信息。
 
-如何解读这些信息呢？有[napi_get_cb_info](https://nodejs.org/api/n-api.html#napi_get_cb_info) 这个方法。通过它可以读出包括 `this` 和各种 ArrayLike 的参数。
+如何解读这些信息呢？有 [napi_get_cb_info](https://nodejs.org/api/n-api.html#napi_get_cb_info) 这个方法。通过它可以读出包括 `this` 和各种 ArrayLike 的参数。
 
 ![napi_get_cb_info](/blog/images/node-native-addons/01-17-07.png)
 
@@ -253,7 +253,7 @@ static void Destructor(napi_env env, void *instance_ptr,
 napi_value js_constructor(napi_env env, napi_callback_info info)
 {
     // 中间省略了获取 js_this 和 name 的步骤
-    NativeDeferred deferred = new NativeDeferred(name);
+    NativeDeferred *deferred = new NativeDeferred(name);
 
     napi_wrap(env, js_this, reinterpret_cast<void *>(deferred),
             Destructor, nullptr, nullptr);
@@ -281,18 +281,18 @@ napi_value js_constructor(napi_env env, napi_callback_info info)
 #include<node_api.h>
 
 napi_property_descriptor runDesc = {"run", 0, js_run,           0,
-                                    0,     0, napi_default_jsproperty, 0};
+                                    0,     0, napi_default_method, 0};
 napi_value js_class;
 napi_property_descriptor descs[1] = {runDesc};
 napi_define_class(env, "Deferrered", NAPI_AUTO_LENGTH, js_constructor,
                   nullptr, 1, descs,
                   &js_class);
 ```
-*`js_run` 和 `js_constructor` 都是 napi_callback 类型，可以自行实现。
+*`js_run` 会在下一节实现。
 
-上面的 `js_class` 就是我们一开始定义的 JS Deferred 了，将他定义到 hello world 中的 exports 上就能被 Node.js 访问啦。
+上面的 `js_class` 就是我们一开始定义的 JS Deferred 了，将他 `napi_set_property` 到 hello world 中的 exports 上就能被 Node.js 访问啦。
 
-这里还有个坑，`napi_default_jsproperty` 是被定义在 if 里，需要我们预先 `define NAPI_VERSION`。
+这里还有个坑，`napi_default_method` 有些版本下是被定义在 if 里的，需要我们预先 define `NAPI_VERSION` 或者 `NAPI_EXPERIMENTAL`。
 ![NAPI_VERSION 需要 8 以上](/blog/images/node-native-addons/12-58-36.png)
 
 让我们打开 `binding.gyp`，在 target 里加入以下内容，就可以啦。
@@ -306,20 +306,346 @@ napi_define_class(env, "Deferrered", NAPI_AUTO_LENGTH, js_constructor,
 }
 ```
 
-### 通过 define class 将所有内容组合起来
+### C++ 回调 JS callback
+
+到现在我们已经实现了一个 class 所需要的一切能力，但有个小问题：这些方法都是单向的从 JS 侧传递给 C++ 侧，或者反之，没有双向交互的部分。可以想一想怎样算是“双向交互”呢？就是 Node.js 常见的 callback 啊，我们还没有涉及到如何从 C++ 调用 JS 函数。[napi_call_function](https://nodejs.org/api/n-api.html#napi_call_function)这个函数就是 napi_get_cb_info 的逆操作了，把参数按个数和数组传递给函数指针。
+
+![napi_call_function](/blog/images/node-native-addons/20-46-09.png)
+
+示例代码：
+
+```cpp
+// 将这个函数 export 出去，使用时会以传入的第一个参数 args[0]，判定其为函数传入 42 作为唯一参数进行调用
+napi_value fire_js_callback(napi_env env, napi_callback_info info) {
+    napi_value js_this;
+    napi_value args[1];
+    size_t argc = 1;
+    napi_get_cb_info(env, info, &argc, args, &js_this, nullptr);
+
+    napi_value num;
+    napi_create_int32(env, 42, &num);
+    napi_value res[1] = { num };
+    napi_call_function(env, js_this, args[0], 1, res, nullptr);
+    return num;
+}
+```
+
+总结一下，我们目前总共实现了以下的 C++ addon 能力。
+
+|功能|实现|
+|---|---|
+|创建 JS class|✅|
+|给 JS class 添加 method|✅|
+|将 C++ 对象封装到 JS 对象上|✅|
+|调用 JS 函数|✅|
 
 ## 高级技巧
+
+读到这里的朋友可能发现了，前面提到的 Deferred 还有一环没有实现，就是延时调用。来想一下 C++ 里如何能延时呢？可以另外启动一个线程，将它 sleep，可以简单写下代码。
+
+```cpp
+#include <node_api.h>
+#include <thread>
+#include <functional>
+
+static void thread_run(std::function<void()> complete) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    complete();
+}
+
+napi_value fire_js_callback(napi_env env, napi_callback_info info) {
+    napi_value js_this;
+    napi_value args[1];
+    size_t argc = 1;
+    napi_get_cb_info(env, info, &argc, args, &js_this, nullptr);
+
+    napi_value num;
+    napi_create_int32(env, 42, &num);
+    napi_value res[1] = { num };
+
+    std::function<void()> complete = [=]() {
+        napi_call_function(env, js_this, args[0], 1, res, nullptr);
+    };
+    std::thread runner(thread_run, complete);
+    runner.detach();
+    return num;
+}
+```
+
+但实际调用时，等了很久也没有触发，这是为什么呢？
+> JavaScript functions can normally only be called from a native addon's main thread. If an addon creates additional threads, then Node-API functions that require a napi_env, napi_value, or napi_ref must not be called from those threads.
+> 
+> When an addon has additional threads and JavaScript functions need to be invoked based on the processing completed by those threads, those threads must communicate with the addon's main thread so that the main thread can invoke the JavaScript function on their behalf. The thread-safe function APIs provide an easy way to do this.
+> 
+> [Asynchronous thread-safe function calls](https://nodejs.org/api/n-api.html#asynchronous-thread-safe-function-calls)
+
+原来跨线程之后 napi_env 就不是原来的那个它了，我们需要按照 N-API 的方式来包装一下异步调用的函数。
+
 ### 线程安全调用
+
+写到这里，笔者发现自己的功力已经不足以解释我所看到的文档了，直接上代码吧。
+
+```cpp
+#include <node_api.h>
+#include <thread>
+#include <functional>
+
+static void thread_run(std::function<void()> complete) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    complete();
+}
+
+static void thread_callback(napi_env env, napi_value js_callback, void* context, void* data) {
+    napi_value js_this = reinterpret_cast<napi_value>(context);
+
+    napi_value num;
+    napi_create_int32(env, 42, &num);
+    napi_value res[1] = { num };
+
+    napi_call_function(env, js_this, js_callback, 1, res, nullptr);
+}
+
+napi_value fire_js_callback(napi_env env, napi_callback_info info) {
+    napi_value js_this;
+    napi_value args[1];
+    size_t argc = 1;
+    napi_get_cb_info(env, info, &argc, args, &js_this, nullptr);
+
+    napi_value async_resource_name;
+    napi_create_string_utf8(env, "foobar", NAPI_AUTO_LENGTH,
+                          &async_resource_name);
+    napi_threadsafe_function thread_complete;
+    // 将 js 传来的 callback 调谐函数 thread_callback 一起传入生成线程安全的回调
+    napi_create_threadsafe_function(
+      env, args[0], nullptr, async_resource_name, 0, 1, nullptr, nullptr,
+      js_this, thread_callback, &thread_complete);
+
+    // 将线程安全的回调再包装成闭包
+    std::function<void()> complete = [=]() {
+        napi_call_threadsafe_function(thread_complete, nullptr, napi_tsfn_blocking);
+    };
+    // 真正放到另一个线程去执行
+    std::thread runner(thread_run, complete);
+    runner.detach();
+
+    return js_this;
+}
+
+napi_value Init(napi_env env, napi_value exports){
+
+  napi_value fire_str;
+  napi_create_string_utf8(env, "fire", NAPI_AUTO_LENGTH, &fire_str);
+  napi_value fire;
+  napi_create_function(env, "fire", NAPI_AUTO_LENGTH, fire_js_callback, nullptr, &fire);
+  napi_set_property(env, exports, fire_str, fire);
+  return exports;
+}
+
+NAPI_MODULE(NODE_GYP_MODULE_NAME, Init)
+```
+
+经过一番眼花缭乱的操作后，终于成功触发了 `args[0]` 处的 JS callback 函数，这就是简化版本的 `js_run` 了。
+
 ### Promise 的实现
+
+既然实现了异步回调，我们再努力一把，实现 Promise 的返回值，这就比较简单了，N-API 将 [napi_create_promise](https://nodejs.org/api/n-api.html#napi_create_promise) 设计为生成 `napi_deferred* deferred` 和 `napi_value* promise`，一式两份，一份直接返回给 JS，一份则留着在异步调用中将其 resolve。
+我们只需稍微改写一下前面的代码即可。
+
+```cpp
+static void thread_callback(napi_env env, napi_value js_callback, void* context, void* data) {
+    napi_deferred deferred = reinterpret_cast<napi_deferred>(data);
+
+    napi_value num;
+    napi_create_int32(env, 42, &num);
+
+    napi_resolve_deferred(env, deferred, num);
+}
+
+napi_value fire_js_callback(napi_env env, napi_callback_info info) {
+    napi_value js_this;
+    size_t argc = 0;
+    napi_get_cb_info(env, info, &argc, nullptr, &js_this, nullptr);
+
+    napi_value async_resource_name;
+    napi_create_string_utf8(env, "foobar", NAPI_AUTO_LENGTH,
+                          &async_resource_name);
+    napi_threadsafe_function thread_complete;
+    // 将 js 传来的 callback 调谐函数 thread_callback 一起传入生成线程安全的回调
+    napi_create_threadsafe_function(
+      env, nullptr, nullptr, async_resource_name, 0, 1, nullptr, nullptr,
+      nullptr, thread_callback, &thread_complete);
+
+    napi_value promise;
+    napi_deferred deferred;
+    napi_create_promise(env, &deferred, &promise);
+
+    // 将线程安全的回调再包装成闭包
+    std::function<void()> complete = [=]() {
+        napi_call_threadsafe_function(thread_complete, deferred, napi_tsfn_blocking);
+    };
+    // 真正放到另一个线程去执行
+    std::thread runner(thread_run, complete);
+    runner.detach();
+
+    return promise;
+}
+```
+
+篇幅起见，只贴出关键的两个函数了。
+
+### 完工
+
+事已至此，与 Deferred 这个类相关的代码已经基本介绍完了，完整的代码可以参见这个仓库：
+https://git.woa.com/kimima/node-addon-example
+
+启动工程应该只需要：
+
+```sh
+npm i
+npm run condifigure
+npm run build
+node ./index.js
+```
 
 C++ addons 调试与构建
 ===
+
+别看前面洋洋洒洒一堆操作，只写出了百来行代码，基本每行代码都踩过坑。这时候强有效的调试工具就显得非常重要了。
+
 ## VSCode CodeLLDB 调试
-## prebuildify 预构建
-## 与 GitHub Actions 集成
+
+推荐大杀器 [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb)，配合 launch.json 食用，可在 VSCode 中左侧 Run and Debug 里对 C++ 代码断点并显示变量信息。
+
+![CodeLLDB](/blog/images/node-native-addons/23-44-43.png)
+
+简易 launch.json
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+      {
+          "name": "debug with build",
+          "type": "lldb",
+          "request": "launch",
+          "preLaunchTask": "npm: build",
+          "program": "node",
+          "args": ["${workspaceFolder}/index.js"]
+      },
+  ]
+}
+```
+
+![断点信息](/blog/images/node-native-addons/23-43-38.png)
+
+## prebuildify 预构建包
+
+前面都是开发模式，如果是服务端使用的话，加上入口 js 文件后已经可以作为 npm 包发布了，安装时会自动执行 `node-gyp rebuild` 重新构建的。
+但如果是嵌入到某个 App，比如腾讯文档桌面端，或是 QQ 之类的客户端应用里，那就需要根据不同的系统和架构进行跨平台编译了。
+
+常见架构有：
+- Linux: x64, armv6, armv7, arm64
+- Windows: x32, x64, arm64
+- macOS: x64, arm64
+
+竟然有这么多 …… 还好社区提供了跨平台编译的解决方案 ———— prebuild，但它需要在安装时下载对应的包，所以还需要将这些构建产物发布到服务器上，不与 npm 包放在一起。虽然在包体积很大的情况下的确有必要，这显然不是我们所追求的一键下载。
+
+然后我就找到了 [prebuildify](https://github.com/prebuild/prebuildify)。它是这么说的：
+
+> With prebuildify, all prebuilt binaries are shipped inside the package that is published to npm, which means there's no need for a separate download step like you find in prebuild. The irony of this approach is that it is faster to download all prebuilt binaries for every platform when they are bundled than it is to download a single prebuilt binary as an install script.
+>
+> Always use prebuildify --@mafintosh
+
+有没有成功案例呢？有，那就是 Google 出品的 [LevelDB 的 js 封装](https://github.com/Level/leveldown/blob/master/package.json#L20-L25)就是它做的，
+
+![prebuildify 直接应用在 npm scripts](/blog/images/node-native-addons/00-05-41.png)
+
+我们项目里也应用了这个方案，参见 https://git.woa.com/kimima/node-database/blob/bfda01b63189ef82f5c77b38c7397103b7187fd5/package.json#L19-25。
+
+## 与 CI 集成
+
+可是这虽然可以只在三个系统各执行一遍进行编译，但每次发布都得登录三台机器来执行吗？no, no, no, 我们当然可以将这一切集成到 CI 中自动运行。
+
+这里展示一下业界标杆 ———— GitHub Actions 的配置:
+
+```yaml
+name: Build
+
+on: push
+
+jobs:
+  build:
+    runs-on: ${{ matrix.platform.runner }}
+    env:
+      CXX: g++
+    strategy:
+      matrix:
+        platform:
+          [
+            { runner: "windows-latest", command: "build:windows" },
+            { runner: "macos-latest", command: "build:mac" },
+            { runner: "ubuntu-latest", command: "build:linux" },
+          ]
+      fail-fast: false
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up GCC
+        uses: egor-tensin/setup-gcc@v1
+        with:
+          version: latest
+          platform: x64
+        if: ${{ matrix.platform.runner == 'ubuntu-latest' }}
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16.6.1"
+
+      - name: Install Dependencies
+        run: |
+          npm i --ignore-scripts
+      - name: Compile
+        run: |
+          npm run configure
+          npm run ${{ matrix.platform.command }}
+    
+      - name: Archive debug artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: |
+            index.js
+            index.d.ts
+            package.json
+            prebuilds/
+```
+
+![GitHub Actions](/blog/images/node-native-addons/00-12-03.png)
+
+<!-- 而在厂内则是采用了新出的 [Stream CI](https://iwiki.woa.com/pages/viewpage.action?pageId=673026981)，主要原因时它支持所有平台，同时又可以 pipeline as code。
+![蓝盾新出品的 Stream CI](/blog/images/node-native-addons/00-09-48.png) -->
 
 C++ addons 的展望
 ===
 
+至此，本文也要进入尾声了，期望能对想要提升 Node.js 程序性能或是拓展应用场景的你带来一些帮助！最后提两点展望吧：
+
 ## 无痛集成第三方库
+
+笔者看到项目里大部分第三方 C++ 库都是以源码形式引入的 …… 对于习惯 `npm i` 的人来说这肯定是像狗皮膏药一样贴在心上。听说 bazel 挺香，但其语法令人望而却步，似乎也不是一个依赖管理工具，这时有个叫 [Conan](https://conan.io/) 的货映入眼帘。
+
+这里有篇文章讲述如何将 Conan 和你的 Node.js addons 结合，笔者试了一下确实可行，甚至都不需要 python 的 virtualenv，只是 `libraries` 需要小小的调整下：
+
+```json
+'libraries': [
+    "-Wl,-rpath,@loader_path/"
+]
+```
+
 ## 编译目标：WebAssembly Interface？
+
+居安思危，笔者也思考了下 Node.js addons 的局限性，需要每个平台都编译一遍还是有点麻烦的，有没有什么办法可以 `compile once, run everywhere` 呢？
+
+有！那就是 `WebAssembly`，“那你为啥不用呢？”，这是个好问题。LevelDB 仓库内也有过类似的[讨论](https://github.com/Level/community/issues/63)，最后问题落到了性能和文件系统上，如果涉及到异步线程问题的话，会更复杂一点，因为 `emcc` 的 `pthread` 是基于 Web Worker 提供的，不清楚 Node.js 侧是否有 polyfill，以及在不同 Worker 运行，各种同步原语、Arc、Mutex 等是否都得到了支持，这些都是未知的。所以遇到一坨祖传下来打满了补丁的 C++ 代码，我们选择的稳妥方式依然是悄悄关上门，然后建座桥，把路直接修到它门口就跑，真刺激啊……
