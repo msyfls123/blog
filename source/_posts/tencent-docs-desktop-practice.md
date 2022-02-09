@@ -47,7 +47,6 @@ disqusId: tencent-docs-desktop-practice
 
 ![](/blog/images/tencent-docs-desktop-practice/document_image_rId12.png)
 
-经过进一步调研，我们发现鹅厂内部也有一个基于 GitHub Desktop 定制的开源项目 **Trinity**，在与其作者进行沟通探讨后决定基于这两个项目作为脚手架，搭建腾讯文档客户端应用。在开发过程中，我们主要参考了上述两个项目的目录结构，比如都是双 package 模式，运行时代码和构建打包脚本分离，以及针对当前开发与线上构建环境特定的配置文件等等。
 
 ### 构建工具
 
@@ -75,10 +74,6 @@ DevOps 工程化实践
 ![](/blog/images/tencent-docs-desktop-practice/document_image_rId17.png)
 
 同时要注意到的是选择协作工具时不仅仅要考虑当下，也要考虑系统的伸缩性，为未来的发展壮大留有余量。
-
-这里是我们用到的部分公司平台基础能力，例如蓝盾流水线托管构建流程，七彩石实现配置下发，Sentry 做日志监控等等。
-
-![](/blog/images/tencent-docs-desktop-practice/document_image_rId18.png)
 
 最终实现了"把控代码质量"，"托管构建过程"和"运行时保障"这三大目标。
 
@@ -170,5 +165,3 @@ React 提供了声明式创建组件的方式，我们可否通过其创建组�
 ![](/blog/images/tencent-docs-desktop-practice/document_image_rId29.png)
 
 这样可以把唤起 Web UI 的职责交给常驻后台的隐藏渲染窗口 webComponent，在其中自定义组合各种各样丰富的 React DUI，通过 React 进行统一管理，后续可以几乎零边际成本增添新组件，同时在组件与进程频繁交互时也方便通过组件树找出对应关系进行维护。
-
-**注：本文为笔者于第一届 QQ Tech 技术周作主题演讲《腾讯文档桌面端跨平台端开发实践》演讲稿整理而来。**
