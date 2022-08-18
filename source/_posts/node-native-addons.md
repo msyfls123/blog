@@ -496,15 +496,15 @@ napi_value fire_js_callback(napi_env env, napi_callback_info info) {
 ### 完工
 
 事已至此，与 Deferred 这个类相关的代码已经基本介绍完了，完整的代码可以参见这个仓库：
-https://git.woa.com/kimima/node-addon-example
+https://github.com/msyfls123/basin
 
 启动工程应该只需要：
 
 ```sh
 npm i
-npm run condifigure
-npm run build
-node ./index.js
+npm run configure
+npx node-gyp rebuild --debug
+npm run basin
 ```
 
 C++ addons 调试与构建
@@ -560,7 +560,7 @@ C++ addons 调试与构建
 
 ![prebuildify 直接应用在 npm scripts](/blog/images/node-native-addons/00-05-41.png)
 
-我们项目里也应用了这个方案，参见 https://git.woa.com/kimima/node-database/blob/bfda01b63189ef82f5c77b38c7397103b7187fd5/package.json#L19-25。
+我们项目里也应用了这个方案，参见 https://github.com/msyfls123/basin/blob/main/package.json#L16-L18。
 
 ## 与 CI 集成
 
