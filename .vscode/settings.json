@@ -4,4 +4,9 @@
   "pasteImage.path": "${projectRoot}/source/images/${currentFileNameWithoutExt}",
   "pasteImage.showFilePathConfirmInputBox": true,
   "pasteImage.insertPattern": "${imageSyntaxPrefix}/blog/images/${currentFileNameWithoutExt}/${imageFileName}${imageSyntaxSuffix}",
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#053521",
+    "titleBar.activeBackground": "#074A2E",
+    "titleBar.activeForeground": "#EFFEF8"
+  },
 }
