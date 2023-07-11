@@ -7,6 +7,29 @@ thumbnail: https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExeXptbHFpcTZmaHFvODF
 disqusId: clean-electron-architecture
 ---
 
+- [框架特性](#框架特性)
+  - [依赖反转](#依赖反转)
+  - [路由模式](#路由模式)
+    - [装饰器（Decorator）](#装饰器decorator)
+      - [HTTP 类](#http-类)
+      - [自定义类](#自定义类)
+    - [中间件（Middleware）](#中间件middleware)
+  - [数据管理](#数据管理)
+    - [简单 JSON 内容](#简单-json-内容)
+    - [数据库](#数据库)
+  - [会话隔离](#会话隔离)
+    - [Session 持久化](#session-持久化)
+    - [Session 事件](#session-事件)
+- [业务特性](#业务特性)
+  - [插件机制](#插件机制)
+    - [内置插件](#内置插件)
+    - [第三方插件](#第三方插件)
+    - [插件依赖](#插件依赖)
+  - [窗口 UI](#窗口-ui)
+    - [KISS](#kiss)
+    - [命令式修改](#命令式修改)
+    - [中心化状态](#中心化状态)
+
 一个好的架构是具有良好用户体验的 App 的必备素质，反而言之，一个差劲体验的 App 一定是架构混乱甚至没有架构的。一坨一坨互相依赖，单例漫天飞的代码，足以让任何一个开发满嘴跑 F**K。
 
 什么是好的架构？众说纷纭，但至少类似洋葱模型的中心化组织形式比较符合心智模型。设想一下，每天睁开眼睛，第一件映入脑海的事可能是下列这些问题：
@@ -30,7 +53,7 @@ disqusId: clean-electron-architecture
 
 没办法，不想脱裤跑路就重构呗。天不生 Nest.js，Electron 架构万古如长夜！经过近两年的苦苦摸索，在尝试了至少三种框架的基础上，终于提炼出了用 Nest.js 框架良好组织 Electron 应用的方法，且听我缓缓道来。
 
-# 关键特性
+# 框架特性
 
 每个框架都会把自己的杀手锏特性都排在官网最前面，比如 React 是组件式，Vue 是渐进式，Angular 是让你有信心交付 web app，Svelte 是消失的框架（无运行时 lib），而 Nest.js 几乎是把渐进式、可靠性、扩展性等等都包圆了。实际使用下来，可以说是跟 Angular 一样的总包框架，可以管理一个 App 从启动到关闭整个生命周期。同时它也借鉴了 Angular 很多的创新点，比如依赖反转注入，装饰器模块，五花八门的中继器，以及强大的可扩展性，这也是我们得以将其应用到 Electron 项目的关键。
 
@@ -62,10 +85,66 @@ disqusId: clean-electron-architecture
 - [Custom providers](https://docs.nestjs.com/fundamentals/custom-providers)
 - [Injection scopes](https://docs.nestjs.com/fundamentals/injection-scopes)
 
-## 丰富的路由模式
+## 路由模式
 
 组件是前端的组织方式，而路由则是后端的组织方式。
 
-## 消息的可扩展性
+不管是 HTTP 还是 IPC，甚至系统菜单，都可以作为路由端点。我们也可以用自带的 EventEmitter 在应用间不同路由间穿梭。
 
-不管是 HTTP 还是 IPC，甚至系统菜单，都可以作为消息来源。我们也可以用自带的 EventEmitter 在应用间不同路由间穿梭。
+### 装饰器（Decorator）
+
+#### HTTP 类
+
+- 路由：@Get / @Post / @Sse
+- 参数：@Param / @Header
+- 响应：@Render
+
+#### 自定义类
+
+- 获取参数：@WebContents
+- 装饰路由：@IpcHandle, @IpcOn
+
+### 中间件（Middleware）
+
+https://stackoverflow.com/questions/54863655/whats-the-difference-between-interceptor-vs-middleware-vs-filter-in-nest-js
+
+![](/blog/images/clean-electron-architecture/17-22S-56.png)
+
+## 数据管理
+
+### 简单 JSON 内容
+
+### 数据库
+
+## 会话隔离
+
+
+### Session 持久化
+
+### Session 事件
+
+例如自定义下载行为，针对特定协议进行重定向。
+
+# 业务特性
+
+## 插件机制
+
+### 内置插件
+
+### 第三方插件
+
+### 插件依赖
+
+## 窗口 UI
+
+### KISS
+
+不要动原生对象！\
+不要动原生对象！\
+不要动原生对象！
+
+重要的事说三遍。
+
+### 命令式修改
+
+### 中心化状态
