@@ -1,145 +1,355 @@
 <!doctype html>
-<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>标签: electron - 马猴烧酒</title><link rel="manifest" href="/blog/manifest.json"><meta name="application-name" content="马猴烧酒"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="马猴烧酒"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="现在站在你面前的我 并不是幻影呀"><meta property="og:type" content="website"><meta property="og:title" content="马猴烧酒"><meta property="og:url" content="https://msyfls123.github.io/blog"><meta property="og:site_name" content="马猴烧酒"><meta property="og:description" content="现在站在你面前的我 并不是幻影呀"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://msyfls123.github.io/blog/img/og_image.png"><meta property="article:author" content="msyfls123"><meta property="article:tag" content="前端 感悟 技术"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/blog/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://msyfls123.github.io/blog"},"headline":"马猴烧酒","image":["https://msyfls123.github.io/blog/img/og_image.png"],"author":{"@type":"Person","name":"msyfls123"},"publisher":{"@type":"Organization","name":"马猴烧酒","logo":{"@type":"ImageObject","url":"https://msyfls123.github.io/images/logo.jpg"}},"description":"现在站在你面前的我 并不是幻影呀"}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/blog/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/blog/"><img src="/blog/images/logo.jpg" alt="马猴烧酒" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/blog/">Home</a><a class="navbar-item" href="/blog/archives">Archives</a><a class="navbar-item" href="/blog/categories">Categories</a><a class="navbar-item" href="/blog/tags">Tags</a><a class="navbar-item" href="/blog/about">About</a></div><div class="navbar-end"><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/blog/tags">标签</a></li><li class="is-active"><a href="#" aria-current="page">electron</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2021-09-16T03:49:17.000Z" title="2021/9/16 11:49:17">2021-09-16</time>发表</span><span class="level-item"><time dateTime="2022-08-18T07:53:40.398Z" title="2022/8/18 15:53:40">2022-08-18</time>更新</span><span class="level-item"><a class="link-muted" href="/blog/categories/web/">web</a><span> / </span><a class="link-muted" href="/blog/categories/web/app/">app</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/blog/2021/09/16/electron-update/">Electron 客户端自动更新</a></h1><div class="content"><p>随着科技的进步，啊不，是网络通信技术的提升，客户端用户不再受限于拨号上网那样的小水管，百兆宽带触手可达，随时随地自动更新版本成为了标配。作为跨端框架的翘楚，Electron 自然也是内置了自动更新功能，但查阅其官网发现其提供的 <a target="_blank" rel="noopener" href="https://www.electronjs.org/docs/latest/api/auto-updater/">autoUpdater</a> 并无明确的操作路径可言，读完仍是一头雾水，尤其是还需要私有 CDN 部署时更是两眼一抹黑。</p>
-<p><img src="/blog/images/electron-update/21-41-04.png" alt="漫漫更新路"></p>
-<p>让我们从零开始，更新逻辑其实很简单，每次发版时将更新文件分发到 CDN 上，客户端通过检查 CDN 上有无更新文件继而下载文件并安装即可完成更新。抛开上传下载这种技术问题不谈，要解决两点：</p>
-<ul>
-<li><strong>什么版本可以更新</strong></li>
-<li><strong>可以更新到什么版本</strong></li>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>标签: Electron - 马猴烧酒</title><link rel="manifest" href="/blog/manifest.json"><meta name="application-name" content="马猴烧酒"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="马猴烧酒"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="现在站在你面前的我 并不是幻影呀"><meta property="og:type" content="website"><meta property="og:title" content="马猴烧酒"><meta property="og:url" content="https://msyfls123.github.io/blog"><meta property="og:site_name" content="马猴烧酒"><meta property="og:description" content="现在站在你面前的我 并不是幻影呀"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://msyfls123.github.io/blog/img/og_image.png"><meta property="article:author" content="msyfls123"><meta property="article:tag" content="前端 感悟 技术"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/blog/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://msyfls123.github.io/blog"},"headline":"马猴烧酒","image":["https://msyfls123.github.io/blog/img/og_image.png"],"author":{"@type":"Person","name":"msyfls123"},"publisher":{"@type":"Organization","name":"马猴烧酒","logo":{"@type":"ImageObject","url":"https://msyfls123.github.io/images/logo.jpg"}},"description":"现在站在你面前的我 并不是幻影呀"}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/blog/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/blog/"><img src="/blog/images/logo.jpg" alt="马猴烧酒" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/blog/">Home</a><a class="navbar-item" href="/blog/archives">Archives</a><a class="navbar-item" href="/blog/categories">Categories</a><a class="navbar-item" href="/blog/tags">Tags</a><a class="navbar-item" href="/blog/about">About</a></div><div class="navbar-end"><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/blog/tags">标签</a></li><li class="is-active"><a href="#" aria-current="page">Electron</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-06-19T06:20:00.000Z" title="2023/6/19 14:20:00">2023-06-19</time>发表</span><span class="level-item"><time dateTime="2023-07-11T09:39:27.932Z" title="2023/7/11 17:39:27">2023-07-11</time>更新</span><span class="level-item"><a class="link-muted" href="/blog/categories/app/">app</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/blog/2023/06/19/clean-electron-architecture/">Electron 应用整洁架构</a></h1><div class="content"><ul>
+<li><a href="#%E6%A1%86%E6%9E%B6%E7%89%B9%E6%80%A7">框架特性</a><ul>
+<li><a href="#%E4%BE%9D%E8%B5%96%E5%8F%8D%E8%BD%AC">依赖反转</a></li>
+<li><a href="#%E8%B7%AF%E7%94%B1%E6%A8%A1%E5%BC%8F">路由模式</a><ul>
+<li><a href="#%E8%A3%85%E9%A5%B0%E5%99%A8decorator">装饰器（Decorator）</a><ul>
+<li><a href="#http-%E7%B1%BB">HTTP 类</a></li>
+<li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB">自定义类</a></li>
 </ul>
-<p>说人话就是从哪儿来，要到哪儿去。本文将要为你解答的就是如何通过一系列配置服务及本地设置，完成包含灰度更新、强制更新、静默更新以及 GUI 更新过程展示在内的可操纵动态更新策略。</p>
-<h1 id="发布与更新"><a href="#发布与更新" class="headerlink" title="发布与更新"></a>发布与更新</h1><p>首先确定一点，我们依然用的是 Electron 提供的更新功能，但主要用了 electron-builder 封装后的 <a target="_blank" rel="noopener" href="https://www.electron.build/auto-update">electron-updater</a>。这里的文档和 Electron 官方文档比较类似，有点啰嗦，下面就使用自定义 CDN 这条路提纲挈领地给大家梳理关键步骤。</p>
-<h2 id="生成制品信息"><a href="#生成制品信息" class="headerlink" title="生成制品信息"></a>生成制品信息</h2><p>这里假定你一定是通过 electron-builder 进行打包了，需要在 electron-builder-config 中加入如下字段（<a target="_blank" rel="noopener" href="https://www.electron.build/configuration/publish">详细字段配置</a>）</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> config = &#123;</span><br><span class="line">    ...others,</span><br><span class="line">    <span class="attr">publish</span>: &#123;</span><br><span class="line">        <span class="attr">provider</span>: <span class="string">&#x27;generic&#x27;</span>,</span><br><span class="line">        <span class="attr">channel</span>: <span class="string">&#x27;latest-win32&#x27;</span>,</span><br><span class="line">        <span class="attr">url</span>: <span class="string">&#x27;https://your.cdn/update-path&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里假设你的更新文件会被放在 <code>https://your.cdn/update-path</code> 目录下，通过这个配置打出来的安装文件就会多出一个 <code>latest-win32.yml</code> 文件，这个文件长下面这样子。</p>
-<p><img src="/blog/images/electron-update/22-21-14.png" alt="制品信息"></p>
-<p>这里面主要包含了版本号、更新资源文件的文件名及校验 hash 及发布日期等关键信息，对于后续步骤最重要的就是资源的文件名了。</p>
-<p>将安装包与 yml 文件一起上传到 CDN 的 <code>https://your.cdn/update-path</code> 目录下就完成了生成制品信息的这一步。<br><img src="/blog/images/electron-update/22-34-19.png"></p>
-<h2 id="配置自动更新信息"><a href="#配置自动更新信息" class="headerlink" title="配置自动更新信息"></a>配置自动更新信息</h2><p>来到这一步需要保证 <code>https://your.cdn/update-path/latest-win32.yml</code> 已经是可以访问到的了，后面就是如何在端内把 electron-updater 支棱起来。</p>
-<p>首先安装 electron-updater: <code>npm i electron-updater</code>。<br><strong>这里作者实操中有个问题，electron-updater 打包后失效了，暂未明确原因，故在 webpack 中将其设为 externals 并在最终由 electron-builder 打包的目录 projectDir 里安装了 electron-updater。</strong></p>
-<p>接下来，为了开发调试我们需要做一点骚操作，在下图所示目录中有 <code>app-update.yml</code> 文件。<br><img src="/blog/images/electron-update/22-36-06.png" alt="mac app-update.yml"><br><img src="/blog/images/electron-update/22-37-11.png" alt="windows app-update.yml"><br>这个文件里面内容是这样的，将它复制到项目根目录下并改名叫 <code>dev-app-update.yml</code>，后面就能调试更新了。<br><img src="/blog/images/electron-update/22-40-35.png"></p>
-<p><strong>需要说明的是，macOS 上自动更新只有在签名后的 App 上才能进行，在后续步骤的退出并安装前会校验签名，校验失败时会报错。</strong></p>
-<h2 id="自动更新"><a href="#自动更新" class="headerlink" title="自动更新"></a>自动更新</h2><p>进入激动人心的代码环节！</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; autoUpdater &#125; <span class="keyword">from</span> <span class="string">&#x27;electron-updater&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置为指定发布版本，以防错读为 Electron 版本</span></span><br><span class="line">autoUpdater.currentVersion = APP_VERSION;</span><br><span class="line">autoUpdater.setFeedURL(&#123;</span><br><span class="line">    <span class="attr">provider</span>: <span class="string">&#x27;generic&#x27;</span>,</span><br><span class="line">    <span class="attr">channel</span>: os.platform() === <span class="string">&#x27;darwin&#x27;</span> ? <span class="string">&#x27;latest&#x27;</span> : <span class="string">&#x27;latest-win32&#x27;</span>,</span><br><span class="line">    <span class="attr">url</span>: <span class="string">`https://your.cdn/update-path`</span>,</span><br><span class="line">&#125;);</span><br><span class="line">autoUpdater.checkForUpdates();</span><br><span class="line">autoUpdater.on(<span class="string">&#x27;update-downloaded&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    autoUpdater.quitAndInstall();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>对，就是这么简单，一旦下载更新完成立即以迅雷不及掩耳之势退出 App 进行更新并重启。这是不是太快了点？都没留给用户反应的时间了。别着急，可以通过 autoUpdater 上的各种事件，参考这篇文章做一个漂亮的更新界面出来。<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/Wonder233/article/details/80563236">https://blog.csdn.net/Wonder233/article/details/80563236</a></p>
-<p>autoUpdater 事件：</p>
-<ul>
-<li>error</li>
-<li>checking-for-update</li>
-<li>update-available</li>
-<li>update-not-available</li>
-<li>download-progress</li>
-<li>update-downloaded</li>
+</li>
+<li><a href="#%E4%B8%AD%E9%97%B4%E4%BB%B6middleware">中间件（Middleware）</a></li>
 </ul>
-<h1 id="精细化更新"><a href="#精细化更新" class="headerlink" title="精细化更新"></a>精细化更新</h1><h2 id="静默更新"><a href="#静默更新" class="headerlink" title="静默更新"></a>静默更新</h2><p>如果把上面的退出更新步骤去掉，离静默更新就只差一步了。</p>
-<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="addition">+ autoUpdater.autoInstallOnAppQuit = true;</span></span><br><span class="line"><span class="deletion">- autoUpdater.on(&#x27;update-downloaded&#x27;, () =&gt; &#123;</span></span><br><span class="line"><span class="deletion">-     autoUpdater.quitAndInstall();</span></span><br><span class="line"><span class="deletion">- &#125;);</span></span><br></pre></td></tr></table></figure>
-
-<p>至这一步为止，你已经做完了一个不断更新到最新版本的 Electron App 所需要的一切了。</p>
-<h2 id="强制更新"><a href="#强制更新" class="headerlink" title="强制更新"></a>强制更新</h2><p>即使你设置了每次都会自动更新，依然免不了有用户不肯买账，或者说会在各种网络差的情况下没法及时更新到最新版本，我们可以通过下发一个配置文件，来控制一些有废弃 API 或者有严重 bug 的版本被继续使用。</p>
-<p>例如在配置系统上生成一个如下的配置，其中 <code>force_update_version_list</code> 就是一串 semver 规范的版本范围。<br><img src="/blog/images/electron-update/23-27-57.png" alt="配置字段"></p>
-<p>在使用时只需要判断一下 APP_VERSION 是否在这些个区间内即可。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> semver <span class="keyword">from</span> <span class="string">&#x27;semver&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> config = <span class="keyword">await</span> fetchUpdateConfig(key);</span><br><span class="line"><span class="keyword">const</span> forceUpdateVersions = config.force_update_version_list;</span><br><span class="line"><span class="keyword">const</span> shouldForceUpdate = forceUpdateVersions.length &amp;&amp;</span><br><span class="line">    semver.satisfies(APP_VERSION, forceUpdateVersions.join(<span class="string">&#x27;||&#x27;</span>));</span><br></pre></td></tr></table></figure>
-
-<p>这里在发出拉取更新配置请求时出现了一个 <code>key</code>，这个 <code>key</code> 提供了本地去决定使用哪个配置组的能力，比如测试就填 Test，线上默认为 Production，方便测试。</p>
-<h2 id="灰度更新"><a href="#灰度更新" class="headerlink" title="灰度更新"></a>灰度更新</h2><p>强制更新解决了哪些版本必须更新的问题，如果我们只想让某些版本或是用户更新到指定版本呢？这也就是通常所说的金丝雀发布、A/B 测试之类的了。同样可以用从网络拉取一个配置文件来解决，正好内网配置平台也满足我们的这种需要。</p>
-<h3 id="配置下发"><a href="#配置下发" class="headerlink" title="配置下发"></a>配置下发</h3><p>首先配置系统支持根据 uin、ip 等进行灰度发布，我们选择了将 uid 后两位截取为 uin 上传到灰度名单，配置系统拿到上传的 uin 后根据灰度规则（上图配的是 30% 的比例）下发最新更改的配置项。</p>
-<p><img src="/blog/images/electron-update/23-53-15.png" alt="逐天放开灰度比例"></p>
-<p>直至 100% 比例后，可以进一步替换官网链接，完成全量发布。</p>
-<h3 id="更新路径划分"><a href="#更新路径划分" class="headerlink" title="更新路径划分"></a>更新路径划分</h3><p>聪明的读者已经发现了，在<a href="#%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0">发布与更新</a>中，我们设置了统一的更新目录 <code>https://your.cdn/update-path</code>，如果有不同的更新版本，我们就需要设置不同的文件或是目录来控制。该用哪一种呢？</p>
+</li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86">数据管理</a><ul>
+<li><a href="#%E7%AE%80%E5%8D%95-json-%E5%86%85%E5%AE%B9">简单 JSON 内容</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BC%9A%E8%AF%9D%E9%9A%94%E7%A6%BB">会话隔离</a><ul>
+<li><a href="#session-%E6%8C%81%E4%B9%85%E5%8C%96">Session 持久化</a></li>
+<li><a href="#session-%E4%BA%8B%E4%BB%B6">Session 事件</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E4%B8%9A%E5%8A%A1%E7%89%B9%E6%80%A7">业务特性</a><ul>
+<li><a href="#%E6%8F%92%E4%BB%B6%E6%9C%BA%E5%88%B6">插件机制</a><ul>
+<li><a href="#%E5%86%85%E7%BD%AE%E6%8F%92%E4%BB%B6">内置插件</a></li>
+<li><a href="#%E7%AC%AC%E4%B8%89%E6%96%B9%E6%8F%92%E4%BB%B6">第三方插件</a></li>
+<li><a href="#%E6%8F%92%E4%BB%B6%E4%BE%9D%E8%B5%96">插件依赖</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AA%97%E5%8F%A3-ui">窗口 UI</a><ul>
+<li><a href="#kiss">KISS</a></li>
+<li><a href="#%E5%91%BD%E4%BB%A4%E5%BC%8F%E4%BF%AE%E6%94%B9">命令式修改</a></li>
+<li><a href="#%E4%B8%AD%E5%BF%83%E5%8C%96%E7%8A%B6%E6%80%81">中心化状态</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>一个好的架构是具有良好用户体验的 App 的必备素质，反而言之，一个差劲体验的 App 一定是架构混乱甚至没有架构的。一坨一坨互相依赖，单例漫天飞的代码，足以让任何一个开发满嘴跑 F**K。</p>
+<p>什么是好的架构？众说纷纭，但至少类似洋葱模型的中心化组织形式比较符合心智模型。设想一下，每天睁开眼睛，第一件映入脑海的事可能是下列这些问题：</p>
+<ul>
+<li>我是谁？我是一个程序员，我每天需要写代码赚钱……</li>
+<li>这是哪？这是我家，租来的房子，离公司骑车 15 分钟，所以我得赶紧起床了</li>
+<li>看看今天有啥新鲜事？拿起手机，把通知和各个 IM 应用点一遍</li>
+<li>开始新的一天吧？打开水龙头洗漱，出门扔垃圾，扫共享单车去上班</li>
+</ul>
+<p>而这些想法和行为正好对应了 Clean Architecture 里的 <strong>Entities</strong>、<strong>Use Cases</strong>、<strong>Interface Adapters</strong>、<strong>Frameworks and Drivers</strong>。我是实体，我每天根据情景有要做的事，我接受的信息有原始的自然信息（如鸟鸣虫叫）也有经过加工的人工信息（明星八卦、国际局势），最后和社会的水电交通等公共设施打交道。任何一种好的架构都应该符合普通人的基本认知才能绵延不息。</p>
+<p><img src="/blog/images/clean-electron-architecture/16-39-09.png" alt="Clean Architecture"></p>
+<p>光说不练假把式，同样以 Electron 框架为例子。为啥总要举它作为栗子呢？因为 Electron 天生具有 C/S 架构，同时又是客户端应用，可以说在单个体上参杂了前端、后端和客户端三种不同关注点的开发视角，所以大多数 Electron 应用往往都是一个大窗口套一个 web，主进程简单做了个数据层就完事。这种情况下既不需要架构，也不需要优化，只需要把代码堆积起来就完事了。</p>
+<p>但时间一长，各种问题就粗来了：</p>
+<ul>
+<li>class 没有统一初始化的地方，基本是直接 export new 或者单例模式</li>
+<li>功能堆砌纯线性组织，一条长长的 main 函数把所有的功能都包含了</li>
+<li>preload 脚本需要 ipcRenderer.sendSync 通讯，同时 ipc 可能遇到跨 frame 通讯问题</li>
+<li>单元测试困难，Electron 模块随处可见，需要多次 mock</li>
+</ul>
+<p>没办法，不想脱裤跑路就重构呗。天不生 Nest.js，Electron 架构万古如长夜！经过近两年的苦苦摸索，在尝试了至少三种框架的基础上，终于提炼出了用 Nest.js 框架良好组织 Electron 应用的方法，且听我缓缓道来。</p>
+<h1 id="框架特性"><a href="#框架特性" class="headerlink" title="框架特性"></a>框架特性</h1><p>每个框架都会把自己的杀手锏特性都排在官网最前面，比如 React 是组件式，Vue 是渐进式，Angular 是让你有信心交付 web app，Svelte 是消失的框架（无运行时 lib），而 Nest.js 几乎是把渐进式、可靠性、扩展性等等都包圆了。实际使用下来，可以说是跟 Angular 一样的总包框架，可以管理一个 App 从启动到关闭整个生命周期。同时它也借鉴了 Angular 很多的创新点，比如依赖反转注入，装饰器模块，五花八门的中继器，以及强大的可扩展性，这也是我们得以将其应用到 Electron 项目的关键。</p>
+<p>对于纯命令行程序，我们可以直接一个函数从头执行到尾再退出 App，而对于任何 GUI 程序，通常的解决方案都是以事件循环阻塞整个进程直至收到退出 SIGNAL，但这带来一个问题，如果进程被阻塞了，后续所有操作都无法得到响应。Node.js 的异步事件循环完美地解决了这个问题，在此基础上设计了基于消息的一系列运行机制，很好地处理了成千上万的请求。既然作为服务器都顶得住，那单机应用区区几个请求的并发更是不在话下。</p>
+<p>我们设想这样一个应用：</p>
+<ul>
+<li>它具有处理自定义请求事件的能力</li>
+<li>它支持中继并更改请求，也就是中间件的能力</li>
+<li>它可以分析模块依赖并自动按序加载</li>
+<li>它可以加载外部网页并与之通讯，同时也可以与宿主机的其他应用通讯</li>
+</ul>
+<p>这是一个跨端的带界面的服务器。</p>
+<h2 id="依赖反转"><a href="#依赖反转" class="headerlink" title="依赖反转"></a>依赖反转</h2><p><img src="/blog/images/clean-electron-architecture/17-06-06.png" alt="依赖反转"></p>
+<p>这个特性可太重要了，可以说没有它就没有后续所有的模块设计。每个上古项目都有一堆不明所以的头文件或者配置文件，或者不知从哪引入的构建脚本，又或是一串 token 或密码，这些东西都应该被管理起来。</p>
+<p>我们需要一个简单的心智模型，所有第三方内容都是输入资源，不管是代码还是配置，webpack 就是把所有的内容都当作资源对待。但 webpack 在打包时也支持给 import 加参数，比如指定图片内嵌为 base64 的最大体积，支持输入参数也是我们的目标之一。</p>
+<p>同时，webpack 也支持拆分模块，延迟至使用时加载，这一点更是杀手锏。因为客户端的生命周期一般比网页要长得多，但对体积相对不敏感，使用一些 preload 技术可以不在影响用户正常使用的情况下在快速响应页面和保证功能随时可用间达到平衡。</p>
+<p>模块存在的意义就是复用，虽然 web 上各种框架的教条都是不要复用组件，多用组合而不是嵌套继承，但实际上数据和 UI 就是不同的组织形式。我们可以精确定义每个模块的使用究竟是全局唯一，每次实例化使用一个新的，还是每次调用就直接新建一个。</p>
+<p><img src="/blog/images/clean-electron-architecture/16-56-47.png"></p>
+<p>参考：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.nestjs.com/fundamentals/custom-providers">Custom providers</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.nestjs.com/fundamentals/injection-scopes">Injection scopes</a></li>
+</ul>
+<h2 id="路由模式"><a href="#路由模式" class="headerlink" title="路由模式"></a>路由模式</h2><p>组件是前端的组织方式，而路由则是后端的组织方式。</p>
+<p>不管是 HTTP 还是 IPC，甚至系统菜单，都可以作为路由端点。我们也可以用自带的 EventEmitter 在应用间不同路由间穿梭。</p>
+<h3 id="装饰器（Decorator）"><a href="#装饰器（Decorator）" class="headerlink" title="装饰器（Decorator）"></a>装饰器（Decorator）</h3><h4 id="HTTP-类"><a href="#HTTP-类" class="headerlink" title="HTTP 类"></a>HTTP 类</h4><ul>
+<li>路由：@Get / @Post / @Sse</li>
+<li>参数：@Param / @Header</li>
+<li>响应：@Render</li>
+</ul>
+<h4 id="自定义类"><a href="#自定义类" class="headerlink" title="自定义类"></a>自定义类</h4><ul>
+<li>获取参数：@WebContents</li>
+<li>装饰路由：@IpcHandle, @IpcOn</li>
+</ul>
+<h3 id="中间件（Middleware）"><a href="#中间件（Middleware）" class="headerlink" title="中间件（Middleware）"></a>中间件（Middleware）</h3><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/54863655/whats-the-difference-between-interceptor-vs-middleware-vs-filter-in-nest-js">https://stackoverflow.com/questions/54863655/whats-the-difference-between-interceptor-vs-middleware-vs-filter-in-nest-js</a></p>
+<p><img src="/blog/images/clean-electron-architecture/17-22S-56.png"></p>
+<h2 id="数据管理"><a href="#数据管理" class="headerlink" title="数据管理"></a>数据管理</h2><h3 id="简单-JSON-内容"><a href="#简单-JSON-内容" class="headerlink" title="简单 JSON 内容"></a>简单 JSON 内容</h3><h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><h2 id="会话隔离"><a href="#会话隔离" class="headerlink" title="会话隔离"></a>会话隔离</h2><h3 id="Session-持久化"><a href="#Session-持久化" class="headerlink" title="Session 持久化"></a>Session 持久化</h3><h3 id="Session-事件"><a href="#Session-事件" class="headerlink" title="Session 事件"></a>Session 事件</h3><p>例如自定义下载行为，针对特定协议进行重定向。</p>
+<h1 id="业务特性"><a href="#业务特性" class="headerlink" title="业务特性"></a>业务特性</h1><h2 id="插件机制"><a href="#插件机制" class="headerlink" title="插件机制"></a>插件机制</h2><h3 id="内置插件"><a href="#内置插件" class="headerlink" title="内置插件"></a>内置插件</h3><h3 id="第三方插件"><a href="#第三方插件" class="headerlink" title="第三方插件"></a>第三方插件</h3><h3 id="插件依赖"><a href="#插件依赖" class="headerlink" title="插件依赖"></a>插件依赖</h3><h2 id="窗口-UI"><a href="#窗口-UI" class="headerlink" title="窗口 UI"></a>窗口 UI</h2><h3 id="KISS"><a href="#KISS" class="headerlink" title="KISS"></a>KISS</h3><p>不要动原生对象！<br>不要动原生对象！<br>不要动原生对象！</p>
+<p>重要的事说三遍。</p>
+<h3 id="命令式修改"><a href="#命令式修改" class="headerlink" title="命令式修改"></a>命令式修改</h3><h3 id="中心化状态"><a href="#中心化状态" class="headerlink" title="中心化状态"></a>中心化状态</h3></div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2022-02-09T16:08:58.000Z" title="2022/2/10 00:08:58">2022-02-10</time>发表</span><span class="level-item"><time dateTime="2022-08-18T07:53:40.399Z" title="2022/8/18 15:53:40">2022-08-18</time>更新</span><span class="level-item"><a class="link-muted" href="/blog/categories/web/">web</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/blog/2022/02/10/from-f2e-to-client/">如何从前端到客户端</a></h1><div class="content"><p>我是如何从一个工作全部内容只是 HTML + CSS + JavaScript 的前端，转为一个依然基本靠着前端三板斧技能工作，但支撑起了”横跨三大操作系统 + 各种处理器架构 + 保持 web 同步迭代周期 + 复用了 web 95% 以上功能的桌面端产品“的伪客户端工程师？</p>
+<p>首先当仁不让地要祭出 Electron 这件大杀器，现在开发一个桌面端最最行之有效的方式仍然是 web 套壳，让 web 代码几乎不用改就可以直接运行在一个窗口里。如果采用别的技术方案，我曾不止一次地在前同事和当下 leader 等口中听到拿 C++/OC/Swift 之类的写界面要吐血三升之类的话语，理解各种 Window、Dialog、Layout、Signal &amp; Slot 就足够一个前端喝一壶了，而这些技术细节在 Electron 下都可以化繁为简成一个个普通的 Chrome 窗口，以及与之相关联的 Node.js 胶水逻辑。</p>
+<p><img src="/blog/images/from-f2e-to-client/Untitled.png" alt="Electron 更接近于 Hybrid 应用"></p>
+<p>Electron 更接近于 Hybrid 应用</p>
+<p>虽然把页面展示出来只是客户端面临的众多问题之一，但这恰好是客户端做 UI 最复杂的那一部分。</p>
+<p>使用 Electron 就是说我可以在<strong>不改变主要工作语言的前提下，尽可能快且大地延展自己的作业范围，以较低成本快速搭建起原型</strong>，这是前端选择其他语言或者框架进行客户端开发无法企及的优势。</p>
+<p>那是不是只要上了 Electron，把 web 页面一封装就万事大吉了呢？倒也不是，客户端开发上接网络通讯、界面渲染，下至系统特性 API，它这个逻辑不是后端来一个 request 返回一个 response（简化模型），也不是前端从一个页面加载到脚本执行后进入等待 UI 交互的过程就结束了。客户端需要同时处理多个页面的展示、管理前后台进程、与服务器做通讯、主动存取数据至文件等。</p>
 <table>
 <thead>
 <tr>
-<th>版本排布方式</th>
-<th>优势</th>
-<th>劣势</th>
+<th>角色</th>
+<th>替身</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>按目录</td>
-<td>一个目录一个版本</td>
-<td>无统一更新地址</td>
+<td>后端</td>
+<td>收银员/会计</td>
 </tr>
 <tr>
-<td>按文件</td>
-<td>目录层级扁平</td>
-<td>文件混杂难分清</td>
+<td>前端</td>
+<td>导购/客服</td>
+</tr>
+<tr>
+<td>客户端</td>
+<td>客户经理/维修人员</td>
 </tr>
 </tbody></table>
-<p>综合考虑后，我们选择了按目录划分版本的方式。<br><img src="/blog/images/electron-update/00-07-14.png" alt="版本"><br><img src="/blog/images/electron-update/00-07-44.png" alt="文件"></p>
-<p>在上面的自动更新代码中替换如下内容即可享受精细控制的灰度更新功能。</p>
-<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import &#123; autoUpdater &#125; from &#x27;electron-updater&#x27;;</span><br><span class="line"></span><br><span class="line"><span class="addition">+ const config = await fetchUpdateConfig(key);</span></span><br><span class="line"></span><br><span class="line">// 设置为指定发布版本，以防错读为 Electron 版本</span><br><span class="line">autoUpdater.currentVersion = APP_VERSION;</span><br><span class="line">autoUpdater.setFeedURL(&#123;</span><br><span class="line">    provider: &#x27;generic&#x27;,</span><br><span class="line">    channel: os.platform() <span class="comment">=== &#x27;darwin&#x27; ? &#x27;latest&#x27; : &#x27;latest-win32&#x27;,</span></span><br><span class="line"><span class="deletion">-   url: `https://your.cdn/update-path`,</span></span><br><span class="line"><span class="addition">+   url: `https://your.cdn/update-path/$&#123;config.version&#125;`,</span></span><br><span class="line">&#125;);</span><br><span class="line">autoUpdater.checkForUpdates();</span><br><span class="line">autoUpdater.on(&#x27;update-downloaded&#x27;, () =&gt; &#123;</span><br><span class="line">    autoUpdater.quitAndInstall();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h1 id="尾声"><a href="#尾声" class="headerlink" title="尾声"></a>尾声</h1><h2 id="按渠道分发"><a href="#按渠道分发" class="headerlink" title="按渠道分发"></a>按渠道分发</h2><p>更新和下载一样是为了分发，当我们有了更多渠道时也可能需要考虑渠道间的差异性。渠道包可以通过配置文件进行区分，更新时只更新资源而不更新配置文件，这样就可以做到不同的安装渠道在同一更新下保持自身渠道特殊性。</p>
-<h2 id="永远递增你的版本号"><a href="#永远递增你的版本号" class="headerlink" title="永远递增你的版本号"></a>永远递增你的版本号</h2><p>The lastest, the best.</p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-08-20T11:51:09.000Z" title="2020/8/20 19:51:09">2020-08-20</time>发表</span><span class="level-item"><time dateTime="2022-08-18T07:53:40.397Z" title="2022/8/18 15:53:40">2022-08-18</time>更新</span><span class="level-item"><a class="link-muted" href="/blog/categories/web/">web</a><span> / </span><a class="link-muted" href="/blog/categories/web/app/">app</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/blog/2020/08/20/electron-eat-shit/">Electron 踩坑</a></h1><div class="content"><p>来鹅厂做了俩常规项目（更新文件上传方式至 COS 及修改移动端顶部 UI）后参与了文档 App 的桌面 <code>Electron</code> App 开发，在 UI 层上又是一个坑接一个坑。主要有下述几点：</p>
+<p>我更偏向从角色和现实生活中的替身角度认识各个端的分工，这个分工不是绝对的，彼此之间有交集。前端主要负责 UI 的展现，像是一个商店的导购小姐，根据用户喜欢安排不同的商品；客户端则是客户经理，向已经对此感兴趣的用户进一步演示商品的功能，并分析深层次用户需求；后端则是收银员兼会计，这时候用户已经拍板下单了，如何收钱，如何签订协议，如何发货和三保。之后可能还会有进一步交互，比如用户发现商品出了问题，继续通过网页上反馈过来，然后客户端需要更新版本，相当于以旧换新，完成持续交付。</p>
+<p>下面我将从四个角度来阐述我对客户端开发的理解：</p>
+<h2 id="技术应用"><a href="#技术应用" class="headerlink" title="技术应用"></a>技术应用</h2><p>抛开具体使用的语言或者框架，不同的职位或者开发方向在解决用户需求和技术问题上有着不同的纵深，意味着“术业有专攻”。这一点很多时候属于给用户一把锤子，他就看啥都像钉子一样，由不得你，甚至还会倒逼你去一步步提升体验。</p>
+<h3 id="剪贴板"><a href="#剪贴板" class="headerlink" title="剪贴板"></a>剪贴板</h3><p>既然都上了客户端，想必用户需要频繁操作的了，这就免不了要和键盘及鼠标事件打交道。常见的输入方式还好，就跟浏览器基本一致，只是遇到过 Mac 上无法通过快捷键复制粘贴的问题。说来都离谱，作为一个文本编辑软件，发布出去时竟然无法使用快捷键 <code>Ctrl + C</code> + <code>Ctrl +Ｖ</code>！还好我们很快就发布了版本修复了这个问题。</p>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/44797324/shortcuts-in-electron-on-mac">Shortcuts in Electron on Mac</a></p>
+<p>而后我们又发现了右键菜单也得自己实现，不由感叹浏览器真是个复杂且贴心的玩意，给前端实现了如此多的功能。右键菜单部分同样是由 Electron 封装好了大量具体系统的 API，只需 JS 调用即可。</p>
+<p>这些可能还是看得见的部分，看不见的部分，比如系统的剪贴板？如果我们想要模仿手机上长按复制文本至 App 内识别链接并打开对应页面的功能该如何操作呢？</p>
+<p>因为各系统的剪贴板实现都是不同的，Web 上早期使用 <code>execCommand</code> 来与剪贴板交互，现在则有 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/API/Clipboard">Clipboard API</a>。看起来很美好，只是致命的是 <code>clipboardchange</code> 事件尚未被 Chrome 实现 …… 这里陷入了前端的盲区。</p>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/67473023/async-clipboard-api-clipboardchange-event-not-fired">Async Clipboard API - clipboardchange event not fired</a></p>
+<p>从前端角度走不通，可以看一看 Electron。Electron 本身自带了一个 Clipboard API，上面有各种读取文本、富文本数据、图像的方法。同时，发起检查剪贴板的请求倒是容易，再不济也可以用轮询。做得细一点可以用 RxJS 来订阅一个<strong>根据鼠标聚焦窗口事件 + 剪贴板文字 + 去重 + 抢占式</strong>的调度模型：</p>
+<p><a href="https://msyfls123.github.io/blog/2021/04/11/use-rxjs-to-handle-data-flows/">使用 RxJS 处理前端数据流</a></p>
+<p>这里有个问题：当用户<strong>重复复制同一段文本</strong>进入到我们的客户端时如何判断出来呢？文本比较肯定是失效了，系统层面前面也了解过没有一致的剪贴板改变事件，所以只剩一条路，就是标记这段文本。</p>
+<p><img src="/blog/images/from-f2e-to-client/Untitled%201.png" alt="Untitled"></p>
+<p>因为绝大部分程序只读 bookmark 里的 url 而不会去读 title，可以用 title 来标记这段文本已经被我们的客户端识别过了，当用户再次从任意地方复制了文本时会清除掉这个 bookmark，也就达到了我们标识<strong>已经过 App 识别链接的文本</strong>的目的了。</p>
+<p>到这里我们发现，客户端的开发与前端正在趋同，两者都会深入系统提供的功能，又期望第三方库或者浏览器能提供标准的接口。</p>
+<h3 id="安装与更新"><a href="#安装与更新" class="headerlink" title="安装与更新"></a>安装与更新</h3><p>作为前端开发，页面关闭或刷新时，整个页面所有的元素都被销毁了，重新载入就是一张全新的白纸。而客户端不一样，下载下来就在硬盘占据了几百 MB 的空间，那可是战战兢兢，指不定哪一天用户嫌体积大就给卸载了。怎么办？当然是与时俱进，网页的优势在于刷新就是新版本，而客户端就只能老老实实做一键安装与自动更新了。</p>
+<p>本着用户价值最大化的原则，现在软件大多抛弃了争奇斗艳的安装界面，反正做得越花哨越像流氓软件，Electron 社区标配 electron-builder 打包时提供的默认安装功能就挺好。只不过有时候要考虑旧版本的卸载问题，因为客户端技术更新换代，总有技术断层的阶段，旧版本无法正常自动更新到新版。像 Mac 上软件都进到了全局唯一的软件目录，安装时可以由系统来提示，玩 Linux 的也都是大神，安装不上也会自己手动 remove，但最广大的 Windows 用户迫切需要一键卸载旧版本的功能。我找到了 electron-builder 所依赖的 <a target="_blank" rel="noopener" href="https://nsis.sourceforge.io/Main_Page">NSIS</a> 安装器，定制了其安装脚本，在检测到旧版本的卸载程序存在于注册表时，会直接调用这个卸载程序，并等待它成功返回后进行新版本的安装过程。</p>
+<p>作为互联网产品，诱骗，啊不是，引导用户安装上客户端不是终点，需要推陈出新、高效迭代，这就需要自动更新了。自动更新的目的在于<strong>及时让用户用上新版本</strong>，仿佛是一句废话。但鉴于大部分用户都是既嫌你更新太勤，又嫌你下载耗费流量，还盼着你能给他一天天地带来体验优化的主，这个开发思路还就是和网页前端不一样。</p>
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>CPU 架构</th>
+<th>安装包</th>
+<th>自动更新包</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Windows</td>
+<td>x32 / x64 / arm64</td>
+<td>exe</td>
+<td>exe</td>
+</tr>
+<tr>
+<td>macOS</td>
+<td>x64 / arm64</td>
+<td>dmg / pkg</td>
+<td>zip</td>
+</tr>
+<tr>
+<td>Linux</td>
+<td>x64 / arm64</td>
+<td>deb / rpm</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<p>首先不同的系统当然是不同的包，而根据 CPU 架构及包的用途，就能打出 10 多个不同的安装包来，总大小甚至超过了 2G …… 这在前端的角度看来真有些不可思议，究其原因还是因为 Electron 打包了 Chromium，这个东西就占据了每个安装包中至少 70% 的空间，而这一切都是为了能保证在不同机型上都有一致的浏览体验。</p>
+<p>由于一开始开发时没有意料到 CPU 架构竟会如此迅速地扩展，所以现在只得以新版本逐渐刷量的方式来逐步替换成独立架构的客户端。这样做的好处是，后续更新时只需要下载对应架构的文件即可。</p>
+<p><img src="/blog/images/from-f2e-to-client/Untitled%202.png" alt="Untitled"></p>
+<p>关于自动更新还有如何进行灰度配置下发更新信息，通过 CDN 进行版本管理，App 内如何完成更新等，可参见之前的文章：</p>
+<p><a href="https://msyfls123.github.io/blog/2021/09/16/electron-update/">Electron 客户端自动更新</a></p>
+<p>这还未到终点，更新一整个客户端接近 100M 的体积仍是过重了，还可以将 Electron 内核和不怎么修改的数据库部分都抽离出来，这样只需要与网页一样更新静态资源即可。</p>
+<p><img src="/blog/images/from-f2e-to-client/Untitled%203.png" alt="Untitled"></p>
+<h3 id="离线使用"><a href="#离线使用" class="headerlink" title="离线使用"></a>离线使用</h3><p>本身 Electron 就是可以离线使用的，只是加上了在线网页之后就需要网络才能工作。一种方案是和移动端一样拦截 HTTP 请求并转发到本地离线资源，但这样带来的问题是需要定义非常繁复的拦截规则，以及如何更新离线资源等。</p>
+<p>我们可以将离线的数据和资源分离，数据可以同移动端走一套数据库接口，只不过需要将数据库编译成不同的平台的动态链接库。</p>
+<p><a href="https://msyfls123.github.io/blog/2021/12/05/node-native-addons/">初探 Node.js 原生扩展模块</a></p>
+<p>然后是资源离线使用，或许很多人已经猜到了，那就是被称为 Electron 杀手的 PWA。</p>
+<p><img src="/blog/images/from-f2e-to-client/Untitled%204.png" alt="Untitled"></p>
+<p>在看过了 PWA 所列出的种种好处后，我们发现其不可避免地仍是一个 web 应用。所以，一个大胆的假设，用 PWA 来加载客户端所需要的页面！这样既拥有了网页的便利，又拥有了可触达系统本身 API 的能力，可谓一石二鸟之计。</p>
+<p><img src="/blog/images/from-f2e-to-client/Untitled%205.png" alt="Untitled"></p>
+<p>目前我们的腾讯文档桌面端离线功能正在紧锣密鼓地攻坚中，很快将于大家正式见面。</p>
+<h3 id="浏览器体验"><a href="#浏览器体验" class="headerlink" title="浏览器体验"></a>浏览器体验</h3><p>作为一个名为客户端，实际上是定制版 Chrome 的软件，向 Chrome 看齐永远是对的。</p>
+<p>用户说页面字体太小，看不清，那就给他加缩放快捷键。</p>
+<p>用户又说缩放了看不到当前比例很慌，那就给他加缩放比例的 tips。</p>
+<p><img src="/blog/images/from-f2e-to-client/Untitled%206.png" alt="Untitled"></p>
+<p>这个用户满意了，那个用户说，哎呀我导出来了文档放在电脑上记不住了呀。</p>
+<p>给他抄个 Chrome 的下载记录页面！</p>
+<p><img src="/blog/images/from-f2e-to-client/Untitled%207.png" alt="Untitled"></p>
+<p>如何存取页面缩放比例？如何在不同窗口间切换时共享一个 tips？鼠标悬浮移入移出 tips 显隐规则是怎样的？</p>
+<p>导出记录该如何跟文档一一对应？有很多天记录时该怎么设计数据结构？本地文档被删除了怎么办？</p>
+<p>不做不知道，一做吓一跳。原来一个浏览器不止看到的网页部分，周围的配套功能也有很多门道。</p>
+<p>作为追赶者，有个好处是毕竟前方一直有领军者，永远有追赶的目标，但也总得想着如何积攒自己的优势，在属于自己的赛道上滑出自己的风采。</p>
+<h2 id="角色扮演"><a href="#角色扮演" class="headerlink" title="角色扮演"></a>角色扮演</h2><p>前面提到的都是用户需要什么功能，但作为开发不仅仅是写出代码交给用户就完事了，同样重要的是进行多方合作，齐心协力将产品做好。这时就需要发挥主观能动性，在不同的情景下扮演不同的角色了。</p>
+<h3 id="测试者"><a href="#测试者" class="headerlink" title="测试者"></a>测试者</h3><p>前面提到过，前端页面往往是单个页面完成单个任务，随用随走，所以其测试也主要针对在线数据。但客户端与之不同的在于有本地数据和系统 API 的差异，这也就决定了如果按照传统的人工测试，其成本是很高的。从效能上讲，如果只是编写的代码虽然可以在不同系统运行，但有多少系统就需要测多少遍，是不够经济的，同时测试人员也不一定完全理解设计意图。答案是得用自动化的测试进行覆盖，这就要求开发人员同时扮演测试者的角色。</p>
+<p>如何改进呢？首先从技术上讲，应该把测试行为左移。</p>
+<p><img src="/blog/images/from-f2e-to-client/Untitled%208.png" alt="Untitled"></p>
+<p>从设计阶段就应该埋入测试所需的常量或者数据，比如可供 UI 测试获取元素用的 CSS 选择器，一些数据的 mock 可以直接放在类型定义旁边，方便测试时直接引入。</p>
+<p>而在编写代码时，则应注意拆分可测试的单元。如果一个功能很复杂，那可以分成若干个子模块来进行编写，同样的，如果一个模块无法便捷地被测试，那它也可以被拆成若干个可测试单元，这样可以在一旦出现问题时通过一系列测试用例，准确定位到具体的单元，而不是一遍遍运行完整的模块测试以查找蛛丝马迹。</p>
+<p>在编写测试用例时，区分平台特性是很重要的，例如快捷键或是菜单，这是 mac 和 Windows 存在显著差异的部分，又或者说只支持某个平台的用例，这时就得将不同系统的用例集用不同的机器运行。</p>
+<p>到了运行测试时，因为客户端测试往往需要漫长的启动初始化，运行测试，处理异常情况、退出销毁测试环境等过程，在将测试自动化的过程中仍需要缓存一些数据，以供多次运行测试，降低边际成本。</p>
+<h3 id="合作方"><a href="#合作方" class="headerlink" title="合作方"></a>合作方</h3><p>作为客户端，前端和后端都是你的爸爸。为啥这么说呢？因为页面出了问题，得找前端修，接口出了问题，得找后端修，仿佛变成了 bug 路由器。</p>
+<p>想要克服这些问题，需要做到两点：</p>
+<ol>
+<li>做好日志<br>当用户发现问题，找到你这边，如何优雅地甩锅 …… 哦不是 …… 定位问题呢？那就是在各种用户行为及接口返回时都做好日志以及进行参数校验，遵循宽入严出的准则。所谓害人之心不可有，防人之心不可无，把任何第三方业务都当成是不可信来源进行防范。同时日志也可以还原出用户操作轨迹，有时候出错的点并不是问题的根源，前几页日志里一行不起眼的 warning 才是真正的问题所在。</li>
+<li>明确职责<br>虽然仍然是直面用户的那一端，但团队协作讲究的是分工明确，不逾矩不代劳。客户端本来就是中枢站，如果把前后端的功能都挪到端上实现，必将牵一发而动全身，这就是重构原则里的“发散式变化”。笔者之前接受登录模块，模块里甚至直接存了用户的 token，这是非常敏感的数据，如果不经良好的加密手段，可能造成用户权限被盗用。如何解决这一点呢？答案是不要重复发明轮子，而要善于利用标准轮子。登录相关的标准存储轮子就是 cookie 了，而 cookie 是由 Chrome 直接管辖的，我们只需交给 Chrome 来鉴权，并且自己维护一个非敏感的用户登录状态即可。<br>如果一段程序不知道其作用范围，那就不要写。</li>
+</ol>
+<h3 id="客服"><a href="#客服" class="headerlink" title="客服"></a>客服</h3><p>记得我刚毕业实习时问当时 leader，我们会有直面用户的机会吗？leader 微微一笑，肯定会有的。后来我发现，原来不用和用户打交道、安心写代码的日子，才是非常弥足珍贵的……</p>
+<p>有人说客服是性子最好的，因为需要每天应对用户各种刁难职责而不变色。当用户找上门来，通常都是丢失了数据、或者打不开应用闪退之类的问题，仿佛落水之人看到了救命稻草。这种情况下，如果不能给用户解决问题，是有很大心理压力的，而人有压力时就容易犯错。</p>
+<p>如何降低犯错的概率和风险呢？一种方式是尽量减少操作的步骤。俗话说，less is more，能让用户一键完成的操作就不要让他点两次。</p>
+<p><img src="/blog/images/from-f2e-to-client/Untitled%209.png" alt="Untitled"></p>
+<p>上图是一个打开崩溃日志目录的按钮，用户需要手动把该目录里的 log 文件提供给开发（因为没找到司内相关 native 日志服务）。在没有这个按钮之前，用户需要手动打开终端，输入一长串地址，然后才能到这个目录下，而这中间任何一步都可能阻塞住用户。只有最简单的操作流程，才能高效地解决问题。</p>
+<p>但很多时候，用户的问题并不那么简单。看似是 A 除了问题，对比日志后发现 B 也有问题，在 debug B 的过程中发现其依赖于 C。甚至到最后发现这些统统都不是问题所在，用户使用的根本不是你这个软件！这里就陷入了用户给你制造的黑盒。怎么办呢？在现有工具无法保证筛选出正常的反馈时，就得通过作业流程来保证各种类型的 bug 在每个阶段就被精准定位并消灭了。</p>
+<p>中医有望闻问切四种基本诊察疾病方法，在针对用户反馈时也可以这么做：</p>
+<ol>
+<li>望：根据用户描述，大致判断问题是否属于所属产品，是网络问题还是应用问题。</li>
+<li>闻：故障截图、上报日志，分析可能出错的模块，如若遇到误报情形，在这一步即可排除。</li>
+<li>问：让用户参与调试，通过改变设置项、清理缓存等步骤以期快速恢复。</li>
+<li>切：直接给用户换一个版本（客户端就这点好，不同用户可以用着不同版本），相当于做移植手术了。可以植入更多自定义日志上报功能，更全面地分析用户使用状态，以便根治问题。</li>
+</ol>
+<h2 id="知识储备"><a href="#知识储备" class="headerlink" title="知识储备"></a>知识储备</h2><p>前面讲到了技术应用方向和自我角色扮演，它们都属于外功，也就是技能部分，下面要讲的可说是内功心法。读过武侠小说的人都知道，内外兼修，德才兼备，方可成为一代大师。技巧永远是层出不穷的，只有透过日复一日，年复一年的基础积累，感受技术背后的脉搏，才能融会贯通，成为优秀的开发者。</p>
+<p>IPC</p>
+<p>Node.js addons</p>
+<p>CI 流水线：蓝盾 Stream CI</p>
+<p>WebAssembly</p>
+<p>模式：图、pub/sub</p>
+<p>Windows 注册表</p>
+<h2 id="心理建设"><a href="#心理建设" class="headerlink" title="心理建设"></a>心理建设</h2><p>采用最通用的技术，延长更迭周期</p>
+<p>控制技术的复杂度</p>
+<p>学习新技术的恐慌</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-12-06T15:56:00.000Z" title="2020/12/6 23:56:00">2020-12-06</time>发表</span><span class="level-item"><time dateTime="2022-08-18T07:53:40.400Z" title="2022/8/18 15:53:40">2022-08-18</time>更新</span><span class="level-item"><a class="link-muted" href="/blog/categories/web/">web</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/blog/2020/12/06/tencent-docs-desktop-practice/">Electron 开发实践</a></h1><div class="content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>首先介绍一下腾讯文档桌面端应用，以下简称桌面端，其通过嵌入 web 端腾讯文档应用并利用 Electron 封装本地系统接口的能力实现了独立分发的桌面端 App，兼顾了 macOS 和 Windows 两大操作系统，借此实现了腾讯文档的全端覆盖。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId9.png"></p>
+<p>两大平台，一个月时间，我们是如何做到从技术选型到项目上线的呢？</p>
+<p>这也太标题党了，跟市面上流传甚广的 21 天精通 C++ 简直一模一样。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId10.png"></p>
+<p>我们都知道罗马不是一天建成的，如果把软件开发比作建一座城市的话，我们的的确确在一个月时间内造出了腾讯文档桌面端应用。肯定有人要问了，为何是一个月时间呢？为什么不是半个月，三个月亦或是半年时间？</p>
+<p>事实上，这也是我们一开始进行技术选型和开发规划时所考虑的问题，因为选择了使用 JavaScript 及 Web 技术开发客户端，就注定了与 web 开发息息相关，包括迭代周期和开发顺序等方面，web 端腾讯文档的发布周期是一周两次发布，在一个月时间内差不多可以交付一系列完整的 API，这样可以做到桌面端与 web 端并行开发，最终整合成一个整体。如果等到半年时间才交付了桌面端，这时 web 端应用的 API 和 JSBridge 等接口规范都可能随之发生改变，容易造成返工甚至二次开发。</p>
+<p>下面，我们将从四个方面介绍腾讯文档桌面端开发实践内容：技术选型、DevOps 工程化实践、混合式开发基础建设和跨端统一用户体验。</p>
+<h2 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h2><p><strong>竞技场耸立，罗马屹立不倒；竞技场倒塌，罗马倒塌；罗马倒塌，整个世界都会崩溃。 ——圣徒比德</strong></p>
+<p>技术选型与古罗马的竞技的核心并无二致，都在于选优拔萃。而我们做技术选型的目的则不在于观赏，在于为了今后的开发找到正确的方向。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId11.png"></p>
+<p>首先是总体的开发框架选择，结果是没有疑问的，我们选择了 Electron，实际上 NW.js 前身 node-webkit 和 Electron 的开发团队具有继承关系，而 NW.js 的特点是以 html 作为启动文件，在窗口里直接调用 Node.js，但我们知道能力越大责任越大，同时风险系数也越高。Electron 的主进程是跑在 Node.js 环境下的，可以无缝使用 Node.js 能力，而单独的窗口，即渲染进程，需要显式地打开开关才能使用，这样就一定程度上降低窗口中的页面滥用 Node.js 能力对系统造成危害或者频繁调用 Node.js 能力对性能产生影响的可能性。在插件、第三方包、社区生态和搜索热度上， Electron 都完胜于 NW.js，所以我们就放心地使用 Electron 进行开发吧。</p>
+<h3 id="社区优质实践"><a href="#社区优质实践" class="headerlink" title="社区优质实践"></a>社区优质实践</h3><p>既然选定了 Electron 作为开发框架，先来看一看业界基于 Electron 的优质实践，首当其冲的是宇宙第一 IDE 的 Visual Studio 的 …… 挂名弟弟 …… Visual Studio Code，同样是微软出品，现已成为 web 开发事实上的标准 IDE。</p>
+<p>然后是 Github 出品的 Atom 编辑器，这里插一句题外话，Electron 原名”Atom Shell”，后来随着框架的进一步抽离和沉淀，改名为”Electron”，这点非常符合国外技术圈觉得”工具不好用就发明一个趁手的工具”的思路。以及同样是 GitHub 出品的 <strong>GitHub Desktop</strong> 客户端，其他知名的基于 Electron 开发的桌面软件还有协作办公软件 <strong>Slack</strong>、 IM 即时通讯软件 <strong>WhatsApp</strong> 和 知识协作软件 <strong>Notion</strong> 等。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId12.png"></p>
+<h3 id="构建工具"><a href="#构建工具" class="headerlink" title="构建工具"></a>构建工具</h3><p>我们做桌面端应用与 web 端应用差异最大的在于分发方式不同，web 端应用打开页面浏览即为分发成功，而桌面端应用则必须要下载到本地安装后使用，所以提升下载与安装体验对用户增长率提升至关重要。而提到安装包，就不得不提一下 <strong>electron-builder</strong>，它不仅做到了轻配置快速构建，也带给了桌面端应用非常多的额外能力，例如系统级别的文件关联，自动签名认证功能，制品管理和安装流程定制等，这些都与后面讲到的工程化建设和跨端体验一致性密切相关。通过一套配置，即可构建出包括自动更新、App Store 发布包在内的多个制品。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId13.png"></p>
+<h3 id="单测框架"><a href="#单测框架" class="headerlink" title="单测框架"></a>单测框架</h3><p>如果说安装包是团队给用户的交付物的话，代码就是开发给团队的交付物。好的代码应该是可测试、可维护和承上启下的，要做到这些的最佳实践形式就是编写测试。而多种多样的测试里最方便快速的就是单元测试了，针对 Electron 的测试方式与常见 web 端测试不同，也可以认为是分别在 JSDOM 和 Node.js 两种环境下进行测试。经过调研，我们引入了 <strong>@jest-runner/electron</strong> 作为我们的单测框架，它的优势是一套配置，根据文件目录分发到两种执行环境下运行，也就是前面提到的主进程和渲染进程。并且具有代码无侵入，配置简单，速度飞快等特点。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId14.png"></p>
+<p>从下面的图可以看到，运行全部 200 多个用例仅耗时不到 30s，方便开发时快速验证功能完备性。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId15.png"></p>
+<h2 id="DevOps-工程化实践"><a href="#DevOps-工程化实践" class="headerlink" title="DevOps 工程化实践"></a>DevOps 工程化实践</h2><p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId16.png"></p>
+<p>然后是我们的 DevOps 实践。为什么要协作呢？一个团队单打独斗不舒服吗？因为不同团队不同开发人员间基础能力有差异，倒不一定是体现在技术能力，而是技术侧重点不一样。DevOps 则提供了平台赋能，将各个能力项拉齐到统一水准。就像罗马士兵拥有了统一的装备，将人变成了战士。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId17.png"></p>
+<p>同时要注意到的是选择协作工具时不仅仅要考虑当下，也要考虑系统的伸缩性，为未来的发展壮大留有余量。</p>
+<p>最终实现了”把控代码质量”，”托管构建过程”和”运行时保障”这三大目标。</p>
+<p>把控代码质量：</p>
+<p>静态代码分析、ESLint 扫描、圈复杂度扫描、重复代码扫描、单元测试、自动化测试</p>
+<p>托管构建过程：</p>
+<p>自动构建托管、自动签名认证、自动发布、自动转工单</p>
+<p>运行时保障：</p>
+<p>配置下发、灰度开关、自动化故障上报、日志监控、性能监控</p>
+<h2 id="混合式开发基础建设"><a href="#混合式开发基础建设" class="headerlink" title="混合式开发基础建设"></a>混合式开发基础建设</h2><p>前面讲到的都是外在条件，但文档内在是 web 项目。我们需要设想一下，对于一个 web 项目而言，包括 HTML、CSS、JavaScript 和其他媒体文件等等都是外部资源，如何建设好应用在于如何利用好外部资源。</p>
+<p>如果说将 web 应用改造成桌面端应用是建一座城的话，那么将外部的能力引入到应用内的混合式开发基础建设就像是建造罗马水道一样。将水源从山脉中引流到城市里供人饮用、灌溉农田菜圃，再将污水输送出城市，完成城市的资源循环。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId19.png"></p>
+<p>让我们先来看看这里都有哪些系统和外界网络提供的能力呢？比如<strong>本地的原生数据库，文件系统里存储的数据文件，服务器的计算资源和静态文件 CDN</strong> 等。</p>
+<h3 id="本地资源：数据库、文件-IO-和-JSBridge"><a href="#本地资源：数据库、文件-IO-和-JSBridge" class="headerlink" title="本地资源：数据库、文件 IO 和 JSBridge"></a>本地资源：数据库、文件 IO 和 JSBridge</h3><p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId20.png"></p>
+<p>首先是本地的资源，我们经过反复比较，最终选择了最高效的 <strong>LevelDB</strong> 作为底层数据库实现，它是由 Google 开发的 KV 数据库，具有很高的随机写，顺序读/写性能，同时原生数据库也给于客户端程序更多的操控权。我们在其上封装了包括多库多用户管理，请求指令封装、分发日志上报等能力，通过 electron 提供的基于 scheme 的渲染进程 URL 请求拦截，以及主进程 webContents 通过 executeJavaScript 向渲染进程执行脚本，实现了 JSBridge，将包括上面提到的 LevelDB 以及 <strong>electron-store</strong> 等存储能力引入到了 web 端，同时通过 Node.js 自带的 fs 模块将文件 IO 能力提供给桌面端应用。</p>
+<h2 id="外部资源"><a href="#外部资源" class="headerlink" title="外部资源"></a>外部资源</h2><p>然后要提到的是外界网络能力，包括服务器和静态文件 CDN 等。</p>
+<p>这两种能力都是通过 web 技术实现的，腾讯文档目前 web 上已经实现了有限的离线编辑能力，比如自动缓存增量编辑操作，进行版本冲突处理和提交等，在静态文件上正在开发基于 <strong>PWA</strong> 的离线缓存方案。同时因为是桌面端，前面提到的 LevelDB 是通过拷贝二进制可执行文件到发布资源中来实现分发的，所产生的问题是对不同系统需要分发不同的二进制文件，或带来工序上的复杂和计算资源的浪费，未来对类似需求可能考虑 <strong>WebAssembly Interface</strong> 来做跨端分发可执行文件。</p>
+<h2 id="跨端统一用户体验"><a href="#跨端统一用户体验" class="headerlink" title="跨端统一用户体验"></a>跨端统一用户体验</h2><p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId21.png"></p>
+<p>既然是应用开发，用户体验是重中之重。如何在跨端情况下保证用户体验的统一性，需要我们制定一系列的规范，像同时期的罗马和秦帝国一样，立国之初就统一了包括法典、文字度量衡等规范，这大大地有利于内部进行交流协作，在处理差异性问题时有据可循。</p>
+<h3 id="弹窗"><a href="#弹窗" class="headerlink" title="弹窗"></a>弹窗</h3><p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId22.png"></p>
+<p>以简单的一个系统设置弹窗为例，在设计规范中 Windows 和 macOS 上样式实现是不一致的，弹框的边框则是都采用了系统样式，但 Windows 同时需要定义标题和关闭按钮，而 macOS 则沿用了系统的红绿灯样式，同时考虑到代码一致性手动实现了标题部分。在内容部分，macOS 考虑到与系统 UI 一致，手动实现了弹窗内 tab 切换，主体内容则是基于 <strong>DUI</strong> 实现两端共用。这里带来的问题是，开发往往只会在一台机器上开发，如果开发需要每次都打包分发到另一个平台看效果也太麻烦了，可以通过加开关的形式进行调试。在完成对弹窗的封装以后，我们可以基于 BrowserWindow 和 React 对其进行统一的生命周期管理，保证同一类型弹窗只显示一个。</p>
+<h3 id="安装与升级"><a href="#安装与升级" class="headerlink" title="安装与升级"></a>安装与升级</h3><p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId23.png"></p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId24.png"></p>
+<p>然后是安装与升级，Windows 是覆盖安装，mac 是拖拽安装，Windows 可自定义安装前后行为，例如安装完写入注册表，卸载后清理用户数据，mac 版则利用了系统的静默升级。而 <strong>electron-updater</strong> 则让两者都实现了自动下载并一键升级的功能。</p>
+<h3 id="更多桌面平台特性"><a href="#更多桌面平台特性" class="headerlink" title="更多桌面平台特性"></a>更多桌面平台特性</h3><p>我们在开发过程中还遇到了更多的桌面特性，比较顺利的是 Electron 和 electron-builder 帮助实现了非常多的系统功能如：<strong>文件打开方式关联，QQ 消息链接自动打开 App 并打开文档，监测剪贴板链接自动打开在线文档</strong>等等。而其中不方便实现的则是全局的 Web UI 容器，因为 Electron 自带的系统 UI 控件非常少，也大多不符合 UI 规范，需要自定义 UI 界面只能通过打开渲染窗口并加载 HTML 文件的方式。如图所示的全局 toast 在项目中应用非常广泛，如何将其与 React DUI 组件进行共用呢？</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId25.png"></p>
+<h4 id="命令式创建-Web-UI-组件"><a href="#命令式创建-Web-UI-组件" class="headerlink" title="命令式创建 Web UI 组件"></a>命令式创建 Web UI 组件</h4><p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId26.png"></p>
+<p>首先要明确的是我们肯定是通过打开 BrowserWindow 窗口加载 html 来展示 UI。一种比较常见的思路是命令式创建 web UI 组件，比如创建 DialogManager 来统一管理多个 dialog，但这里的问题是有多少个 dialog 就需要多少个 dialog.html 文件，因为它们都是编译时就确定的，即使通过 url 分发，也必须至少创建一个 dialog 文件才能打开窗口。</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId27.png"></p>
+<h4 id="声明式创建-Web-UI-组件"><a href="#声明式创建-Web-UI-组件" class="headerlink" title="声明式创建 Web UI 组件"></a>声明式创建 Web UI 组件</h4><p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId28.png"></p>
+<p>React 提供了声明式创建组件的方式，我们可否通过其创建组件呢？通过调研，我们发现了 React 的 createPortal 函数是可以将 React 组件挂载到新创建的 window 里去的，那么我们只需要定制新创建 window 的参数就可以实现无边框窗口加载 React DUI 组件的功能。即实现了利用 React 管理窗口的生命周期。</p>
 <ul>
-<li>实现适应于内置 <code>React</code> 组件大小的 <code>BrowserWindow</code>，同时保证首次加载时页面不会错乱</li>
-<li>使自定义弹窗可拖拽并且内部表单组件可使用</li>
-<li>在 <code>BrowserWindow</code> 内弹出超出 Window 范围的菜单</li>
-<li>跨端编译打包后发现 runtime 对不上</li>
+<li><p>  <strong>window.open</strong> 并通过 Electron 拦截定义新创建 Chromium 窗口</p>
+</li>
+<li><p>  <strong>React.createPortal</strong> 将组件（如 <Snackbar/>）</p>
+</li>
 </ul>
-<h2 id="使-BrowserWindow-自适应-React-组件"><a href="#使-BrowserWindow-自适应-React-组件" class="headerlink" title="使 BrowserWindow 自适应 React 组件"></a>使 <code>BrowserWindow</code> 自适应 <code>React</code> 组件</h2><p>我们知道 <code>Electron</code> 的 <code>BrowserWindow</code> 的默认尺寸为 <code>800 × 600</code>，虽然可以初始化设置弹窗大小，但是并不知道弹窗内容尺寸呀！于是乎，需要先隐藏弹窗直至 <code>compsnentDidMount</code> 时获取到 dialog 内容尺寸再设置 <code>BrowserWindow</code> 的大小并显示。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main-process 打开弹窗</span></span><br><span class="line"><span class="keyword">import</span> &#123; ipcMain &#125; <span class="keyword">from</span> <span class="string">&#x27;electron&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">openDialog</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> dialog = <span class="keyword">new</span> BrowserWindow(&#123;</span><br><span class="line">    <span class="attr">show</span>: <span class="literal">false</span></span><br><span class="line">  &#125;)</span><br><span class="line">  ipcMain.once(<span class="string">&#x27;dialog-did-mount&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    dialog.show()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// renderer 页面在组件加载后设置宽高并返回消息显示 window</span></span><br><span class="line"><span class="keyword">import</span> React, &#123; useEffect, useRef &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; ipcRenderer, remote &#125; <span class="keyword">from</span> <span class="string">&#x27;electron&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">Dialog</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> dialogRef = useRef()</span><br><span class="line">  useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="built_in">window</span> = remote.getCurrentWindow()</span><br><span class="line">    <span class="keyword">const</span> &#123; clientWidth, clientHeight &#125; = dialogRef.current</span><br><span class="line">    <span class="built_in">window</span>.setSize(clientWidth, clientHeight, <span class="literal">true</span><span class="comment">/* animate */</span>)</span><br><span class="line">    <span class="built_in">window</span>.center()</span><br><span class="line">    ipcRenderer.send(<span class="string">&#x27;dialog-did-mount&#x27;</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">ref</span>=<span class="string">&#123;dialogRef&#125;</span>&gt;</span></span></span><br><span class="line"><span class="xml">    contents...</span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="拖拽窗口"><a href="#拖拽窗口" class="headerlink" title="拖拽窗口"></a>拖拽窗口</h2><p><a target="_blank" rel="noopener" href="https://www.electronjs.org/docs/api/frameless-window#%E5%8F%AF%E6%8B%96%E6%8B%BD%E5%8C%BA">官方解答</a><br>遇到的坑是设置好 dialog 内部 <code>button/input</code> 的 <code>no-drag</code> 后发现 <code>dui</code>（某鹅厂组件库）会直接在 <code>body</code> 下生成 DOM 节点，哪怕设置上了 <code>dui-*</code> 这样的通配符都没用，在 <code>Windows</code> 上点击事件还是穿透了组件，只好给整个内容的区域都打上了 <code>-webkit-app-region: no-drag</code>。</p>
-<h2 id="弹出超出-Window-的菜单"><a href="#弹出超出-Window-的菜单" class="headerlink" title="弹出超出 Window 的菜单"></a>弹出超出 <code>Window</code> 的菜单</h2><p><a target="_blank" rel="noopener" href="https://www.electronjs.org/docs/api/menu#menupopupoptions">官方做法</a><br>设计觉得 <code>Windows</code> 下不好看，于是要自定义 <code>BrowserWindow</code>。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main-process 打开弹窗</span></span><br><span class="line"><span class="keyword">import</span> &#123; BrowserWindow &#125; <span class="keyword">from</span> <span class="string">&#x27;electron&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">openMenu</span>(<span class="params">x, y</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> menu = <span class="keyword">new</span> BrowserWindow(&#123; x, y &#125;)</span><br><span class="line">  menu.loadUrl(<span class="string">`file://<span class="subst">$&#123;__dirname&#125;</span>/menu.html`</span>)</span><br><span class="line">  menu.on(<span class="string">&#x27;did-finish-load&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    menu.show()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line">ipcMain.on(<span class="string">&#x27;open-menu&#x27;</span>, <span class="function">(<span class="params">event, x, y</span>) =&gt;</span> openMenu(x, y))</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// renderer 渲染进程捕获触发元素</span></span><br><span class="line"><span class="keyword">import</span> &#123; remote &#125; <span class="keyword">from</span> <span class="string">&#x27;eletron&#x27;</span></span><br><span class="line"><span class="keyword">import</span> React, &#123; useRef, useEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">App</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> btnRef = useRef()</span><br><span class="line">  useEffect(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="built_in">window</span> = remote.getCurrentWindow()</span><br><span class="line">    <span class="keyword">const</span> &#123; <span class="attr">x</span>: windowX, <span class="attr">y</span>: windowY &#125; = <span class="built_in">window</span>.getBounds()</span><br><span class="line">    <span class="keyword">const</span> &#123; <span class="attr">x</span>: elX, <span class="attr">y</span>: elY, height &#125; = btnRef.current.getBoundingClientRect()</span><br><span class="line">    <span class="keyword">const</span> x = windowX + elX</span><br><span class="line">    <span class="keyword">const</span> y = windowY + elY + height</span><br><span class="line">    ipcRenderer.send(<span class="string">&#x27;open-menu&#x27;</span>, x | <span class="number">0</span>, y | <span class="number">0</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="xml">    content...</span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">ref</span>=<span class="string">&#123;btnRef&#125;</span>&gt;</span>点我出菜单<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>其中</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipcRenderer.send(<span class="string">&#x27;open-menu&#x27;</span>, x | <span class="number">0</span>, y | <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
-
-<p>非常重要 😂 因为 <code>Electron</code> 打开 menu 的 <code>x &amp; y</code> 只认整型，而 <code>getBoundingClientRect()</code> 返回了浮点数，直接用就崩了……</p>
-<h2 id="区分「开发时」「编译时」和「运行时」"><a href="#区分「开发时」「编译时」和「运行时」" class="headerlink" title="区分「开发时」「编译时」和「运行时」"></a>区分「开发时」「编译时」和「运行时」</h2><p>跨端开发的优势就是 <code>Write Once, Run Everywhere</code>。代码能贴近运行时判断就贴近运行时判断，不过为了开发和打包大小，有如下几个优化思路。</p>
+<p>挂载到新创建的窗口内</p>
 <ul>
-<li>跨端开发 UI 需要调试查看其他端上的状态，所以会需要一个全局的样式开关，目前只区分了 <code>macOS</code> 和 <code>Windows</code>，写作<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// constants/setting.ts</span></span><br><span class="line"><span class="keyword">const</span> useMacStyle = process.platform === <span class="string">&#x27;darwin&#x27;</span></span><br></pre></td></tr></table></figure>
-开发时只需要按需加 <code>!</code> 取反就可以方便切换样式了，<code>process.platform</code> 是啥？这就是编译时了。</li>
-<li>编译时需要确定目标对象，一般会写成不同脚本或者是一个脚本里根据 <code>platform</code> 分发并写入进程参数，为了锁死各种依赖关系，假设某处写了 <code>process.platform === &#39;darwin</code> 如果 <code>platform</code>  不符合就会直接剪枝掉后面的部分。</li>
-<li>而运行时就广泛得多，比如关闭所有窗口时默认退出 App。<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os <span class="keyword">from</span> <span class="string">&#x27;os&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; app &#125; <span class="keyword">from</span> <span class="string">&#x27;electron&#x27;</span></span><br><span class="line">app.on(<span class="string">&#x27;window-all-closed&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (os.platform() !== <span class="string">&#x27;darwin&#x27;</span>) &#123;</span><br><span class="line">    app.quit()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-再比如根据系统类型开启不同的提示文本，这些都需要运行时判断，虽然也可以直接编译时判断，但终究不够灵活。</li>
+<li>  利用 <strong>React</strong> 管理窗口的生命周期</li>
 </ul>
-<p>__结论__：类似于配置下发的流程，如果是偏开发侧的内容可以在一处统一管理，如果是偏向本地系统的功能可以根据实际运行环境开闭，做到尽量少依赖于编译时以求在多端最大化复用代码逻辑。</p>
-<hr>
-<p>To be continued……</p>
-</div></article></div></div><div class="column column-left is-4-tablet is-4-desktop is-3-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="https://www.gravatar.com/avatar/ec56b0250e1a422107277db28a26e7ef?s=128" alt="Kimi Ma"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Kimi Ma</p><p class="is-size-6 is-block">F2E Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Beijing, China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/blog/archives"><p class="title">28</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/blog/categories"><p class="title">7</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/blog/tags"><p class="title">28</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="http://github.com/msyfls123" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="http://github.com/msyfls123"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://www.facebook.com/profile.php?id=100002470633349"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com/msyfls123"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/blog/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://douban.com/people/kimimama" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Douban</span></span><span class="level-right"><span class="level-item tag">douban.com</span></span></a></li></ul></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/blog/categories/GUI/"><span class="level-start"><span class="level-item">GUI</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/blog/categories/Windows/"><span class="level-start"><span class="level-item">Windows</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/blog/categories/app/"><span class="level-start"><span class="level-item">app</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/blog/categories/web/"><span class="level-start"><span class="level-item">web</span></span><span class="level-end"><span class="level-item tag">16</span></span></a><ul><li><a class="level is-mobile" href="/blog/categories/web/app/"><span class="level-start"><span class="level-item">app</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></li><li><a class="level is-mobile" href="/blog/categories/%E6%83%B3%E6%B3%95/"><span class="level-start"><span class="level-item">想法</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li><li><a class="level is-mobile" href="/blog/categories/%E7%94%9F%E6%B4%BB/"><span class="level-start"><span class="level-item">生活</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/blog/tags/App/"><span class="tag">App</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/C/"><span class="tag">C++</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/Electron/"><span class="tag">Electron</span><span class="tag">5</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/Node-js/"><span class="tag">Node.js</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/React/"><span class="tag">React</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/Rust/"><span class="tag">Rust</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/UI/"><span class="tag">UI</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/Windows/"><span class="tag">Windows</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/data-flow/"><span class="tag">data-flow</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/electron/"><span class="tag">electron</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/electron-builder/"><span class="tag">electron-builder</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/gulp/"><span class="tag">gulp</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/node/"><span class="tag">node</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/nodejs/"><span class="tag">nodejs</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/rollup/"><span class="tag">rollup</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/rxjs/"><span class="tag">rxjs</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/web/"><span class="tag">web</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/webpack/"><span class="tag">webpack</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/%E5%89%8D%E7%AB%AF/"><span class="tag">前端</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"><span class="tag">多线程</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/%E5%AE%A2%E6%88%B7%E7%AB%AF/"><span class="tag">客户端</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/%E6%97%85%E8%A1%8C/"><span class="tag">旅行</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/%E6%B3%A8%E5%86%8C%E8%A1%A8/"><span class="tag">注册表</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/%E7%BC%96%E7%A8%8B/"><span class="tag">编程</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/%E8%A7%A3%E8%B0%9C/"><span class="tag">解谜</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/%E9%80%BB%E8%BE%91/"><span class="tag">逻辑</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/%E9%9D%A2%E8%AF%95/"><span class="tag">面试</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/blog/tags/%E9%A3%8E%E6%99%AF/"><span class="tag">风景</span><span class="tag">1</span></a></div></div></div></div></div><div class="column-right-shadow is-hidden-widescreen"></div></div><div class="column column-right is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only order-3"><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><figure class="media-left"><a class="image" href="/blog/2023/06/19/clean-electron-architecture/"><img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExeXptbHFpcTZmaHFvODFtc3hqMzd5dDFwcWJtMDF1Z2ptcG84cGd4dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/h2NxCschQ81ltiL9HV/giphy.gif" alt="Electron 应用整洁架构"></a></figure><div class="media-content"><p class="date"><time dateTime="2023-06-19T06:20:00.000Z">2023-06-19</time></p><p class="title"><a href="/blog/2023/06/19/clean-electron-architecture/">Electron 应用整洁架构</a></p><p class="categories"><a href="/blog/categories/app/">app</a></p></div></article><article class="media"><figure class="media-left"><a class="image" href="/blog/2023/04/28/regedit-file-association/"><img src="/blog/images/regedit-file-association/16-41-14.png" alt="注册表与文件关联"></a></figure><div class="media-content"><p class="date"><time dateTime="2023-04-28T08:33:42.000Z">2023-04-28</time></p><p class="title"><a href="/blog/2023/04/28/regedit-file-association/">注册表与文件关联</a></p><p class="categories"><a href="/blog/categories/Windows/">Windows</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-02-09T16:08:58.000Z">2022-02-10</time></p><p class="title"><a href="/blog/2022/02/10/from-f2e-to-client/">如何从前端到客户端</a></p><p class="categories"><a href="/blog/categories/web/">web</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-12-05T04:21:01.000Z">2021-12-05</time></p><p class="title"><a href="/blog/2021/12/05/node-native-addons/">初探 Node.js 原生扩展模块</a></p><p class="categories"><a href="/blog/categories/web/">web</a></p></div></article><article class="media"><figure class="media-left"><a class="image" href="/blog/2021/09/16/electron-update/"><img src="/blog/images/electron-eat-shit-1.jpg" alt="Electron 客户端自动更新"></a></figure><div class="media-content"><p class="date"><time dateTime="2021-09-16T03:49:17.000Z">2021-09-16</time></p><p class="title"><a href="/blog/2021/09/16/electron-update/">Electron 客户端自动更新</a></p><p class="categories"><a href="/blog/categories/web/">web</a> / <a href="/blog/categories/web/app/">app</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/blog/archives/2023/06/"><span class="level-start"><span class="level-item">六月 2023</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2023/04/"><span class="level-start"><span class="level-item">四月 2023</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2022/02/"><span class="level-start"><span class="level-item">二月 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2021/12/"><span class="level-start"><span class="level-item">十二月 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2021/09/"><span class="level-start"><span class="level-item">九月 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2021/05/"><span class="level-start"><span class="level-item">五月 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2021/04/"><span class="level-start"><span class="level-item">四月 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2021/02/"><span class="level-start"><span class="level-item">二月 2021</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2020/12/"><span class="level-start"><span class="level-item">十二月 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2020/11/"><span class="level-start"><span class="level-item">十一月 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2020/10/"><span class="level-start"><span class="level-item">十月 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2020/08/"><span class="level-start"><span class="level-item">八月 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2020/06/"><span class="level-start"><span class="level-item">六月 2020</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2020/05/"><span class="level-start"><span class="level-item">五月 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2020/04/"><span class="level-start"><span class="level-item">四月 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2020/03/"><span class="level-start"><span class="level-item">三月 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2020/02/"><span class="level-start"><span class="level-item">二月 2020</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2020/01/"><span class="level-start"><span class="level-item">一月 2020</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2019/12/"><span class="level-start"><span class="level-item">十二月 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/blog/archives/2019/03/"><span class="level-start"><span class="level-item">三月 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li></ul></div></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/blog/"><img src="/blog/images/logo.jpg" alt="马猴烧酒" height="28"></a><p class="is-size-7"><span>&copy; 2023 msyfls123</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="http://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
-            article: {
-                highlight: {
-                    clipboard: true,
-                    fold: 'unfolded'
-                }
-            }
-        };</script><script src="/blog/js/column.js"></script><script src="/blog/js/animation.js"></script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
-            if (typeof $.fn.lightGallery === 'function') {
-                $('.article').lightGallery({ selector: '.gallery-item' });
-            }
-            if (typeof $.fn.justifiedGallery === 'function') {
-                if ($('.justified-gallery > p > .gallery-item').length) {
-                    $('.justified-gallery > p > .gallery-item').unwrap();
-                }
-                $('.justified-gallery').justifiedGallery();
-            }
-        });</script><script type="text/x-mathjax-config">MathJax.Hub.Config({
-            'HTML-CSS': {
-                matchFontHeight: false
-            },
-            SVG: {
-                matchFontHeight: false
-            },
-            CommonHTML: {
-                matchFontHeight: false
-            },
-            tex2jax: {
-                inlineMath: [
-                    ['$','$'],
-                    ['\\(','\\)']
-                ]
-            }
-        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><script src="/blog/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/blog/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
-            loadInsight({"contentUrl":"/blog/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
-        });</script></body></html>�步的例子来说明为什么声明式编程更适合 UI 开发？</p>
+<p><img src="/blog/images/tencent-docs-desktop-practice/document_image_rId29.png"></p>
+<p>这样可以把唤起 Web UI 的职责交给常驻后台的隐藏渲染窗口 webComponent，在其中自定义组合各种各样丰富的 React DUI，通过 React 进行统一管理，后续可以几乎零边际成本增添新组件，同时在组件与进程频繁交互时也方便通过组件树找出对应关系进行维护。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2020-12-01T14:54:54.000Z" title="2020/12/1 22:54:54">2020-12-01</time>发表</span><span class="level-item"><time dateTime="2022-08-18T07:53:40.400Z" title="2022/8/18 15:53:40">2022-08-18</time>更新</span><span class="level-item"><a class="link-muted" href="/blog/categories/web/">web</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/blog/2020/12/01/rendering-cause-me-to-exist/">我渲染故我在，Electron 窗口开发指北</a></h1><div class="content"><h1 id="前情摘要"><a href="#前情摘要" class="headerlink" title="前情摘要"></a>前情摘要</h1><p>在前一篇文章中笔者主要介绍了使用 Electron 进行开发过程中打包、构建、自动升级与文件关联相关的内容，细心的读者可能已经发现其中并没有提到与界面相关的话题。时隔一个月，中间又经历了一些需求迭代开发和代码维护，这篇文章将会尽可能详细地介绍 Electron 跨端开发中用户界面部分与平台及系统差异相关的注意点，并探索建立支持自定义多范式的窗口管理方式。</p>
+<h1 id="窗口开发基础"><a href="#窗口开发基础" class="headerlink" title="窗口开发基础"></a>窗口开发基础</h1><p>我住长江头，君住长江尾，日日思君不见君，共饮长江水。 —— 李之仪</p>
+<h2 id="通信方式"><a href="#通信方式" class="headerlink" title="通信方式"></a>通信方式</h2><p>我们知道所有 Electron 自定义的窗口界面都是跑在渲染进程里的，而讲到渲染进程则不得不提到主进程。《卜算子》这首小令非常形象地道出了同一个应用里不同渲染进程和主进程之间的关系：一个应用实例只有一个主进程，而会有多个渲染进程。渲染进程之间是无法直接通信的，他们必须要通过主进程这条”长江”来通讯。</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId10.png"></p>
+<p>一个渲染进程就是管理一个 Window 的进程，通常意义上总是这样。它可以用 IPC 消息和主进程通讯，而主进程通常情况下是作为调度器来衔接各个渲染进程的，只能在收到消息后进行回复。但其实渲染进程和实际展示的网页还是有所不同的，下图简单梳理了一下「主进程 - 渲染进程 - 窗口」直接通信的方式。<img src="/blog/images/rendering-cause-me-to-exist/document_image_rId11.png"></p>
+<p>上图中，ipcMain 和 webContents 都存在在主进程里，它们之间可以无缝直接调用，每个 webContents 管理一个窗口，一一对应浏览器里的 window 对象，而每个 window 对象里通过打开 nodeIntegration 开关赋予调用 Electron 的 ipcRenderer 模块发送异步或同步消息则是进程间通信的关键点。</p>
+<p>这里有几个注意点，理清它们才能更好地规划应用的架构：</p>
+<ol>
+<li><p> ipcRenderer 通常是通信的发起者，ipcMain 只能作为通信的接受者，而 webContents 则作为中间枢纽，代理了部分 ipc 消息（如 send 或者 sendSync 消息可以直接被 webContents 截获并处理）。</p>
+</li>
+<li><p> ipcMain 只有在接受消息时才知晓渲染进程的存在，本身应该作为一个全局的无状态的服务器。</p>
+</li>
+<li><p> webContents 作为既存在于主进程又可以直接对应到单个 window     的对象，有效地隔离了 ipc 消息的作用域。</p>
+</li>
+</ol>
+<p>通常情形下，我们应该尽可能直接使用 webContents 和 ipcRenderer 之间的通讯，只有涉及到全局事件时才通过 ipcMain 进行调度。</p>
+<h2 id="窗口结构"><a href="#窗口结构" class="headerlink" title="窗口结构"></a>窗口结构</h2><p>Electron 提供了基于 Chromium 的丰富多彩的窗口能力，注意它是基于 Chromium，所以在 Electron 里看到的几乎所有窗口（有些文件选择弹窗之类的是系统原生实现）都是一个个浏览器。这些窗口都有很丰富的选项和能力，比如最强大的 nodeIntegration 可以在浏览器环境下使用 Node.js 的能力。</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId12.png"><br>一个简单的弹窗</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId13.png"><br>一个 DUI 的 Snackbar </p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId14.png"><br>一个复杂的多 Tab 应用</p>
+<p>它们都是 BrowserWindow。这时问题就产生了，如何有序地管理这些窗口？Electron 是一个客户端应用，但它跑在 Node.js 上，而 Node.js 最出色的特性比如 stream 和 Event Loop 和它似乎都没啥关系。那就看看我们所熟知的 Web 应用是如何管理”多任务”的吧：在服务端，我们有基于 MVC 的路由，根据 url 转发到不同的 view 进行处理并返回，在客户端，我们也有前端路由，同样根据 url，不过是渲染成不同的 DOM 节点。</p>
+<img src="/blog/images/rendering-cause-me-to-exist/document_image_rId15.png" width="380" />
+<img src="/blog/images/rendering-cause-me-to-exist/document_image_rId16.png" width="380" />
+
+<p>可见，任务组织结构与实际节点的物理/逻辑拓扑关系是息息相关的，任何组织结构都是服务于节点间更好地进行沟通交流，以及根节点对子节点有效的管理。所以，我们可以得出一个简单的结论：</p>
+<ol>
+<li><p> 如果是抽象关联节点的话，可以用哈希表（如 Map）来对应单个窗口</p>
+</li>
+<li><p> 如果是具象关联节点的话，可以用树状结构（如 XML）来对应单个窗口</p>
+</li>
+</ol>
+<p>但这时有一个问题，窗口内加载的仍是 web 页面，本质是一个个 HTML 文件，而我们知道 HTML 并不能互相嵌套 …… 虽然曾有过 HTML Imports，但其在 MDN docs 上已被标记为过时且不建议使用，我们仍然需要一个组合 HTML 的机制否则我们的页面文件随着需求的增加就会变成一个冗长的 entry 列表。</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId17.png"></p>
+<h2 id="代码风格"><a href="#代码风格" class="headerlink" title="代码风格"></a>代码风格</h2><blockquote>
+<p>“Imperative programming is like <strong>how</strong> you do something, and declarative programming is more like <strong>what</strong> you do.”</p>
+</blockquote>
+<p>我们知道代码风格有命令式和声明式两种，命令式编程意味着你告诉计算机每一步应该做什么，而声明式则更多关心计算机执行的最后结果，即告诉计算机要什么，怎么做到我不管。</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId18.png"></p>
+<p>上面两段代码估计早期前端开发都曾写过，第一个函数的作用是将数组的每一项乘以 2 并返回所得的新数组，第二个函数是求数组内所有项的和。</p>
+<p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId19.png"></p>
+<p>这一段代码在上一段代码基础上利用 Array.prototype 上的 map 和 reduce 高阶函数对迭代操作进行了封装，可以注意到函数的行数明显下降了，并且读者并不用关注具体迭代过程是怎么样的，也不用关注这些计算过程。</p>
+<p>阅读代码的人只需要知道：</p>
+<ol>
+<li><p> 将 arr 的每一项都映射到这一项取值的 2 倍</p>
+</li>
+<li><p> 设置初始值为 0，将 arr 的每一项加上初始值之后赋值给初始值</p>
+</li>
+</ol>
+<p>具体每一项是如何取值的，又是如何赋值的，写代码和阅读代码的人都不必关注。可能 map 和 reduce 的例子还不够充分，sort 这个方法是诠释声明式编程最好的例子。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">arr.sort(<span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> a - b;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>如上图，如果 <code>a - b &lt; 0</code>，则将 a 放在 b 的左边，如果 <code>a - b === 0</code> 则保留两者位置不变，如果 <code>a - b &gt; 0</code>，则将 a 放到 b 的右边，简单朴素地说明了排序的基本原则，而具体排序是用什么方式，时间复杂度和空间复杂度都不要用户去关注（如果想要进一步了解 Array.sort 的实现可参见<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/234683/javascript-array-sort-implementation">这篇 StackOverflow 的回答</a>）。</p>
+<p>理清了上面这一点我们可以通过一个更进一步的例子来说明为什么声明式编程更适合 UI 开发？</p>
 <p><img src="/blog/images/rendering-cause-me-to-exist/document_image_rId21.png"></p>
 <p>这个例子是一个初学 jQuery 的学徒都可以轻松写出的代码，逻辑也比较清晰，但做的事情已经开始混杂了：</p>
 <ul>

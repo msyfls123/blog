@@ -1,5 +1,45 @@
 <!doctype html>
-<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>马猴烧酒</title><link rel="manifest" href="/blog/manifest.json"><meta name="application-name" content="马猴烧酒"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="马猴烧酒"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="现在站在你面前的我 并不是幻影呀"><meta property="og:type" content="website"><meta property="og:title" content="马猴烧酒"><meta property="og:url" content="https://msyfls123.github.io/blog"><meta property="og:site_name" content="马猴烧酒"><meta property="og:description" content="现在站在你面前的我 并不是幻影呀"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://msyfls123.github.io/blog/img/og_image.png"><meta property="article:author" content="msyfls123"><meta property="article:tag" content="前端 感悟 技术"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/blog/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://msyfls123.github.io/blog"},"headline":"马猴烧酒","image":["https://msyfls123.github.io/blog/img/og_image.png"],"author":{"@type":"Person","name":"msyfls123"},"publisher":{"@type":"Organization","name":"马猴烧酒","logo":{"@type":"ImageObject","url":"https://msyfls123.github.io/images/logo.jpg"}},"description":"现在站在你面前的我 并不是幻影呀"}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/blog/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/blog/"><img src="/blog/images/logo.jpg" alt="马猴烧酒" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item is-active" href="/blog/">Home</a><a class="navbar-item" href="/blog/archives">Archives</a><a class="navbar-item" href="/blog/categories">Categories</a><a class="navbar-item" href="/blog/tags">Tags</a><a class="navbar-item" href="/blog/about">About</a></div><div class="navbar-end"><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-06-19T06:20:00.000Z" title="2023/6/19 14:20:00">2023-06-19</time>发表</span><span class="level-item"><time dateTime="2023-06-25T10:08:12.315Z" title="2023/6/25 18:08:12">2023-06-25</time>更新</span><span class="level-item"><a class="link-muted" href="/blog/categories/app/">app</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/blog/2023/06/19/clean-electron-architecture/">Electron 应用整洁架构</a></h1><div class="content"><p>一个好的架构是具有良好用户体验的 App 的必备素质，反而言之，一个差劲体验的 App 一定是架构混乱甚至没有架构的。一坨一坨互相依赖，单例漫天飞的代码，足以让任何一个开发满嘴跑 F**K。</p>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>马猴烧酒</title><link rel="manifest" href="/blog/manifest.json"><meta name="application-name" content="马猴烧酒"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="马猴烧酒"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="现在站在你面前的我 并不是幻影呀"><meta property="og:type" content="website"><meta property="og:title" content="马猴烧酒"><meta property="og:url" content="https://msyfls123.github.io/blog"><meta property="og:site_name" content="马猴烧酒"><meta property="og:description" content="现在站在你面前的我 并不是幻影呀"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://msyfls123.github.io/blog/img/og_image.png"><meta property="article:author" content="msyfls123"><meta property="article:tag" content="前端 感悟 技术"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/blog/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://msyfls123.github.io/blog"},"headline":"马猴烧酒","image":["https://msyfls123.github.io/blog/img/og_image.png"],"author":{"@type":"Person","name":"msyfls123"},"publisher":{"@type":"Organization","name":"马猴烧酒","logo":{"@type":"ImageObject","url":"https://msyfls123.github.io/images/logo.jpg"}},"description":"现在站在你面前的我 并不是幻影呀"}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/blog/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><meta name="generator" content="Hexo 5.4.0"></head><body class="is-3-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/blog/"><img src="/blog/images/logo.jpg" alt="马猴烧酒" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item is-active" href="/blog/">Home</a><a class="navbar-item" href="/blog/archives">Archives</a><a class="navbar-item" href="/blog/categories">Categories</a><a class="navbar-item" href="/blog/tags">Tags</a><a class="navbar-item" href="/blog/about">About</a></div><div class="navbar-end"><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-6-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-06-19T06:20:00.000Z" title="2023/6/19 14:20:00">2023-06-19</time>发表</span><span class="level-item"><time dateTime="2023-07-11T09:39:27.932Z" title="2023/7/11 17:39:27">2023-07-11</time>更新</span><span class="level-item"><a class="link-muted" href="/blog/categories/app/">app</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/blog/2023/06/19/clean-electron-architecture/">Electron 应用整洁架构</a></h1><div class="content"><ul>
+<li><a href="#%E6%A1%86%E6%9E%B6%E7%89%B9%E6%80%A7">框架特性</a><ul>
+<li><a href="#%E4%BE%9D%E8%B5%96%E5%8F%8D%E8%BD%AC">依赖反转</a></li>
+<li><a href="#%E8%B7%AF%E7%94%B1%E6%A8%A1%E5%BC%8F">路由模式</a><ul>
+<li><a href="#%E8%A3%85%E9%A5%B0%E5%99%A8decorator">装饰器（Decorator）</a><ul>
+<li><a href="#http-%E7%B1%BB">HTTP 类</a></li>
+<li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB">自定义类</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%AD%E9%97%B4%E4%BB%B6middleware">中间件（Middleware）</a></li>
+</ul>
+</li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86">数据管理</a><ul>
+<li><a href="#%E7%AE%80%E5%8D%95-json-%E5%86%85%E5%AE%B9">简单 JSON 内容</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BC%9A%E8%AF%9D%E9%9A%94%E7%A6%BB">会话隔离</a><ul>
+<li><a href="#session-%E6%8C%81%E4%B9%85%E5%8C%96">Session 持久化</a></li>
+<li><a href="#session-%E4%BA%8B%E4%BB%B6">Session 事件</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E4%B8%9A%E5%8A%A1%E7%89%B9%E6%80%A7">业务特性</a><ul>
+<li><a href="#%E6%8F%92%E4%BB%B6%E6%9C%BA%E5%88%B6">插件机制</a><ul>
+<li><a href="#%E5%86%85%E7%BD%AE%E6%8F%92%E4%BB%B6">内置插件</a></li>
+<li><a href="#%E7%AC%AC%E4%B8%89%E6%96%B9%E6%8F%92%E4%BB%B6">第三方插件</a></li>
+<li><a href="#%E6%8F%92%E4%BB%B6%E4%BE%9D%E8%B5%96">插件依赖</a></li>
+</ul>
+</li>
+<li><a href="#%E7%AA%97%E5%8F%A3-ui">窗口 UI</a><ul>
+<li><a href="#kiss">KISS</a></li>
+<li><a href="#%E5%91%BD%E4%BB%A4%E5%BC%8F%E4%BF%AE%E6%94%B9">命令式修改</a></li>
+<li><a href="#%E4%B8%AD%E5%BF%83%E5%8C%96%E7%8A%B6%E6%80%81">中心化状态</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>一个好的架构是具有良好用户体验的 App 的必备素质，反而言之，一个差劲体验的 App 一定是架构混乱甚至没有架构的。一坨一坨互相依赖，单例漫天飞的代码，足以让任何一个开发满嘴跑 F**K。</p>
 <p>什么是好的架构？众说纷纭，但至少类似洋葱模型的中心化组织形式比较符合心智模型。设想一下，每天睁开眼睛，第一件映入脑海的事可能是下列这些问题：</p>
 <ul>
 <li>我是谁？我是一个程序员，我每天需要写代码赚钱……</li>
@@ -18,9 +58,44 @@
 <li>单元测试困难，Electron 模块随处可见，需要多次 mock</li>
 </ul>
 <p>没办法，不想脱裤跑路就重构呗。天不生 Nest.js，Electron 架构万古如长夜！经过近两年的苦苦摸索，在尝试了至少三种框架的基础上，终于提炼出了用 Nest.js 框架良好组织 Electron 应用的方法，且听我缓缓道来。</p>
-<h1 id="关键特性"><a href="#关键特性" class="headerlink" title="关键特性"></a>关键特性</h1><p>每个框架都会把自己的杀手锏特性都排在官网最前面，比如 React 是组件式，Vue 是渐进式，Angular 是让你有信心交付 web app，Svelte 是消失的框架（无运行时 lib），而 Nest.js 几乎是把渐进式、可靠性、扩展性等等都包圆了。实际使用下来，可以说是跟 Angular 一样的总包框架，可以管理一个 App 从启动到关闭整个生命周期。同时它也借鉴了 Angular 很多的创新点，比如依赖反转注入，装饰器模块，五花八门的中继器，以及强大的可扩展性，这也是我们得以将其应用到 Electron 项目的关键。</p>
+<h1 id="框架特性"><a href="#框架特性" class="headerlink" title="框架特性"></a>框架特性</h1><p>每个框架都会把自己的杀手锏特性都排在官网最前面，比如 React 是组件式，Vue 是渐进式，Angular 是让你有信心交付 web app，Svelte 是消失的框架（无运行时 lib），而 Nest.js 几乎是把渐进式、可靠性、扩展性等等都包圆了。实际使用下来，可以说是跟 Angular 一样的总包框架，可以管理一个 App 从启动到关闭整个生命周期。同时它也借鉴了 Angular 很多的创新点，比如依赖反转注入，装饰器模块，五花八门的中继器，以及强大的可扩展性，这也是我们得以将其应用到 Electron 项目的关键。</p>
+<p>对于纯命令行程序，我们可以直接一个函数从头执行到尾再退出 App，而对于任何 GUI 程序，通常的解决方案都是以事件循环阻塞整个进程直至收到退出 SIGNAL，但这带来一个问题，如果进程被阻塞了，后续所有操作都无法得到响应。Node.js 的异步事件循环完美地解决了这个问题，在此基础上设计了基于消息的一系列运行机制，很好地处理了成千上万的请求。既然作为服务器都顶得住，那单机应用区区几个请求的并发更是不在话下。</p>
+<p>我们设想这样一个应用：</p>
+<ul>
+<li>它具有处理自定义请求事件的能力</li>
+<li>它支持中继并更改请求，也就是中间件的能力</li>
+<li>它可以分析模块依赖并自动按序加载</li>
+<li>它可以加载外部网页并与之通讯，同时也可以与宿主机的其他应用通讯</li>
+</ul>
+<p>这是一个跨端的带界面的服务器。</p>
 <h2 id="依赖反转"><a href="#依赖反转" class="headerlink" title="依赖反转"></a>依赖反转</h2><p><img src="/blog/images/clean-electron-architecture/17-06-06.png" alt="依赖反转"></p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-04-28T08:33:42.000Z" title="2023/4/28 16:33:42">2023-04-28</time>发表</span><span class="level-item"><time dateTime="2023-04-28T09:38:25.503Z" title="2023/4/28 17:38:25">2023-04-28</time>更新</span><span class="level-item"><a class="link-muted" href="/blog/categories/Windows/">Windows</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/blog/2023/04/28/regedit-file-association/">注册表与文件关联</a></h1><div class="content"><p>注册表可能是 Windows 最愚蠢同时又是最伟大的发明之一。相较于 *nix 系统汗牛充栋的 *rc 文件，Windows 一直依赖于注册表这样一个中心化的注册服务来提供各种系统功能及样式的配置。与此同时带来的就是各种复杂的软件依赖关系，甚至各大厂商都深陷其中，不得不依赖第三方软件来对注册表里塞满的无用键值进行清理。对于这样一个令人头疼的领域，这篇文章将简单介绍一下如何将应用程序关联文件管理器中特定后缀名的文件右键菜单，让用户方便地使用你开发的程序对文件进行操作。所用的语言为 NSIS Script，语法指南可参考<a target="_blank" rel="noopener" href="https://nsis.sourceforge.io/Docs/Contents.html">这个链接</a>。</p>
+<p>这个特性可太重要了，可以说没有它就没有后续所有的模块设计。每个上古项目都有一堆不明所以的头文件或者配置文件，或者不知从哪引入的构建脚本，又或是一串 token 或密码，这些东西都应该被管理起来。</p>
+<p>我们需要一个简单的心智模型，所有第三方内容都是输入资源，不管是代码还是配置，webpack 就是把所有的内容都当作资源对待。但 webpack 在打包时也支持给 import 加参数，比如指定图片内嵌为 base64 的最大体积，支持输入参数也是我们的目标之一。</p>
+<p>同时，webpack 也支持拆分模块，延迟至使用时加载，这一点更是杀手锏。因为客户端的生命周期一般比网页要长得多，但对体积相对不敏感，使用一些 preload 技术可以不在影响用户正常使用的情况下在快速响应页面和保证功能随时可用间达到平衡。</p>
+<p>模块存在的意义就是复用，虽然 web 上各种框架的教条都是不要复用组件，多用组合而不是嵌套继承，但实际上数据和 UI 就是不同的组织形式。我们可以精确定义每个模块的使用究竟是全局唯一，每次实例化使用一个新的，还是每次调用就直接新建一个。</p>
+<p><img src="/blog/images/clean-electron-architecture/16-56-47.png"></p>
+<p>参考：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.nestjs.com/fundamentals/custom-providers">Custom providers</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.nestjs.com/fundamentals/injection-scopes">Injection scopes</a></li>
+</ul>
+<h2 id="路由模式"><a href="#路由模式" class="headerlink" title="路由模式"></a>路由模式</h2><p>组件是前端的组织方式，而路由则是后端的组织方式。</p>
+<p>不管是 HTTP 还是 IPC，甚至系统菜单，都可以作为路由端点。我们也可以用自带的 EventEmitter 在应用间不同路由间穿梭。</p>
+<h3 id="装饰器（Decorator）"><a href="#装饰器（Decorator）" class="headerlink" title="装饰器（Decorator）"></a>装饰器（Decorator）</h3><h4 id="HTTP-类"><a href="#HTTP-类" class="headerlink" title="HTTP 类"></a>HTTP 类</h4><ul>
+<li>路由：@Get / @Post / @Sse</li>
+<li>参数：@Param / @Header</li>
+<li>响应：@Render</li>
+</ul>
+<h4 id="自定义类"><a href="#自定义类" class="headerlink" title="自定义类"></a>自定义类</h4><ul>
+<li>获取参数：@WebContents</li>
+<li>装饰路由：@IpcHandle, @IpcOn</li>
+</ul>
+<h3 id="中间件（Middleware）"><a href="#中间件（Middleware）" class="headerlink" title="中间件（Middleware）"></a>中间件（Middleware）</h3><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/54863655/whats-the-difference-between-interceptor-vs-middleware-vs-filter-in-nest-js">https://stackoverflow.com/questions/54863655/whats-the-difference-between-interceptor-vs-middleware-vs-filter-in-nest-js</a></p>
+<p><img src="/blog/images/clean-electron-architecture/17-22S-56.png"></p>
+<h2 id="数据管理"><a href="#数据管理" class="headerlink" title="数据管理"></a>数据管理</h2><h3 id="简单-JSON-内容"><a href="#简单-JSON-内容" class="headerlink" title="简单 JSON 内容"></a>简单 JSON 内容</h3><h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><h2 id="会话隔离"><a href="#会话隔离" class="headerlink" title="会话隔离"></a>会话隔离</h2><h3 id="Session-持久化"><a href="#Session-持久化" class="headerlink" title="Session 持久化"></a>Session 持久化</h3><h3 id="Session-事件"><a href="#Session-事件" class="headerlink" title="Session 事件"></a>Session 事件</h3><p>例如自定义下载行为，针对特定协议进行重定向。</p>
+<h1 id="业务特性"><a href="#业务特性" class="headerlink" title="业务特性"></a>业务特性</h1><h2 id="插件机制"><a href="#插件机制" class="headerlink" title="插件机制"></a>插件机制</h2><h3 id="内置插件"><a href="#内置插件" class="headerlink" title="内置插件"></a>内置插件</h3><h3 id="第三方插件"><a href="#第三方插件" class="headerlink" title="第三方插件"></a>第三方插件</h3><h3 id="插件依赖"><a href="#插件依赖" class="headerlink" title="插件依赖"></a>插件依赖</h3><h2 id="窗口-UI"><a href="#窗口-UI" class="headerlink" title="窗口 UI"></a>窗口 UI</h2><h3 id="KISS"><a href="#KISS" class="headerlink" title="KISS"></a>KISS</h3><p>不要动原生对象！<br>不要动原生对象！<br>不要动原生对象！</p>
+<p>重要的事说三遍。</p>
+<h3 id="命令式修改"><a href="#命令式修改" class="headerlink" title="命令式修改"></a>命令式修改</h3><h3 id="中心化状态"><a href="#中心化状态" class="headerlink" title="中心化状态"></a>中心化状态</h3></div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-04-28T08:33:42.000Z" title="2023/4/28 16:33:42">2023-04-28</time>发表</span><span class="level-item"><time dateTime="2023-04-28T09:38:25.503Z" title="2023/4/28 17:38:25">2023-04-28</time>更新</span><span class="level-item"><a class="link-muted" href="/blog/categories/Windows/">Windows</a></span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/blog/2023/04/28/regedit-file-association/">注册表与文件关联</a></h1><div class="content"><p>注册表可能是 Windows 最愚蠢同时又是最伟大的发明之一。相较于 *nix 系统汗牛充栋的 *rc 文件，Windows 一直依赖于注册表这样一个中心化的注册服务来提供各种系统功能及样式的配置。与此同时带来的就是各种复杂的软件依赖关系，甚至各大厂商都深陷其中，不得不依赖第三方软件来对注册表里塞满的无用键值进行清理。对于这样一个令人头疼的领域，这篇文章将简单介绍一下如何将应用程序关联文件管理器中特定后缀名的文件右键菜单，让用户方便地使用你开发的程序对文件进行操作。所用的语言为 NSIS Script，语法指南可参考<a target="_blank" rel="noopener" href="https://nsis.sourceforge.io/Docs/Contents.html">这个链接</a>。</p>
 <h1 id="通用注册表修改"><a href="#通用注册表修改" class="headerlink" title="通用注册表修改"></a>通用注册表修改</h1><h2 id="卸载方式关联"><a href="#卸载方式关联" class="headerlink" title="卸载方式关联"></a>卸载方式关联</h2><p>如果只是一个 Portable 文件，那么其实不需要卸载这个过程，直接删除文件即可。但既然我们需要一个稳定、位置可知的程序来处理我们的文件，这里必须将程序注册到系统菜单中。<br>安装过程因各个安装引导程序而已，作者这里是用的 NSIS 安装器。这里简单介绍一下 Windows 里如何将我们自己的程序注册到程序功能列表，以便用户哪天不爽了把程序卸载掉。</p>
 <p><img src="/blog/images/regedit-file-association/16-48-55.png" alt="程序与功能"></p>
 <p>这里将程序注册到了 <code>计算机\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall</code> 下，这里就是卸载程序的大本营了。</p>
