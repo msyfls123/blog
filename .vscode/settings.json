@@ -5,8 +5,8 @@
   "pasteImage.showFilePathConfirmInputBox": true,
   "pasteImage.insertPattern": "${imageSyntaxPrefix}/blog/images/${currentFileNameWithoutExt}/${imageFileName}${imageSyntaxSuffix}",
   "workbench.colorCustomizations": {
-    "activityBar.background": "#053521",
-    "titleBar.activeBackground": "#074A2E",
-    "titleBar.activeForeground": "#EFFEF8"
+    "activityBar.background": "#61021F",
+    "titleBar.activeBackground": "#87032B",
+    "titleBar.activeForeground": "#FFFBFC"
   },
 }
