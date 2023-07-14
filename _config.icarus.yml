@@ -36,6 +36,7 @@ article:
         clipboard: true
         # Default folding status of the code blocks. Can be "", "folded", "unfolded"
         fold: unfolded
+    readtime: true
 search:
     type: insight
 comment:
