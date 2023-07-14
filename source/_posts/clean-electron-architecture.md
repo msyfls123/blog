@@ -17,6 +17,7 @@ disqusId: clean-electron-architecture
   - [数据管理](#数据管理)
     - [简单 JSON 内容](#简单-json-内容)
     - [数据库](#数据库)
+    - [跨进程共享数据（preload）](#跨进程共享数据preload)
   - [会话隔离](#会话隔离)
     - [Session 持久化](#session-持久化)
     - [Session 事件](#session-事件)
@@ -92,6 +93,13 @@ disqusId: clean-electron-architecture
 
 组件是前端的组织方式，而路由则是后端的组织方式。
 
+路由模式和消息监听机制很像，区别是路由是编译时即唯一确定的，而消息监听则往往是运行时动态注册。这里动态注册的消息机制带来了两个严重的问题：
+
+- 首次加载时无法确定消息处理的顺序，往往需要等待一个消息监听器绑定之后再触发事件，要是没监听上就丢失了。
+- 消息监听可以放在全局，或者跟随模块。前者污染了全局环境，后者层层嵌套之后难以确认依赖层级。
+
+既然消息机制具有如此多的不稳定性，我们还是更倾向于跟服务器一样一次性注册所有路由。
+
 不管是 HTTP 还是 IPC，甚至系统菜单，都可以作为路由端点。我们也可以用自带的 EventEmitter 在应用间不同路由间穿梭。下面这段代码就演示了一个简单的创建或更新对象的路由端点，可以看到路由的组件由装饰器标识，在函数参数里通过装饰器来捕获不同的参数，经过 `this` 上的数据库及 logger 对象，完成了数据的持久化和日志功能，最后把创建结果以 JSON 格式返回。
 
 ```typescript
@@ -137,13 +145,15 @@ public async upsert(
 
 https://stackoverflow.com/questions/54863655/whats-the-difference-between-interceptor-vs-middleware-vs-filter-in-nest-js
 
-![](/blog/images/clean-electron-architecture/17-22S-56.png)
+![](/blog/images/clean-electron-architecture/17-22-56.png)
 
 ## 数据管理
 
 ### 简单 JSON 内容
 
 ### 数据库
+
+### 跨进程共享数据（preload）
 
 ## 会话隔离
 
