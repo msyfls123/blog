@@ -130,7 +130,71 @@ public async upsert(
 
 ### 装饰器（Decorator）
 
+大家肯定也看到上面代码中四个大大的 `@`，这就是 JavaScript 中的装饰器语法。只是可惜的是 parameter decorator 最终没有进入 stage 3，也就意味着 Typescript 以后肯定会对这个调用方式进行更改，不过这件事还没有尘埃落定，加上这么大一个框架，根本不用担心。
+
+让我们庖丁解牛一下“装饰器”究竟是个什么东西？装饰器的重点自然是在装饰上，也就是给被装饰的类、函数方法、参数等实现一个不同的外观，从而在程序运行起来时以指定的方式调用/生成被装饰的对象。这句话读起来还是很别扭，实际上装饰器是元编程的一种形式，也就是不改变代码结构的前提下给代码走不同路径的方式，可以理解成打补丁。
+
+举几个例子，比如常见的 debounce 和 throttle 方法，它们接受一个函数，返回防抖和节流后的函数版本。
+
+```javascript
+
+function debounce(fn, timeout) {
+  let timer = null
+  return function(...args) {
+    if (timer) {
+      clearTimeout(timer)
+      timer = null
+    }
+    timer = setTimeout(() => {
+      fn.apply(this, args)
+      timer = null
+    }, timeout)
+  }
+}
+
+function log(data) {
+  console.log(data)
+}
+
+class Logger {
+  debounceLog = debounce(log, 1000)
+}
+```
+无装饰器版本
+
+```javascript
+
+const debounce = (timeout: number) => (value: any, context: ClassMethodDecoratorContext<any>) => {
+  let timer: undefined | NodeJS.Timeout = undefined
+  context.addInitializer(function () {
+     const fn = this[context.name]
+     this[context.name] = (...args: any[]) => {
+      if (timer) {
+          clearTimeout(timer)
+          timer = undefined
+        }
+        timer = setTimeout(() => {
+          fn.apply(this, args)
+          timer = undefined
+        }, timeout)
+     };
+  });
+}
+
+class Logger {
+  @debounce(1000)
+  log(data: any) {
+    console.log(data)
+  }
+}
+```
+装饰器版本
+
+可以看到装饰器版本将业务逻辑内聚成了一个函数，而不是必须要用函数套函数的方式。让代码分层有助于隔离关注部分，我们通常会把路由的执行逻辑和路由的路径给绑定在一起，但又不想变成每个路由端点都是一个类，这就是装饰器常见的应用场景了。
+
 #### HTTP 类
+
+Nest.js 自带了很多 HTTP 服务的默认装饰器，对于绝大多数场景而言已经足够了。支持 HTTP 不同的请求类型，从请求中获取数据，并最终将内容用模版拼合并返回。
 
 - 路由：@Get / @Post / @Sse
 - 参数：@Param / @Header
