@@ -22,6 +22,7 @@ module.exports = class extends Component {
         const embeddedConfig = `var IcarusThemeSettings = {
             article: {
                 highlight: {
+                    theme: '${article.highlight.theme}',
                     clipboard: ${clipboard},
                     fold: '${fold}'
                 }
