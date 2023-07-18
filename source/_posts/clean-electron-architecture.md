@@ -205,7 +205,70 @@ Nest.js 自带了很多 HTTP 服务的默认装饰器，对于绝大多数场景
 - 获取参数：@WebContents
 - 装饰路由：@IpcHandle, @IpcOn
 
+除了 HTTP，Electron 应用还内置了一种消息通讯机制，就是客户端熟知的 IPC（Interprocess Communications）。它的实现可以有很多方式，不同平台也会有[不同的实现](https://learn.microsoft.com/en-us/windows/win32/ipc/interprocess-communications)，但 Electron 的特殊点在于 IPC 两端绑定的不是进程或者 socket 连接，而是 web 页面。
+
+Web 页面承载了实际展示给用户的 UI 内容，它本身存在于一个个渲染进程里，主进程里可以认为只是它的一个替身，但实际运用中往往需要拿到这个替身的各种状态。
+
+既然是统一了 HTTP 和 IPC 通讯方式的框架，我们将会用装饰器抹平两者的差别，开发时可以自由选择通讯方式的同时也能支持拿到相应的请求源对象。
+
+|通讯方式|优点|劣势|
+|---|---|---|
+|HTTP|无需向 web 注入代码|无法自然获得 web 页面句柄|
+|IPC|传输 JSON 无需序列化|需要向 web 注入对象|
+
+
+这里面会分别用到 Nest.js 的 [Custom Transport](https://docs.nestjs.com/microservices/custom-transport)，以及 Electron 的 [WebRequest](https://www.electronjs.org/docs/latest/api/web-request#webrequestonbeforerequestfilter-listener) 模块。
+
+- **Step 1**: 通过 @nestjs/microservices 的 EventPattern, MessagePattern 组合出 IpcInvoke 和 IpcEvent 装饰器（给路由用）
+- **Step 2**: 通过 session.protocol.registerSchemesAsPrivileged 放通自定义 SCHEME
+- **Step 3**: 在 WebRequest 拦截自定义 SCHEME（HTTP）请求头注入 webContentsId
+- **Step 4**: 在 CustomTransportStrategy 绑定所有 Step.1 装饰过的路由响应 IPC listener，并在 handler 中传入 event 对象作为 data
+- **Step 5**: 创建 WebContents 装饰器。通过 @nestjs/common 的 createParamDecorator，根据 ctx.getType == 'http' || 'rpc' 来返回位于 req.headers 和 RpcArgumentsHost.getData 中的 webContents
+
+
+```typescript
+import { HandlerType } from '~/common/constants/meta';
+
+import { applyDecorators } from '@nestjs/common';
+import { EventPattern, MessagePattern } from '@nestjs/microservices';
+
+export const IpcInvoke = (channel: string) => {
+  return applyDecorators(
+    MessagePattern(channel, { handlerType: HandlerType.InvokeMessage }),
+  );
+};
+
+export const IpcEvent = (channel: string) => {
+  return applyDecorators(
+    EventPattern(channel, { handlerType: HandlerType.Event }),
+  );
+};
+```
+
+```typescript
+import { IRequest } from '~/common/interfaces/electron/request';
+
+import { ExecutionContext, createParamDecorator } from '@nestjs/common';
+
+export const WebContent = createParamDecorator(
+  (data: unknown, ctx: ExecutionContext) => {
+    if (ctx.getType() === 'http') {
+      const request = ctx.switchToHttp().getRequest<IRequest>();
+      return request.webContents;
+    } else if (ctx.getType() === 'rpc') {
+      return ctx.switchToRpc().getData().event.sender;
+    }
+  },
+);
+```
+
+使用装饰器可以让我们更轻松地将不同的路由与 Electron 框架进行交互，不管是注册事件监听模拟路由还是从请求中解出需要的源数据，都很方便。
+
 ### 中间件（Middleware）
+
+如果说装饰器是完成了路由的网状组织最后一块拼图的话，那中间件就是为数据的流动接上了一长条管道。
+
+Nest.js 中的中间件有三种，Middleware，Interceptor 和 Exception filters，甚至 Pipes 和 Guards 也可以算作中间件。它们本质都是对请求和响应作一定的处理，来满足包括鉴权，错误处理，数据转换等等功能。
 
 https://stackoverflow.com/questions/54863655/whats-the-difference-between-interceptor-vs-middleware-vs-filter-in-nest-js
 
