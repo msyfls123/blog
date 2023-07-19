@@ -11,8 +11,8 @@ disqusId: clean-electron-architecture
   - [依赖反转](#依赖反转)
   - [路由模式](#路由模式)
     - [装饰器（Decorator）](#装饰器decorator)
-      - [HTTP 类](#http-类)
-      - [自定义类](#自定义类)
+      - [**HTTP 类**](#http-类)
+      - [**自定义类**](#自定义类)
     - [中间件（Middleware）](#中间件middleware)
   - [数据管理](#数据管理)
     - [简单 JSON 内容](#简单-json-内容)
@@ -192,7 +192,7 @@ class Logger {
 
 可以看到装饰器版本将业务逻辑内聚成了一个函数，而不是必须要用函数套函数的方式。让代码分层有助于隔离关注部分，我们通常会把路由的执行逻辑和路由的路径给绑定在一起，但又不想变成每个路由端点都是一个类，这就是装饰器常见的应用场景了。
 
-#### HTTP 类
+#### **HTTP 类**
 
 Nest.js 自带了很多 HTTP 服务的默认装饰器，对于绝大多数场景而言已经足够了。支持 HTTP 不同的请求类型，从请求中获取数据，并最终将内容用模版拼合并返回。
 
@@ -200,7 +200,7 @@ Nest.js 自带了很多 HTTP 服务的默认装饰器，对于绝大多数场景
 - 参数：@Param / @Header
 - 响应：@Render
 
-#### 自定义类
+#### **自定义类**
 
 - 获取参数：@WebContents
 - 装饰路由：@IpcHandle, @IpcOn
@@ -270,11 +270,78 @@ export const WebContent = createParamDecorator(
 
 Nest.js 中的中间件有三种，Middleware，Interceptor 和 Exception filters，甚至 Pipes 和 Guards 也可以算作中间件。它们本质都是对请求和响应作一定的处理，来满足包括鉴权，错误处理，数据转换等等功能。
 
+这是 Stackoverflow 上对不同中间件的总结。
 https://stackoverflow.com/questions/54863655/whats-the-difference-between-interceptor-vs-middleware-vs-filter-in-nest-js
 
+这张图很好地展示出了不同中间件在一个请求的生命周期中的作用。
 ![](/blog/images/clean-electron-architecture/17-22-56.png)
 
+简单实现一个针对特殊路由对 JSON 路由返回结果，将 data 包了一层再返回的中间件。
+
+```typescript
+import { Observable, tap } from 'rxjs';
+
+import {
+  CallHandler,
+  ExecutionContext,
+  Injectable,
+  NestInterceptor,
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+
+@Injectable()
+export class RequestInterceptor implements NestInterceptor {
+  constructor(private reflector: Reflector) {}
+
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    return next.handle().pipe(
+      map((data) => {
+        const handler = context.getHandler();
+        const isJSON = this.reflector.get('json', handler);
+        if (isJSON) {
+          return {
+            res: 0,
+            data,
+          }
+        }
+        return data
+      }),
+    );
+  }
+}
+
+import {
+  SetMetadata,
+  Post,
+  Param,
+} from '@nestjs/common/decorators';
+
+class Controller {
+  @Post('create')
+  @SetMetaData('json', true)
+  create(@Param('name') name) {
+    return this.db.create({ name })
+  }
+}
+
+```
+
+Web 后端服务直接将端口暴露在网络上往往需要很多的安全校验以及错误处理，实际上客户端代码是自主维护的，风险相对可控，所以不会需要太多的校验工作，只是对一些涉及到 C++ 调用时，因为数据类型需要转换，比如只接受整数，传入浮点数会导致类型转换失败甚至程序崩溃。中间件一些应用场景如下：
+
+- 给 request、context 统一加上指定参数，例如 request.user
+- 在请求处理完毕返回前继续调用别的路由端点
+
 ## 数据管理
+
+前面我们讲到了如何处理用户操作（也就是各种各样的请求），这里谈下如何将请求的结果持久化，也就是记录数据。不管是前端还是后端，都有一整套数据 CRUD 的工具可以用，但到了客户端这边需要考虑的东西就变得复杂了起来。
+
+|存储方式|瓶颈|优势|
+|---|---|---|
+|localStorage/IndexedDB|仅限 web 使用|原生|
+|MySQL/PostgreSQL|跨平台支持不足，且需要占用端口|生态丰富|
+|JSON 文件|可能存在读写竞争|单文件|
+|LevelDB|文件数量多|跨平台支持，不限定文档结构|
+|SQLite|需要固定单条记录结构|跨平台支持|
 
 ### 简单 JSON 内容
 
