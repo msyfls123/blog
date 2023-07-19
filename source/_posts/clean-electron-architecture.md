@@ -30,7 +30,7 @@ disqusId: clean-electron-architecture
     - [KISS](#kiss)
     - [命令式修改](#命令式修改)
     - [中心化状态](#中心化状态)
-- [原则](#原则)
+- [最佳实践](#最佳实践)
   - [防呆设计](#防呆设计)
   - [保持功能独立](#保持功能独立)
 
@@ -227,6 +227,7 @@ Web 页面承载了实际展示给用户的 UI 内容，它本身存在于一个
 
 
 ```typescript
+/* 路由装饰器 */
 import { HandlerType } from '~/common/constants/meta';
 
 import { applyDecorators } from '@nestjs/common';
@@ -246,6 +247,7 @@ export const IpcEvent = (channel: string) => {
 ```
 
 ```typescript
+/* 参数装饰器 */
 import { IRequest } from '~/common/interfaces/electron/request';
 
 import { ExecutionContext, createParamDecorator } from '@nestjs/common';
@@ -335,6 +337,8 @@ Web 后端服务直接将端口暴露在网络上往往需要很多的安全校�
 
 前面我们讲到了如何处理用户操作（也就是各种各样的请求），这里谈下如何将请求的结果持久化，也就是记录数据。不管是前端还是后端，都有一整套数据 CRUD 的工具可以用，但到了客户端这边需要考虑的东西就变得复杂了起来。
 
+首先数据库最简单的需要支持读写，是否支持多人同时读写？抛开写入而言，读取性能是否满足？如果数据库意外崩溃，是否支持根据日志回放等等。然后考虑到跨平台场景，还需要数据库支持不同操作系统不同架构等。根据上述问题分别分析不同数据库使用场景，各自的优劣势分析如下表。
+
 |存储方式|瓶颈|优势|
 |---|---|---|
 |localStorage/IndexedDB|仅限 web 使用|原生|
@@ -343,7 +347,17 @@ Web 后端服务直接将端口暴露在网络上往往需要很多的安全校�
 |LevelDB|文件数量多|跨平台支持，不限定文档结构|
 |SQLite|需要固定单条记录结构|跨平台支持|
 
+最终，我们发现可以将简单的 KV 存储和复杂结构数据区分开来考虑。
+
 ### 简单 JSON 内容
+
+JSON 存储主要突出一个字：快。这里通常的数据量级都不会超过 1kb，无论是 set 或是 get 都可认为是同步完成的，会带来以下好处：
+
+- 无需 async/await 写法，跟普通 JavaScript 对象一样操作
+- 单文件 debug 方便，任意编辑器直接查看
+- 同上一条，单文件可直接跨进程访问，web 与 Node.js 之间可通过 JSON 共享数据
+
+下面将实现一个从主进程写入 JSON 数据，preload 中读取数据的 demo。
 
 ### 数据库
 
@@ -390,7 +404,7 @@ Web 后端服务直接将端口暴露在网络上往往需要很多的安全校�
 
 ### 中心化状态
 
-# 原则
+# 最佳实践
 
 ## 防呆设计
 
