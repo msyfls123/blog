@@ -359,7 +359,37 @@ JSON 存储主要突出一个字：快。这里通常的数据量级都不会超
 
 下面将实现一个从主进程写入 JSON 数据，preload 中读取数据的 demo。
 
+
+```typescript
+// main-process
+
+import Store from 'electron-store'
+import { BrowserWindow, app } from 'electron'
+import { resolve } from 'path'
+
+const store = new Store
+store.set('name', 'kimi')
+
+const win = new BrowserWindow({
+  webPreferences: {
+    preload: resolve(app.getAppPath(), 'preload.js')
+  }
+})
+win.show()
+```
+
+```typescript
+// preload.js
+
+import Store from 'electron-store'
+
+const store = new Store
+const name = store.get('name')
+```
+
 ### 数据库
+
+客户端所用数据库跟普通后端数据库没有太大差别，只是得注意需要有不同系统及架构的二进制包。但如果是在 Electron 项目中，则又多了一项准备工作，那就是如何获得数据库的存放位置。
 
 ### 跨进程共享数据（preload）
 
