@@ -17,7 +17,7 @@ disqusId: clean-electron-architecture
   - [数据管理](#数据管理)
     - [简单 JSON 内容](#简单-json-内容)
     - [数据库](#数据库)
-    - [跨进程共享数据（preload）](#跨进程共享数据preload)
+    - [数据目录分类](#数据目录分类)
   - [会话隔离](#会话隔离)
     - [Session 持久化](#session-持久化)
     - [Session 事件](#session-事件)
@@ -389,9 +389,99 @@ const name = store.get('name')
 
 ### 数据库
 
-客户端所用数据库跟普通后端数据库没有太大差别，只是得注意需要有不同系统及架构的二进制包。但如果是在 Electron 项目中，则又多了一项准备工作，那就是如何获得数据库的存放位置。
+客户端所用数据库跟普通后端数据库没有太大差别，只是得注意需要有不同系统及架构的二进制包，事实上例如 SQLite 和 LevelDB 都有官方的 node binding 版本，只需要打包时一并合入发布制品即可正常使用。但如果是在 Electron 项目中，则又多了一项准备工作，那就是如何获得数据库的存放位置。
 
-### 跨进程共享数据（preload）
+其实任何存储都有类似的问题，前面的 electron-store 也不例外，需要在 new 的时候知晓确切的存储位置，但这是一个异步过程，简单表述如下。
+
+```typescript
+import { app } from 'electron'
+const getAppPath = async () => {
+  await app.whenReady()
+  return app.getPath('userData')
+}
+```
+
+为啥要 `await app.whenReady()` 呢，因为可能会有让用户指定目录或者运行自动化测试需要传入特定目录的需求，比如 Chrome 就提供了 [Overriding the User Data Directory](https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md#overriding-the-user-data-directory) 的选项。
+
+但这里带来一个严重的问题，所有使用数据库方法的地方，都需要加上 await 来等待 Electron 的 ready，这样看起来很不科学。有一种办法是给所有的方法都加上一个装饰器，sync 方法也变成 async 方法，但这肯定不是我们想要的。怎么办呢？我们需要用前面提到的 `useFactory` 来包装一下这个 ready 事件。
+
+```typescript
+// module
+import { Global, Module } from '@nestjs/common';
+
+@Global()
+@Module({
+  imports: [],
+  providers: [
+    {
+      provide: 'USER_DATA',
+      useFactory: async () => {
+        await app.ready();
+        return app.getPath('userData');
+      },
+      inject: [],
+    }
+  ],
+  exports: ['USER_DATA'],
+})
+export class ElectronModule {}
+```
+
+```typescript
+// database
+import PouchDB from 'pouchdb';
+
+@Injectable()
+export class DatabaseService {
+
+  constructor(
+    @Inject('USER_DATA')
+    private readonly userDataDir: string,
+  ) {
+    this.db = new PouchDB(this.userDataDir)
+  }
+}
+```
+我们看到上面的代码中，`userDataDir` 变成了一个 Injectable Provider，可以被随时注入到例如数据库 constructor 里，这样不仅避免了 async 写法，还能让 Nest.js 自己管理依赖关系。
+
+理想情形下，退出 App 前还需要关闭数据库操作，这也可以绑定到 Nest.js 的退出回调监听器上。
+
+### 数据目录分类
+
+前面提到的数据存储操作，最终都需要将数据写入磁盘目录，而且我们也看到了这里面使用了 `userData` 这样的目录。实际上 Electron 给我们封装了各种系统预置的目录，让我们来了解一下它们分别是什么用途，以便更好地设置。
+
+|名称|说明|
+|---|---|
+|appData|程序目录，不要动这里面的文件|
+|userData|用户数据，大多数数据都应该放在这里|
+|temp|临时文件，一次性数据，关机后不保证可以留存|
+|downloads|下载目录|
+|logs|日志目录|
+
+这里面没有提到一个很关键的目录，就是 cache 缓存目录。默认实现时，缓存目录和用户数据在同一个路径下，但我们往往希望它能位于一个隔离的路径下，以便用户觉得占用过多空间是主动清理。可以通过以下方式拿到这个 cache 目录。
+```typescript
+
+import os from 'os'
+import path from 'path'
+
+function getAppCacheDir() {
+    const homedir = os.homedir();
+    // https://github.com/electron/electron/issues/1404#issuecomment-194391247
+    let result;
+    if (process.platform === "win32") {
+        result = process.env.LOCALAPPDATA || path.join(homedir, "AppData", "Local");
+    }
+    else if (process.platform === "darwin") {
+        result = path.join(homedir, "Library", "Application Support", "Caches");
+    }
+    else {
+        result = process.env.XDG_CACHE_HOME || path.join(homedir, ".cache");
+    }
+    return result;
+}
+```
+
+简单总结一下，Electron App 的数据存储与普通 Node.js 应用类似，都是通过一定的映射方式，或以文件或以记录的方式存储到磁盘上，只是需要考虑跨进程读写及数据的初始化配置问题。
 
 ## 会话隔离
 
