@@ -10,17 +10,17 @@ disqusId: clean-electron-architecture
 - [框架特性](#框架特性)
   - [依赖反转](#依赖反转)
   - [路由模式](#路由模式)
-    - [装饰器（Decorator）](#装饰器decorator)
-      - [**HTTP 类**](#http-类)
+    - [装饰器-decorator](#装饰器-decorator)
+      - [**HTTP类**](#http类)
       - [**自定义类**](#自定义类)
-    - [中间件（Middleware）](#中间件middleware)
+    - [中间件-middleware](#中间件-middleware)
   - [数据管理](#数据管理)
-    - [简单 JSON 内容](#简单-json-内容)
-    - [数据库](#数据库)
+    - [简单JSON内容与跨进程](#简单json内容与跨进程)
+    - [数据库的初始化和关闭](#数据库的初始化和关闭)
     - [数据目录分类](#数据目录分类)
   - [会话隔离](#会话隔离)
-    - [Session 持久化](#session-持久化)
-    - [Session 事件](#session-事件)
+    - [Session持久化](#session持久化)
+    - [Session事件](#session事件)
 - [业务特性](#业务特性)
   - [插件机制](#插件机制)
     - [内置插件](#内置插件)
@@ -128,7 +128,7 @@ public async upsert(
 }
 ```
 
-### 装饰器（Decorator）
+### 装饰器-decorator
 
 大家肯定也看到上面代码中四个大大的 `@`，这就是 JavaScript 中的装饰器语法。只是可惜的是 parameter decorator 最终没有进入 stage 3，也就意味着 Typescript 以后肯定会对这个调用方式进行更改，不过这件事还没有尘埃落定，加上这么大一个框架，根本不用担心。
 
@@ -192,7 +192,7 @@ class Logger {
 
 可以看到装饰器版本将业务逻辑内聚成了一个函数，而不是必须要用函数套函数的方式。让代码分层有助于隔离关注部分，我们通常会把路由的执行逻辑和路由的路径给绑定在一起，但又不想变成每个路由端点都是一个类，这就是装饰器常见的应用场景了。
 
-#### **HTTP 类**
+#### **HTTP类**
 
 Nest.js 自带了很多 HTTP 服务的默认装饰器，对于绝大多数场景而言已经足够了。支持 HTTP 不同的请求类型，从请求中获取数据，并最终将内容用模版拼合并返回。
 
@@ -266,7 +266,7 @@ export const WebContent = createParamDecorator(
 
 使用装饰器可以让我们更轻松地将不同的路由与 Electron 框架进行交互，不管是注册事件监听模拟路由还是从请求中解出需要的源数据，都很方便。
 
-### 中间件（Middleware）
+### 中间件-middleware
 
 如果说装饰器是完成了路由的网状组织最后一块拼图的话，那中间件就是为数据的流动接上了一长条管道。
 
@@ -349,7 +349,7 @@ Web 后端服务直接将端口暴露在网络上往往需要很多的安全校�
 
 最终，我们发现可以将简单的 KV 存储和复杂结构数据区分开来考虑。
 
-### 简单 JSON 内容
+### 简单JSON内容与跨进程
 
 JSON 存储主要突出一个字：快。这里通常的数据量级都不会超过 1kb，无论是 set 或是 get 都可认为是同步完成的，会带来以下好处：
 
@@ -387,7 +387,7 @@ const store = new Store
 const name = store.get('name')
 ```
 
-### 数据库
+### 数据库的初始化和关闭
 
 客户端所用数据库跟普通后端数据库没有太大差别，只是得注意需要有不同系统及架构的二进制包，事实上例如 SQLite 和 LevelDB 都有官方的 node binding 版本，只需要打包时一并合入发布制品即可正常使用。但如果是在 Electron 项目中，则又多了一项准备工作，那就是如何获得数据库的存放位置。
 
@@ -485,10 +485,17 @@ function getAppCacheDir() {
 
 ## 会话隔离
 
+![](/blog/images/clean-electron-architecture/22-44-30.png)
 
-### Session 持久化
+绝大多数人都会在 web 上使用各式各样的账号，这里就出现了一个问题，如何在同一个网站登录不同的账号呢？有的人做法是开一个隐身模式窗口，dddd …… 但实际上浏览器本身自带多账号功能，称作 session。前文里提到的不同 `--user-data-dir` 可以让 Chrome 多开成为现实，不同用户间的数据是完全隔离的，但这需要启动多个进程。合理利用 chromium 的 session 可以在同一个进程内实现登录同一个网站使用不同 session 的功能。
 
-### Session 事件
+使用不同 Session 不仅可以隔离账号，还可以针对不同 Session 定制特殊行为，比如支持自定义协议，对 web 资源进行缓存等，妥妥就是一个 web 定制沙箱。
+
+### Session持久化
+
+使用 Session 第一步，要将 session 数据持久化。有人会说 sessionStorage 不是在浏览器关闭 tab 后会被清除吗？事实上此 session storage 非彼 sessionStorage，这里的 session 指的是包括 cookie、localStorage、IndexedDB 以及 sessionStorage 在内的所有 web 缓存。如果没有设置成持久化，那 Session 就变成了隐身访问模式。
+
+### Session事件
 
 例如自定义下载行为，针对特定协议进行重定向。
 
