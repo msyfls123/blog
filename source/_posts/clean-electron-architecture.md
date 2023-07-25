@@ -220,10 +220,10 @@ Web 页面承载了实际展示给用户的 UI 内容，它本身存在于一个
 这里面会分别用到 Nest.js 的 [Custom Transport](https://docs.nestjs.com/microservices/custom-transport)，以及 Electron 的 [WebRequest](https://www.electronjs.org/docs/latest/api/web-request#webrequestonbeforerequestfilter-listener) 模块。
 
 - **Step 1**: 通过 @nestjs/microservices 的 EventPattern, MessagePattern 组合出 IpcInvoke 和 IpcEvent 装饰器（给路由用）
-- **Step 2**: 通过 session.protocol.registerSchemesAsPrivileged 放通自定义 SCHEME
+- **Step 2**: 通过 `session.protocol.registerSchemesAsPrivileged` 放通自定义 SCHEME
 - **Step 3**: 在 WebRequest 拦截自定义 SCHEME（HTTP）请求头注入 webContentsId
 - **Step 4**: 在 CustomTransportStrategy 绑定所有 Step.1 装饰过的路由响应 IPC listener，并在 handler 中传入 event 对象作为 data
-- **Step 5**: 创建 WebContents 装饰器。通过 @nestjs/common 的 createParamDecorator，根据 ctx.getType == 'http' || 'rpc' 来返回位于 req.headers 和 RpcArgumentsHost.getData 中的 webContents
+- **Step 5**: 创建 WebContents 装饰器。通过 @nestjs/common 的 createParamDecorator，根据 `ctx.getType == 'http' || 'rpc'` 来返回位于 `req.headers` 和 `RpcArgumentsHost.getData` 中的 `webContents`
 
 
 ```typescript
@@ -362,7 +362,6 @@ JSON 存储主要突出一个字：快。这里通常的数据量级都不会超
 
 ```typescript
 // main-process
-
 import Store from 'electron-store'
 import { BrowserWindow, app } from 'electron'
 import { resolve } from 'path'
@@ -380,7 +379,6 @@ win.show()
 
 ```typescript
 // preload.js
-
 import Store from 'electron-store'
 
 const store = new Store
@@ -460,7 +458,6 @@ export class DatabaseService {
 
 这里面没有提到一个很关键的目录，就是 cache 缓存目录。默认实现时，缓存目录和用户数据在同一个路径下，但我们往往希望它能位于一个隔离的路径下，以便用户觉得占用过多空间是主动清理。可以通过以下方式拿到这个 cache 目录。
 ```typescript
-
 import os from 'os'
 import path from 'path'
 
@@ -495,11 +492,52 @@ function getAppCacheDir() {
 
 使用 Session 第一步，要将 session 数据持久化。有人会说 sessionStorage 不是在浏览器关闭 tab 后会被清除吗？事实上此 session storage 非彼 sessionStorage，这里的 session 指的是包括 cookie、localStorage、IndexedDB 以及 sessionStorage 在内的所有 web 缓存。如果没有设置成持久化，那 Session 就变成了隐身访问模式。
 
+设置 Session 持久化只需要一步，就是创建 Session 时传入前缀为 `persists:` 的 partition。在 Electron 代码中即有[这个常量](https://github.com/electron/electron/blob/e543126957bfd15c06722e7ba7b5a50a814af918/shell/browser/api/electron_api_session.cc#L267)，这也是为数不多通过字面量判断表达不同目的的 API 之一。
+
+不同的 Session 会出现在 Partitions 目录下，`persists:` 后面的文字就是目录名，里面密密麻麻都是 Chromium 运行时产生的数据文件。
+![](/blog/images/clean-electron-architecture/17-05-18.png)
+
 ### Session事件
 
-例如自定义下载行为，针对特定协议进行重定向。
+与 IPC 消息可以只在全局 `ipcMain` 对象上监听不同，不同的自定义协议、网络请求和 cookies 都只能从单个 Session 上获取，这是一把双刃剑。一方面我们需要在不同 Session 初始化时绑定事件监听，甚至在 app 启动时注册协议，另一方面同样也能对 Session 进行隔离，以防某个 Session 崩溃影响到别的，这也符合 [Chrome 对于多渲染进程安全和效率之间的平衡](https://chromium.googlesource.com/chromium/src/+/main/docs/process_model_and_site_isolation.md)。
+
+简单来讲，Session 上有 `protocol`、`webRequests` 和 `Cookies` 这些对象可供调用，分别提供了协议拦截、请求拦截和 cookies 操作的功能，注意这不是 Chromium 的全部功能，所以可以预见的是这个树状结构会越来越长。
+
+{% mermaid %}
+flowchart LR
+    session(Session) --> protocol(protocol)
+    session --> webRequests(webRequests)
+    session --> cookies(cookies)
+    protocol --> registerSchemesAsPrivileged
+    protocol --> handle
+    protocol --> isProtocolHandled
+    webRequests --> onBeforeRequest
+    webRequests --> onBeforeSendHeaders
+    webRequests --> onHeadersReceived
+    webRequests --> onCompleted
+    webRequests --> onErrorOccurred
+    cookies --> get
+    cookies --> set
+    cookies --> remove
+    cookies --> flushStore
+{% endmermaid %}
+
+以上三个对象的操作方式大相径庭，下面为简单分析：
+
+- protocol 比较纯粹，对某个 scheme 比如 `app` 相关的请求拦截并响应，可以理解成后端服务器的 server
+  ![](/blog/images/clean-electron-architecture/17-50-54.png)。
+  
+- webRequests 需要设定 url pattern 匹配规则，对规则内的请求做处理，或改变 header，或进行重定向。但这里可以拿到请求的 webContents 对象，所以可以做一些特殊的操作。不利之处是，url pattern 及 callback 在**单个 session 同一 hook**上只能注册一次，所以遇到多 pattern 匹配需要自己手动做拼接及分发。
+
+- cookies 同样很纯粹，它就是 web 内 cookie 对象的真身，只是移除了跨域读写 cookie 的限制。
+
+Session 可以说是 Electron 的命脉，虽然大部分情况下都不会跟它打交道，但它往往是一个 Electron 程序运行性能的瓶颈。
 
 # 业务特性
+
+铺垫了如此长的篇幅，Electron App 都快走到了它生命周期的尾声，这才来到了我们开发它的初衷：完成指定的功能。
+
+一个理想的 Electron App 就应该像 VSCode 一样，本身提供渲染排版编辑的功能，其他功能以插件形式补充。
 
 ## 插件机制
 
