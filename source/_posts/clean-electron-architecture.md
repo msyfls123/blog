@@ -14,6 +14,9 @@ disqusId: clean-electron-architecture
       - [**HTTP类**](#http类)
       - [**自定义类**](#自定义类)
     - [中间件-middleware](#中间件-middleware)
+    - [传输器-transporter](#传输器-transporter)
+      - [自定义scheme](#自定义scheme)
+      - [ipc注册](#ipc注册)
   - [数据管理](#数据管理)
     - [简单JSON内容与跨进程](#简单json内容与跨进程)
     - [数据库的初始化和关闭](#数据库的初始化和关闭)
@@ -332,6 +335,155 @@ Web 后端服务直接将端口暴露在网络上往往需要很多的安全校�
 
 - 给 request、context 统一加上指定参数，例如 request.user
 - 在请求处理完毕返回前继续调用别的路由端点
+
+### 传输器-transporter
+
+可能聪明的读者已经发现，前面讲路由的篇幅大部分都在介绍如何处理请求，但形如 `app://create` 的 URL 以及 IPC 监听器是如何被注册到应用之上的呢？下面就介绍一下两种注册方式。
+
+#### 自定义scheme
+
+假设要处理 `app://` 这样的一个协议，我们需要将这个请求转发到真正的 HTTP Server 上。通常情况下需要绑定本机的一个 TCP 端口，但这里有个问题，如果尝试绑定的端口被占用怎么办？可以用不断尝试的方式最终拿到一个可用端口，但更好的方式是使用 Unix socket。
+
+{% mermaid %}
+flowchart LR
+  request(app:\/\/create) -- 拦截 ---> protocol.handle -- 转发 ---> response(unix:///tmp/electron.sock:create)
+{% endmermaid %}
+
+```typescript
+import os from 'os';
+import { Readable } from 'stream';
+import { Session } from 'electron';
+
+import nodeFetch, { RequestInit } from 'node-fetch-unix';
+import { ReadableStream } from 'stream/web';
+
+const API_SCHEME = 'electron';
+
+export function getSocketPath(socketName: string) {
+  if (os.platform() === 'win32') {
+    return `//./pipe/${socketName}`;
+  }
+  return `/tmp/${socketName}.sock`;
+}
+
+export function getSocketUrl(socketName: string, pathname = '') {
+  if (os.platform() === 'win32') {
+    return `unix:////./pipe/${socketName}:${pathname}`;
+  }
+  return `unix:///tmp/${socketName}.sock:${pathname}`;
+}
+
+export function redirectRequest(req: Request) {
+  const url = req.url;
+  const urlObj = new URL(url);
+  const newUrl = getSocketUrl(API_SCHEME, urlObj.pathname);
+
+  const body = req.body
+    ? Readable.fromWeb(req.body as ReadableStream<Uint8Array>)
+    : undefined;
+  const newReq: RequestInit = {
+    ...req,
+    method: req.method,
+    headers: req.headers as any,
+    body,
+  };
+
+  return nodeFetch(newUrl, newReq).then((res) => {
+    const readable = new Readable().wrap(res.body);
+    return {
+      ...res,
+      status: res.status,
+      headers: res.headers || {},
+      body: Readable.toWeb(readable),
+    } as unknown as Response;
+  });
+}
+
+Session.defaultSession.protocol.handle('app', redirectRequest)
+```
+
+之后我们只需要将 Nest.js 的 listen 方法指向 `getSocketPath` 创建出的 socket 地址即可收发协议消息了。
+
+#### ipc注册
+
+注册 Electron 自有的 IPC 消息则略微麻烦一点，但好在 Nest.js 提供了 MicroServices 模块，允许我们自定义消息传输器。
+
+因为我们在前面使用 `EventPattern`, `MessagePattern` 绑定了 handler，这样就能在 server 的 `messageHandlers` 里找到对应的请求处理函数，将它与 `ipcMain` 对接起来。示例实现如下：
+
+```typescript
+import { ipcMain } from 'electron';
+
+import {
+  CustomTransportStrategy,
+  MessageHandler,
+  Server,
+} from '@nestjs/microservices';
+
+export class IpcStrategy extends Server implements CustomTransportStrategy {
+  private handlerMap: Partial<Record<HandlerType, (pattern: string) => void>> =
+    {
+      'invoke': this.bindIpcInvoke,
+      'event': this.bindIpcEvent,
+    };
+
+  bindIpcInvoke(pattern: string) {
+    ipcMain.handle(pattern, (event, ...args) => {
+      const handler: MessageHandler = this.messageHandlers.get(pattern);
+
+      if (!handler) {
+        return this.logger.warn(`No handlers for message ${pattern}`);
+      }
+
+      return handler({
+        event,
+        args,
+        channel: pattern,
+      });
+    });
+  }
+
+  bindIpcEvent(pattern: string) {
+    ipcMain.on(pattern, (event, ...args) => {
+      const handler: MessageHandler = this.messageHandlers.get(pattern);
+
+      if (!handler) {
+        return this.logger.warn(`No handlers for message ${pattern}`);
+      }
+
+      handler({
+        event,
+        args,
+        channel: pattern,
+      });
+    });
+  }
+
+  listen(callback: () => void) {
+    this.logger.debug('Start listening...');
+
+    for (const [pattern, handler] of this.messageHandlers) {
+      const handlerType: HandlerType = handler.extras.handlerType;
+      this.handlerMap[handlerType]?.call(this, pattern);
+    }
+
+    callback();
+  }
+
+  close() {
+    this.messageHandlers.clear();
+    this.logger.log('End listening...');
+  }
+}
+```
+
+最后在入口处加上这个 strategy 并随 App 启动即可。
+```typescript
+// microservices
+app.connectMicroservice({
+  strategy: new IpcStrategy(),
+});
+await app.startAllMicroservices();
+```
 
 ## 数据管理
 
