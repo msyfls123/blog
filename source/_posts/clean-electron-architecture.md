@@ -347,7 +347,7 @@ Web 后端服务直接将端口暴露在网络上往往需要很多的安全校�
 
 {% mermaid %}
 flowchart LR
-  request(app:\/\/create) -- 拦截 ---> protocol.handle -- 转发 ---> response(unix:///tmp/electron.sock:create)
+  request(app://create) -- 拦截 ---> protocol.handle -- 转发 ---> response(unix:///tmp/electron.sock:create)
 {% endmermaid %}
 
 ```typescript
@@ -677,8 +677,8 @@ flowchart LR
 
 以上三个对象的操作方式大相径庭，下面为简单分析：
 
-- protocol 比较纯粹，对某个 scheme 比如 `app` 相关的请求拦截并响应，可以理解成后端服务器的 server
-  ![](/blog/images/clean-electron-architecture/17-50-54.png)。
+- protocol 比较纯粹，对某个 scheme 比如 `app` 相关的请求拦截并响应，可以理解成后端服务器的 server。
+  ![](/blog/images/clean-electron-architecture/17-50-54.png)
   
 - webRequests 需要设定 url pattern 匹配规则，对规则内的请求做处理，或改变 header，或进行重定向。但这里可以拿到请求的 webContents 对象，所以可以做一些特殊的操作。不利之处是，url pattern 及 callback 在**单个 session 同一 hook**上只能注册一次，所以遇到多 pattern 匹配需要自己手动做拼接及分发。
 
