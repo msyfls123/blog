@@ -71,6 +71,12 @@ time_format: HH:mm:ss
 per_page: 10
 pagination_dir: page
 
+# Head
+head:
+  favicon: /images/favicon.ico
+
+logo: /images/logo.jpeg
+
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/

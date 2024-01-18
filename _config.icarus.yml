@@ -1,7 +1,7 @@
 version: 4.0.0
 favicon: /images/favicon.ico
 rss: 
-logo: /images/logo.jpg
+logo: /images/logo.jpeg
 open_graph:
     fb_app_id: 
     fb_admins: 
