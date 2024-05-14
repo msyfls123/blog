@@ -10,7 +10,7 @@
     "build": "hexo generate"
   },
   "engines": {
-    "node": ">=13.2.0 <14.0"
+    "node": "> 14.0"
   },
   "dependencies": {
     "bulma-stylus": "^0.8.0",
